@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		946864DE25D0DFB20090421F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946864DD25D0DFB20090421F /* main.cpp */; };
+		9468650825D1F8340090421F /* libLLVM.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9468650725D1F8340090421F /* libLLVM.dylib */; };
+		9468650925D1F8340090421F /* libLLVM.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 9468650725D1F8340090421F /* libLLVM.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -20,11 +22,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		9468650A25D1F8340090421F /* Embed Libraries */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9468650925D1F8340090421F /* libLLVM.dylib in Embed Libraries */,
+			);
+			name = "Embed Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		946864DA25D0DFB20090421F /* DreamLLVM */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DreamLLVM; sourceTree = BUILT_PRODUCTS_DIR; };
 		946864DD25D0DFB20090421F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		946864EC25D1C93B0090421F /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
+		9468650725D1F8340090421F /* libLLVM.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libLLVM.dylib; path = ../../../../../usr/local/Cellar/llvm/11.0.1/lib/libLLVM.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9468650825D1F8340090421F /* libLLVM.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +59,7 @@
 			children = (
 				946864DC25D0DFB20090421F /* DreamLLVM */,
 				946864DB25D0DFB20090421F /* Products */,
+				9468650625D1F8340090421F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,8 +75,17 @@
 			isa = PBXGroup;
 			children = (
 				946864DD25D0DFB20090421F /* main.cpp */,
+				946864EC25D1C93B0090421F /* test.h */,
 			);
 			path = DreamLLVM;
+			sourceTree = "<group>";
+		};
+		9468650625D1F8340090421F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9468650725D1F8340090421F /* libLLVM.dylib */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -69,6 +95,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 946864E125D0DFB20090421F /* Build configuration list for PBXNativeTarget "DreamLLVM" */;
 			buildPhases = (
+				9468650A25D1F8340090421F /* Embed Libraries */,
 				946864D625D0DFB20090421F /* Sources */,
 				946864D725D0DFB20090421F /* Frameworks */,
 				946864D825D0DFB20090421F /* CopyFiles */,
@@ -176,10 +203,24 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/Cellar/llvm/11.0.1/include;
+				LD_GENERATE_MAP_FILE = NO;
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/llvm/11.0.1/lib;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-ltermcap",
+					"-lc++",
+					"-lLLVMCore",
+					"-lLLVMSupport",
+					"-lLLVMTransformUtils",
+					"-lLLVMBitReader",
+					"-lLLVMAnalysis",
+					"-lLLVMDemangle",
+				);
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -229,9 +270,22 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/Cellar/llvm/11.0.1/include;
+				LD_GENERATE_MAP_FILE = NO;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-ltermcap",
+					"-lc++",
+					"-lLLVMCore",
+					"-lLLVMSupport",
+					"-lLLVMTransformUtils",
+					"-lLLVMBitReader",
+					"-lLLVMAnalysis",
+					"-lLLVMDemangle",
+				);
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -240,6 +294,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				ENABLE_NS_ASSERTIONS = NO;
+				"EXCLUDED_ARCHS[sdk=*]" = arm64;
+				"HEADER_SEARCH_PATHS[arch=*]" = /usr/local/opt/llvm/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/opt/llvm/lib;
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -248,6 +307,23 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				"HEADER_SEARCH_PATHS[arch=*]" = /usr/local/Cellar/llvm/11.0.1/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/opt/llvm/lib;
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-ltermcap",
+					"-lc++",
+					"-lLLVMCore",
+					"-lLLVMSupport",
+					"-lLLVMTransformUtils",
+					"-lLLVMBitReader",
+					"-lLLVMAnalysis",
+					"-lLLVMDemangle",
+					"-undefined",
+					dynamic_lookup,
+					"-libs",
+					interpreter,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
