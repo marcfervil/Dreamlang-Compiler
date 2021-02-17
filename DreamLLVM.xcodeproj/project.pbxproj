@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		946864DE25D0DFB20090421F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946864DD25D0DFB20090421F /* main.cpp */; };
+		946864DE25D0DFB20090421F /* referance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946864DD25D0DFB20090421F /* referance.cpp */; };
 		9468650825D1F8340090421F /* libLLVM.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9468650725D1F8340090421F /* libLLVM.dylib */; };
 		9468650925D1F8340090421F /* libLLVM.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 9468650725D1F8340090421F /* libLLVM.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		948AB2F625DB5DA3009FCA3B /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 948AB2F425DB5DA3009FCA3B /* main.cpp */; };
+		948AB2F925DB7935009FCA3B /* standard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 948AB2F725DB7935009FCA3B /* standard.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,9 +39,13 @@
 
 /* Begin PBXFileReference section */
 		946864DA25D0DFB20090421F /* DreamLLVM */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DreamLLVM; sourceTree = BUILT_PRODUCTS_DIR; };
-		946864DD25D0DFB20090421F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		946864DD25D0DFB20090421F /* referance.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = referance.cpp; sourceTree = "<group>"; };
 		946864EC25D1C93B0090421F /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
 		9468650725D1F8340090421F /* libLLVM.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libLLVM.dylib; path = ../../../../../usr/local/Cellar/llvm/11.0.1/lib/libLLVM.dylib; sourceTree = "<group>"; };
+		948AB2F425DB5DA3009FCA3B /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		948AB2F525DB5DA3009FCA3B /* main.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = main.hpp; sourceTree = "<group>"; };
+		948AB2F725DB7935009FCA3B /* standard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = standard.cpp; sourceTree = "<group>"; };
+		948AB2F825DB7935009FCA3B /* standard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = standard.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,8 +80,12 @@
 		946864DC25D0DFB20090421F /* DreamLLVM */ = {
 			isa = PBXGroup;
 			children = (
-				946864DD25D0DFB20090421F /* main.cpp */,
+				946864DD25D0DFB20090421F /* referance.cpp */,
 				946864EC25D1C93B0090421F /* test.h */,
+				948AB2F425DB5DA3009FCA3B /* main.cpp */,
+				948AB2F525DB5DA3009FCA3B /* main.hpp */,
+				948AB2F725DB7935009FCA3B /* standard.cpp */,
+				948AB2F825DB7935009FCA3B /* standard.hpp */,
 			);
 			path = DreamLLVM;
 			sourceTree = "<group>";
@@ -145,7 +155,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				946864DE25D0DFB20090421F /* main.cpp in Sources */,
+				948AB2F625DB5DA3009FCA3B /* main.cpp in Sources */,
+				946864DE25D0DFB20090421F /* referance.cpp in Sources */,
+				948AB2F925DB7935009FCA3B /* standard.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,6 +308,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				ENABLE_NS_ASSERTIONS = NO;
 				"EXCLUDED_ARCHS[sdk=*]" = arm64;
+				"EXCLUDED_SOURCE_FILE_NAMES[arch=*]" = referance.cpp;
 				"HEADER_SEARCH_PATHS[arch=*]" = /usr/local/opt/llvm/include;
 				LIBRARY_SEARCH_PATHS = /usr/local/opt/llvm/lib;
 				OTHER_LDFLAGS = "";
