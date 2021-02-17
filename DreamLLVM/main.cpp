@@ -38,66 +38,59 @@ using namespace llvm;
 using namespace std;
 
 
+StructType * dreamObjTy;
+PointerType * dreamObjPtrTy;
+PointerType * voidPointerTy;
+
+//struct that represents llvm data
 typedef struct LLVMData{
     LLVMContext context;
     Module * module;
     Function *mainFunc;
     BasicBlock *currentBlock;
     ExecutionEngine* engine;
-    
     std::unique_ptr<Module> owner;
 } LLVMData;
 
-StructType * dreamObjTy;
-PointerType * dreamObjPtrTy;
-PointerType * voidPointerTy;
 
-
+//initialize llvm & return context struct
 LLVMData * llvm_init(){
+    //initialize llvm
     InitializeNativeTarget();
     LLVMInitializeNativeAsmPrinter();
 
-   // LLVMContext Context;
-    
-   // LLVMData * new_context = (LLVMData *) malloc(sizeof(struct LLVMData));
+    //initialize context struct
     LLVMData * new_context = new LLVMData();
-
-//    new_context -> context = Context;
     
+    //create main module
     new_context->owner = std::make_unique<Module>("main", new_context -> context);
     Module *M = new_context->owner.get();
-
-    
-   
     new_context -> module = M;
-    //context -> module->getNamedMDList().back();
     
-    voidPointerTy  = PointerType::get(PointerType::getVoidTy(new_context -> context), 0);
-    //PointerType* StructPointerTy = PointerType::get(StructType::get(Context), 0);
-    
+    //initialize type variables
+    voidPointerTy = PointerType::get(PointerType::getVoidTy(new_context -> context), 0);
     dreamObjTy = StructType::create(new_context -> context, "dreamObj");
     dreamObjTy->setBody({ Type::getInt32Ty(new_context -> context) , dreamObjTy , voidPointerTy });
     dreamObjPtrTy = PointerType::get(dreamObjTy, 0);
     
-    
+    //create main function & block
     Type * int32Type = Type::getInt32Ty(new_context -> context);
     new_context -> mainFunc = Function::Create(FunctionType::get(int32Type, {}, false), Function::ExternalLinkage, "main_func", new_context->module);
-    
-    
-   // BasicBlock *currentBlock =
     new_context -> currentBlock = BasicBlock::Create(new_context -> context, "EntryBlock", new_context->mainFunc);
 
-    //new_context -> mainFunc -> print(outs());
-    
     return new_context;
 }
 
+
+//run our llvm code
 void llvm_run(LLVMData * context){
     context -> engine = EngineBuilder(std::move(context->owner)).create();
     std::vector<GenericValue> noargs;
     GenericValue gv = context->engine->runFunction(context->mainFunc, noargs);
     outs() << "We just constructed this LLVM module:\n\n" << *context->module;
     outs() << "Result: " << gv.IntVal << "\n";
+    delete context -> engine;
+    llvm_shutdown();
 }
 
 
@@ -106,7 +99,6 @@ int main(){
 
     LLVMData * llvmData = llvm_init();
    
-    
     IRBuilder<> builder(llvmData->currentBlock);
     Value * num = builder.getInt32(30);
     builder.CreateRet(num);
