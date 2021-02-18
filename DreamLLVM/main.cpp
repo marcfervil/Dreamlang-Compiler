@@ -33,7 +33,7 @@
 
 
 
-
+extern "C" {
 using namespace llvm;
 using namespace std;
 
@@ -140,7 +140,6 @@ Value * call_standard(LLVMData* context, string funcName, ArrayRef<Value *> args
 Value * str(LLVMData* context, string value){
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "str_stack", context->currentBlock);
     Value * callResult = context->builder->get.CreateCall(functions["str"], context->builder->get.CreateGlobalStringPtr(StringRef(value)));
-    //builder.CreateGlobalStringPtr(StringRef("(Love laiojfweojfewofjefworugh?)"))->getType()->print(outs());
     new StoreInst(callResult, objStore, context->currentBlock);
     LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "str", context->currentBlock);
     
@@ -158,7 +157,7 @@ Value * num(LLVMData* context, int value){
     return object;
 }
 
-Value * num(LLVMData* context, Value * value){
+Value * numVal(LLVMData* context, Value * value){
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "int_stack", context->currentBlock);
     Value * callResult = context->builder->get.CreateCall(functions["int"], value);
     new StoreInst(callResult, objStore, context->currentBlock);
@@ -169,30 +168,25 @@ Value * num(LLVMData* context, Value * value){
 
 
 Value* get_value(LLVMData* context, Type * type, Value * obj ){
-    //LoadInst * lod = new LoadInst(dreamObjPtrTy, obj, "v3",  context->currentBlock);
     std::vector<llvm::Value*> indices(2);
     indices[0] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
     indices[1] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 2, true));
     Value *valuePointer = context->builder->get.CreateGEP(obj, indices,  "memberptr");
     LoadInst *value = new LoadInst(type, valuePointer, "temp", context->currentBlock);
     
-    /*
-    Value* valueStr =  context->builder->get.CreateGlobalStringPtr(StringRef("out: (%d)\n"));
-    call_standard(context, "printf", {valueStr, value});*/
-    
-    //printf(const char *, ...)
+
     return value;
 }
 
 Value * add(LLVMData* context, Value *var1, Value *var2){
     Value* value1 = get_value(context, Type::getInt32Ty(context->context), var1);
     Value* value2 = get_value(context, Type::getInt32Ty(context->context), var2);
-    return num(context, context->builder->get.CreateAdd(value1, value2));
+    return numVal(context, context->builder->get.CreateAdd(value1, value2));
     //return context->builder->get.CreateAdd(value1, value2);
 }
 
 int main(){
-
+/*
     LLVMData * context = llvm_init();
     
     
@@ -203,6 +197,9 @@ int main(){
 
     
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
-    llvm_run(context);
+    llvm_run(context);*/
+    return 0;
 
 }
+
+};

@@ -10,6 +10,9 @@
 		946864DE25D0DFB20090421F /* referance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946864DD25D0DFB20090421F /* referance.cpp */; };
 		9468650825D1F8340090421F /* libLLVM.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9468650725D1F8340090421F /* libLLVM.dylib */; };
 		9468650925D1F8340090421F /* libLLVM.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 9468650725D1F8340090421F /* libLLVM.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		947A65AA25DE1D770093D821 /* DreamLib.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 947A65A925DE1D770093D821 /* DreamLib.hpp */; };
+		947A65AC25DE1D770093D821 /* DreamLibPriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 947A65AB25DE1D770093D821 /* DreamLibPriv.hpp */; };
+		947A65AE25DE1D770093D821 /* DreamLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 947A65AD25DE1D770093D821 /* DreamLib.cpp */; };
 		948AB2F625DB5DA3009FCA3B /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 948AB2F425DB5DA3009FCA3B /* main.cpp */; };
 		948AB2F925DB7935009FCA3B /* standard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 948AB2F725DB7935009FCA3B /* standard.cpp */; };
 /* End PBXBuildFile section */
@@ -42,6 +45,10 @@
 		946864DD25D0DFB20090421F /* referance.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = referance.cpp; sourceTree = "<group>"; };
 		946864EC25D1C93B0090421F /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
 		9468650725D1F8340090421F /* libLLVM.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libLLVM.dylib; path = ../../../../../usr/local/Cellar/llvm/11.0.1/lib/libLLVM.dylib; sourceTree = "<group>"; };
+		947A65A725DE1D770093D821 /* libDreamLib.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libDreamLib.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		947A65A925DE1D770093D821 /* DreamLib.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DreamLib.hpp; sourceTree = "<group>"; };
+		947A65AB25DE1D770093D821 /* DreamLibPriv.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DreamLibPriv.hpp; sourceTree = "<group>"; };
+		947A65AD25DE1D770093D821 /* DreamLib.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DreamLib.cpp; sourceTree = "<group>"; };
 		948AB2F425DB5DA3009FCA3B /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		948AB2F525DB5DA3009FCA3B /* main.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = main.hpp; sourceTree = "<group>"; };
 		948AB2F725DB7935009FCA3B /* standard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = standard.cpp; sourceTree = "<group>"; };
@@ -57,6 +64,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		947A65A525DE1D770093D821 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -64,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				946864DC25D0DFB20090421F /* DreamLLVM */,
+				947A65A825DE1D770093D821 /* DreamLib */,
 				946864DB25D0DFB20090421F /* Products */,
 				9468650625D1F8340090421F /* Frameworks */,
 			);
@@ -73,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				946864DA25D0DFB20090421F /* DreamLLVM */,
+				947A65A725DE1D770093D821 /* libDreamLib.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -98,7 +114,29 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		947A65A825DE1D770093D821 /* DreamLib */ = {
+			isa = PBXGroup;
+			children = (
+				947A65A925DE1D770093D821 /* DreamLib.hpp */,
+				947A65AB25DE1D770093D821 /* DreamLibPriv.hpp */,
+				947A65AD25DE1D770093D821 /* DreamLib.cpp */,
+			);
+			path = DreamLib;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		947A65A325DE1D770093D821 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				947A65AA25DE1D770093D821 /* DreamLib.hpp in Headers */,
+				947A65AC25DE1D770093D821 /* DreamLibPriv.hpp in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		946864D925D0DFB20090421F /* DreamLLVM */ = {
@@ -119,6 +157,23 @@
 			productReference = 946864DA25D0DFB20090421F /* DreamLLVM */;
 			productType = "com.apple.product-type.tool";
 		};
+		947A65A625DE1D770093D821 /* DreamLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 947A65B125DE1D770093D821 /* Build configuration list for PBXNativeTarget "DreamLib" */;
+			buildPhases = (
+				947A65A325DE1D770093D821 /* Headers */,
+				947A65A425DE1D770093D821 /* Sources */,
+				947A65A525DE1D770093D821 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DreamLib;
+			productName = DreamLib;
+			productReference = 947A65A725DE1D770093D821 /* libDreamLib.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -128,6 +183,9 @@
 				LastUpgradeCheck = 1220;
 				TargetAttributes = {
 					946864D925D0DFB20090421F = {
+						CreatedOnToolsVersion = 12.2;
+					};
+					947A65A625DE1D770093D821 = {
 						CreatedOnToolsVersion = 12.2;
 					};
 				};
@@ -146,6 +204,7 @@
 			projectRoot = "";
 			targets = (
 				946864D925D0DFB20090421F /* DreamLLVM */,
+				947A65A625DE1D770093D821 /* DreamLib */,
 			);
 		};
 /* End PBXProject section */
@@ -158,6 +217,14 @@
 				948AB2F625DB5DA3009FCA3B /* main.cpp in Sources */,
 				946864DE25D0DFB20090421F /* referance.cpp in Sources */,
 				948AB2F925DB7935009FCA3B /* standard.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		947A65A425DE1D770093D821 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				947A65AE25DE1D770093D821 /* DreamLib.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +408,36 @@
 			};
 			name = Release;
 		};
+		947A65AF25DE1D770093D821 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		947A65B025DE1D770093D821 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -358,6 +455,15 @@
 			buildConfigurations = (
 				946864E225D0DFB20090421F /* Debug */,
 				946864E325D0DFB20090421F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		947A65B125DE1D770093D821 /* Build configuration list for PBXNativeTarget "DreamLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				947A65AF25DE1D770093D821 /* Debug */,
+				947A65B025DE1D770093D821 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

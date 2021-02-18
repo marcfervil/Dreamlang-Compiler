@@ -1,0 +1,2 @@
+g++ -L/usr/local/opt/llvm/lib -I/usr/local/Cellar/llvm/11.0.1/include -c -fPIC main.cpp -o dream.o -std=c++17 -undefined dynamic_lookup 
+g++ -shared -WL,-install_name,dream.so -o dream.so dream.o -undefined dynamic_lookup
