@@ -149,10 +149,18 @@ Value * str(LLVMData* context, string value){
     return object;
 }
 
-Value * integer(LLVMData* context, int value){
+Value * num(LLVMData* context, int value){
     Value* builtInt = context->builder->get.getInt32(value);
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "int_stack", context->currentBlock);
     Value * callResult = context->builder->get.CreateCall(functions["int"], builtInt);
+    new StoreInst(callResult, objStore, context->currentBlock);
+    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "int", context->currentBlock);
+    return object;
+}
+
+Value * num(LLVMData* context, Value * value){
+    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "int_stack", context->currentBlock);
+    Value * callResult = context->builder->get.CreateCall(functions["int"], value);
     new StoreInst(callResult, objStore, context->currentBlock);
     LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "int", context->currentBlock);
     return object;
@@ -179,42 +187,22 @@ Value* get_value(LLVMData* context, Type * type, Value * obj ){
 Value * add(LLVMData* context, Value *var1, Value *var2){
     Value* value1 = get_value(context, Type::getInt32Ty(context->context), var1);
     Value* value2 = get_value(context, Type::getInt32Ty(context->context), var2);
-    
-    
-    /*
-    Value* valueStr =  context->builder->get.CreateGlobalStringPtr(StringRef("(%d) (%d)"));
-    call_standard(context, "printf", {valueStr, value1, value2});*/
-    
-    return context->builder->get.CreateAdd(value1, value2);
+    return num(context, context->builder->get.CreateAdd(value1, value2));
+    //return context->builder->get.CreateAdd(value1, value2);
 }
 
 int main(){
 
     LLVMData * context = llvm_init();
     
-   /*
-    call_standard(llvmData, "print",  str(llvmData, "more lyfe"));
-    call_standard(llvmData, "print",  integer(llvmData, 420));
     
-    context->builder->get.CreateRet(context->builder->get.getInt32(69));*/
+    Value * int1 = num(context, 400);
+
+    Value * twenty = add(context, num(context, 10), num(context, 10));
+    call_standard(context, "print", add(context, int1, twenty));
+
     
-    
-    
-    Value * int1 = integer(context, 400);
-    Value * int2 = integer(context, 20);
-    context->builder->get.CreateRet(add(context, int1, int2));
-  
-    /*
-    Value* i =  str(context, "luv");
-    Value * value = get_value(context, Type::getInt8PtrTy(context->context), i);
-    call_standard(context, "printf", {value} );*/
-    
-  //  Value* valueStr =  context->builder->get.CreateGlobalStringPtr(StringRef("out: (%s)\n"));
-   // call_standard(context, "printf", { value} );
-    
-    
-    
-    //context->builder->get.CreateRet(context->builder->get.getInt32(69));
+    context->builder->get.CreateRet(context->builder->get.getInt32(0));
     llvm_run(context);
 
 }
