@@ -119,6 +119,11 @@ typedef struct dreamObj{
     }
 
 
+dreamObj * dreamInt(int value){
+    dreamObj * obj = make_dream((void *)value, dreamIntType);
+    
+    return obj;
+}
 
 
 dreamObj * dreamStr(const char * value){
