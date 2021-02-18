@@ -26,6 +26,7 @@ extern "C" {
         new_obj -> value = (value);
         new_obj -> type = type;
 
+        
         for(int i=0; i<HASHSIZE; i++){
             new_obj -> vars[i] = NULL;
         }
@@ -35,25 +36,27 @@ extern "C" {
 
 
 
-
     dreamObj * dreamStr(const char * value){
 
         dreamObj * obj = make_dream((void *)value, dreamStrType);
         return obj;
     }
 
+    dreamObj * dreamInt(int value){
 
-    void print(dreamObj* obj, bool raw = false){
+        dreamObj * obj = make_dream((void *)value, dreamIntType);
+        return obj;
+    }
+
+    void print(dreamObj* obj){
         if (obj == NULL){
             printf("[Dream]: <Undefined> \n");
             return;
         }
         if(obj->type == dreamStrType || obj->type == dreamType){
-            if(raw){
-                printf("[Dream]: %s\n", (char *)obj->value);
-            }else{
-                printf("%s\n", (char *)obj->value);
-            }
+            printf("[Dream]: %s\n", (char *)obj->value);
+        }else if(obj->type == dreamIntType){
+            printf("[Dream]: %d\n", (int *)obj->value);
         }else{
             printf("[Dream]: didn't print type \n");
         }
@@ -66,7 +69,7 @@ extern "C" {
           hashval = *s + 31 * hashval;
         return hashval % HASHSIZE;
     }
-
+/*
     dreamObj * get_var(dreamObj * obj, const char *s){
         dreamObj *np;
   
@@ -103,7 +106,7 @@ extern "C" {
         }
         return np;
     }
-
+*/
     
 
 

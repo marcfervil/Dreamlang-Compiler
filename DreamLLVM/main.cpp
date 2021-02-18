@@ -80,6 +80,7 @@ void loadStandard(LLVMData* context){
     functions["printf"] = context->owner->getOrInsertFunction("printf", FunctionType::get(IntegerType::getInt32Ty(context->context), PointerType::get(Type::getInt8Ty(context->context), 0), true));
     functions["object"] = context->owner->getOrInsertFunction("make_dream", FunctionType::get(dreamObjPtrTy, voidPointerTy, false ));
     functions["str"] = context->owner->getOrInsertFunction("dreamStr", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
+    functions["int"] = context->owner->getOrInsertFunction("dreamInt", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
 }
 
 
@@ -100,8 +101,9 @@ LLVMData * llvm_init(){
     //initialize type variables
     voidPointerTy = PointerType::get(PointerType::getVoidTy(new_context -> context), 0);
     dreamObjTy = StructType::create(new_context -> context, "dreamObj");
-    dreamObjTy->setBody({ Type::getInt32Ty(new_context -> context) , dreamObjTy , voidPointerTy });
     dreamObjPtrTy = PointerType::get(dreamObjTy, 0);
+    dreamObjTy->setBody({ Type::getInt8PtrTy(new_context -> context) , dreamObjPtrTy , voidPointerTy, dreamObjPtrTy });
+    
     
     //create main function & block
     Type * int32Type = Type::getInt32Ty(new_context -> context);
@@ -118,23 +120,16 @@ LLVMData * llvm_init(){
 
 //run our llvm code
 void llvm_run(LLVMData * context){
+    
     context -> engine = EngineBuilder(std::move(context->owner)).create();
     outs() << "We just constructed this LLVM module:\n\n" << *context->module;
+    printf("\n\n");
     std::vector<GenericValue> noargs;
     GenericValue gv = context->engine->runFunction(context->mainFunc, noargs);
-    
+    printf("\n");
     outs() << "Result: " << gv.IntVal << "\n";
     delete context -> engine;
     llvm_shutdown();
-}
-
-Value * str(LLVMData* context, string value){
-    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "sr_stack", context->currentBlock);
-    Value * callResult = context->builder->get.CreateCall(functions["str"], context->builder->get.CreateGlobalStringPtr(StringRef(value)));
-    //builder.CreateGlobalStringPtr(StringRef("(Love laiojfweojfewofjefworugh?)"))->getType()->print(outs());
-    new StoreInst(callResult, objStore, context->currentBlock);
-    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "str", context->currentBlock);
-    return object;
 }
 
 Value * call_standard(LLVMData* context, string funcName, ArrayRef<Value *> args = None){
@@ -142,14 +137,84 @@ Value * call_standard(LLVMData* context, string funcName, ArrayRef<Value *> args
     return callResult;
 }
 
+Value * str(LLVMData* context, string value){
+    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "str_stack", context->currentBlock);
+    Value * callResult = context->builder->get.CreateCall(functions["str"], context->builder->get.CreateGlobalStringPtr(StringRef(value)));
+    //builder.CreateGlobalStringPtr(StringRef("(Love laiojfweojfewofjefworugh?)"))->getType()->print(outs());
+    new StoreInst(callResult, objStore, context->currentBlock);
+    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "str", context->currentBlock);
+    
+  
+  //  context->builder->get.CreateCall(functions["printf"], load2);
+    return object;
+}
+
+Value * integer(LLVMData* context, int value){
+    Value* builtInt = context->builder->get.getInt32(value);
+    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "int_stack", context->currentBlock);
+    Value * callResult = context->builder->get.CreateCall(functions["int"], builtInt);
+    new StoreInst(callResult, objStore, context->currentBlock);
+    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "int", context->currentBlock);
+    return object;
+}
+
+
+
+Value* get_value(LLVMData* context, Type * type, Value * obj ){
+    //LoadInst * lod = new LoadInst(dreamObjPtrTy, obj, "v3",  context->currentBlock);
+    std::vector<llvm::Value*> indices(2);
+    indices[0] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
+    indices[1] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 2, true));
+    Value *valuePointer = context->builder->get.CreateGEP(obj, indices,  "memberptr");
+    LoadInst *value = new LoadInst(type, valuePointer, "temp", context->currentBlock);
+    
+    /*
+    Value* valueStr =  context->builder->get.CreateGlobalStringPtr(StringRef("out: (%d)\n"));
+    call_standard(context, "printf", {valueStr, value});*/
+    
+    //printf(const char *, ...)
+    return value;
+}
+
+Value * add(LLVMData* context, Value *var1, Value *var2){
+    Value* value1 = get_value(context, Type::getInt32Ty(context->context), var1);
+    Value* value2 = get_value(context, Type::getInt32Ty(context->context), var2);
+    
+    
+    /*
+    Value* valueStr =  context->builder->get.CreateGlobalStringPtr(StringRef("(%d) (%d)"));
+    call_standard(context, "printf", {valueStr, value1, value2});*/
+    
+    return context->builder->get.CreateAdd(value1, value2);
+}
+
 int main(){
 
-    LLVMData * llvmData = llvm_init();
+    LLVMData * context = llvm_init();
     
-   
+   /*
     call_standard(llvmData, "print",  str(llvmData, "more lyfe"));
+    call_standard(llvmData, "print",  integer(llvmData, 420));
     
-    llvmData->builder->get.CreateRet(llvmData->builder->get.getInt32(69));
-    llvm_run(llvmData);
+    context->builder->get.CreateRet(context->builder->get.getInt32(69));*/
+    
+    
+    
+    Value * int1 = integer(context, 400);
+    Value * int2 = integer(context, 20);
+    context->builder->get.CreateRet(add(context, int1, int2));
+  
+    /*
+    Value* i =  str(context, "luv");
+    Value * value = get_value(context, Type::getInt8PtrTy(context->context), i);
+    call_standard(context, "printf", {value} );*/
+    
+  //  Value* valueStr =  context->builder->get.CreateGlobalStringPtr(StringRef("out: (%s)\n"));
+   // call_standard(context, "printf", { value} );
+    
+    
+    
+    //context->builder->get.CreateRet(context->builder->get.getInt32(69));
+    llvm_run(context);
 
 }

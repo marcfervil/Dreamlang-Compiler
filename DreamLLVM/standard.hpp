@@ -26,9 +26,9 @@ extern "C" {
         
         void * value;
         
+     //
+        dreamObj * type ;
         dreamObj * vars [HASHSIZE];
-        dreamObj * type = NULL;
-
         // etc..
     } dreamObj;
 

@@ -491,7 +491,7 @@ int main() {
     Value *Ten = new AllocaInst(objPtrType, 0, "dreamint", BB);
     
    // StoreInst *str = new StoreInst(builder.getInt32(69), Ten, BB); // i -> current instruction pointer which represents %add ( source of store instruction ), pa -> destination. i.e., temp1
-    Value * num = builder.getInt32(69);
+   
     
     //Value * casted_num =  llvm::CastInst::CreatePointerCast(num, VoidPointerTy, "intvoid", BB);
    // Value * tt = builder.CreateCall(init_dreamStr, builder.CreateGlobalStringPtr(StringRef("we???")));
@@ -504,6 +504,8 @@ int main() {
      Add1CallRes->setTailCall(true);
 
     
+    
+    Value * num = builder.getInt32(69);
     //builder.CreateCall(print, lod);
     
     /*
