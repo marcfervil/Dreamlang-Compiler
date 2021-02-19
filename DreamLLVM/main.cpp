@@ -331,6 +331,28 @@ Value * add(LLVMData* context, Value *var1, Value *var2){
     //return context->builder->get.CreateAdd(value1, value2);
 }
 
+Value * mul(LLVMData* context, Value *var1, Value *var2){
+    Value* value1 = get_value(context, Type::getInt32Ty(context->context), var1);
+    Value* value2 = get_value(context, Type::getInt32Ty(context->context), var2);
+    return numVal(context, context->builder->get.CreateMul(value1, value2));
+    //return context->builder->get.CreateAdd(value1, value2);
+}
+
+Value * divi(LLVMData* context, Value *var1, Value *var2){
+    Value* value1 = get_value(context, Type::getInt32Ty(context->context), var1);
+    Value* value2 = get_value(context, Type::getInt32Ty(context->context), var2);
+    //return numVal(context, context->builder->get.CreateSDiv(value1, value2));
+    return numVal(context, context->builder->get.CreateSDiv(value1, value2));
+    //return context->builder->get.CreateAdd(value1, value2);
+}
+
+Value * sub(LLVMData* context, Value *var1, Value *var2){
+    Value* value1 = get_value(context, Type::getInt32Ty(context->context), var1);
+    Value* value2 = get_value(context, Type::getInt32Ty(context->context), var2);
+    return numVal(context, context->builder->get.CreateSub(value1, value2));
+    //return context->builder->get.CreateAdd(value1, value2);
+}
+
 Value * retVal(LLVMData* context, Value * value ){
     return context->builder->get.CreateRet(value);
 }
@@ -376,8 +398,10 @@ int main(){
 
     context->builder->get.CreateRet(context->builder->get.getInt32(0));*/
     
-    Value * ya = str(context, "efokw");
-    call_standard(context, "print", ya);
+    Value * num1 = num(context, 13);
+    Value * num2 = num(context, 2);
+    Value * result = divi(context, num1, num2);
+    call_standard(context, "print", result);
     
     
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
