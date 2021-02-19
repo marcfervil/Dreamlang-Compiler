@@ -76,9 +76,8 @@ typedef struct LLVMData{
 map<string, FunctionCallee> functions;
 
 
-int testing(int f){
+void testing(){
     printf("IT WORKS!!");
-    return 0;
 
 }
 
@@ -92,7 +91,7 @@ void loadStandard(LLVMData* context){
     functions["object"] = context->owner->getOrInsertFunction("make_dream", FunctionType::get(dreamObjPtrTy, voidPointerTy, false ));
     functions["str"] = context->owner->getOrInsertFunction("dreamStr", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
     functions["int"] = context->owner->getOrInsertFunction("dreamInt", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
-    functions["test"] = context->owner->getOrInsertFunction("testing", FunctionType::get(IntegerType::getInt32Ty(context->context), Type::getInt32Ty(context->context), false));
+    functions["test"] = context->owner->getOrInsertFunction("testing", FunctionType::get(PointerType::getVoidTy(context->context), false));
 }
 
 
@@ -176,6 +175,7 @@ void llvm_run(LLVMData * context, bool link_obj=true, bool print_module = false)
     
     if(print_module){
         outs() << "We just constructed this LLVM module:\n\n" << *context->module;
+        
         printf("\n\n");
     }
     std::vector<GenericValue> noargs;
@@ -186,14 +186,56 @@ void llvm_run(LLVMData * context, bool link_obj=true, bool print_module = false)
     llvm_shutdown();
 }
 
-Value * call_standard(LLVMData* context, string funcName, ArrayRef<Value *> args = None){
+Value * num(LLVMData* context, int value){
+    Value* builtInt = context->builder->get.getInt32(value);
+    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "int_stack", context->currentBlock);
+    Value * callResult = context->builder->get.CreateCall(functions["int"], builtInt);
+    new StoreInst(callResult, objStore, context->currentBlock);
+    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "int", context->currentBlock);
+    return object;
+}
+
+
+Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *> args){
+   // if(args->size()==0)args=None;
     Value * callResult = context->builder->get.CreateCall(functions[funcName], args);
     return callResult;
 }
 
+Value * call_standard_c(LLVMData* context, const char * funcName, int size, Value * args[size] ){
+    vector<Value *> p;
+    for(int i=0;i<size;i++){
+        p.push_back(args[i]);
+    }
+    return call_standard(context, funcName, p);
+   // return v;
+}
+
+/*
+Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *>* args){
+   // if(args->size()==0)args=None;
+    Value * callResult = context->builder->get.CreateCall(functions[funcName], *args);
+    return callResult;
+}
 
 
-Value * str(LLVMData* context, string value){
+ArrayRef<Value *>* toArrayRef(int num, Value *values[]){
+    ArrayRef<Value *>* e = new  ArrayRef<Value *>(values);
+    for(int i=0; i<num; i++){
+        e->
+    }
+    return e;
+}*
+
+Value * call_standardVal(LLVMData* context, const char * funcName, ArrayRef<Value *> args=None){
+    if(args.size()==0)args=None;
+    Value * callResult = context->builder->get.CreateCall(functions[funcName], args);
+    return callResult;
+}*/
+
+
+
+Value * str(LLVMData* context, const char * value){
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "str_stack", context->currentBlock);
     Value * callResult = context->builder->get.CreateCall(functions["str"], context->builder->get.CreateGlobalStringPtr(StringRef(value)));
     new StoreInst(callResult, objStore, context->currentBlock);
@@ -209,14 +251,6 @@ Type * int_type(LLVMData* context){
     return Type::getInt32Ty(context->context);
 }
 
-Value * num(LLVMData* context, int value){
-    Value* builtInt = context->builder->get.getInt32(value);
-    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "int_stack", context->currentBlock);
-    Value * callResult = context->builder->get.CreateCall(functions["int"], builtInt);
-    new StoreInst(callResult, objStore, context->currentBlock);
-    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "int", context->currentBlock);
-    return object;
-}
 
 
 Value * test0(LLVMData* context, int value){
@@ -287,6 +321,9 @@ Value* get_value(LLVMData* context, Type * type, Value * obj ){
     return value;
 }
 
+
+
+
 Value * add(LLVMData* context, Value *var1, Value *var2){
     Value* value1 = get_value(context, Type::getInt32Ty(context->context), var1);
     Value* value2 = get_value(context, Type::getInt32Ty(context->context), var2);
@@ -308,16 +345,16 @@ Value * llvmStr(LLVMData* context, char * value){
 }
 
 void luv(LLVMData * context){
-    test2b(context);
+    //test2b(context);
    
-    
-    retVal(context, llvmInt(context, 59));
+
+    //retVal(context, llvmInt(context, 59));
 }
 
 int main(){
 
     LLVMData * context = llvm_init();
-   // Value * int1 = num(context, 400);
+    Value * int1 = num(context, 400);
 
     //Value * int1 = num(context, 400);
     /*
@@ -328,10 +365,22 @@ int main(){
     call_standard(context, "print", add(context, int1, twenty));
 
     
-    context->builder->get.CreateRet(context->builder->get.getInt32(0));
-        */
-    luv(context);
     
+        */
+    //Value * args[] = {int1};
+    //call_standard(context, "print",  args);
+    
+    /*
+    Value * ar[1]  = {int1};
+    call_standard_c(context, "print", 1, ar);
+
+    context->builder->get.CreateRet(context->builder->get.getInt32(0));*/
+    
+    Value * ya = str(context, "efokw");
+    call_standard(context, "print", ya);
+    
+    
+    context->builder->get.CreateRet(context->builder->get.getInt32(0));
     llvm_run(context, false);
     return 0;
 
