@@ -137,7 +137,7 @@ dreamObj * dreamInt(int value){
           hashval = *s + 31 * hashval;
         return hashval % HASHSIZE;
     }
-/*
+
     dreamObj * get_var(dreamObj * obj, const char *s){
         dreamObj *np;
   
@@ -174,7 +174,7 @@ dreamObj * dreamInt(int value){
         }
         return np;
     }
-*/
+
     
 
 
