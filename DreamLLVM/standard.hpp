@@ -131,6 +131,8 @@ dreamObj * make_dream(void * value, dreamObj * type = nullptr);
             printf("[Dream]: %s\n", (char *)obj->value);
         }else if(obj->type == dreamIntType){
             printf("[Dream]: %d\n", (int *)obj->value);
+        }else if(obj->type == dreamFuncType){
+                printf("[Dream]: <Function %s>\n", obj->name);
         }else{
             printf("[Dream]: didn't print type \n");
         }

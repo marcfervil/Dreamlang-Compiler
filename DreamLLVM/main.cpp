@@ -218,15 +218,24 @@ Value * set_var_llvm(LLVMData* context,  Value * scope, const char * key, Value 
     return call_standard(context, "set_var", {scope, llvmStrConst(context, key), value});
 }
 
-
+Value* get_value(LLVMData* context, Type * type, Value * obj );
 Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *> args, Value * scope ){
     
     Value * callResult;
     if (isBuiltinFunc(funcName)){
         callResult = context->builder->get.CreateCall(functions[funcName], args);
     }else{
-       // Value * var = call_standard(context, "get_var", {scope, llvmStrConst(context, "few")});
+        //Value * var = call_standard(context, "get_var", {scope, llvmStrConst(context, "few")});
         //callResult = context->builder->get.CreateCall
+        
+        
+        Value * var = get_var_llvm(context, scope, funcName);
+        //TODO: IF THE PROGRAM RANDOMLY SEGFAULTS IT WAS PROBABLY CAUSED BY THIS LINE (I didn't pass in the correct number of args, but it doesn't seem to matter...)
+        FunctionType * func_ty = FunctionType::get(dreamObjPtrTy, {}, false);
+        Type * func_ptr_ty = PointerType::get(func_ty, 0);
+        Value * func_ptr = get_value(context, func_ptr_ty, var);
+        //Function * func_ptr_func = cast<Function>(func_ptr);
+        callResult = context->builder->get.CreateCall(func_ty, func_ptr, args);
     }
     
     return callResult;
@@ -259,7 +268,13 @@ Value * str(LLVMData* context, const char * value, const char * name="str"){
     return object;
 }
 
-
+typedef struct FuncData{
+    Function *func;
+    BasicBlock *startingBlock;
+    Value * scope;
+    const char * name;
+    FuncData(Function *init_func):func(init_func){};
+} FuncData;
 
 Value * func_init(LLVMData* context, Value * value){
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "func_stack", context->currentBlock);
@@ -272,48 +287,60 @@ Value * func_init(LLVMData* context, Value * value){
     return object;
 }
 
-Value * func(LLVMData* context, Value* obj, const char * funcName, int arg_size, const char * arg_names[arg_size]){
+FuncData * func(LLVMData* context, Value* obj, const char * funcName, int arg_size, const char * arg_names[arg_size]){
+    
+  
     vector<Type *> args = {dreamObjPtrTy};
     std::vector<Metadata*> meta_args;
         
     for(int i=0;i<arg_size;i++)args.push_back(dreamObjPtrTy);
 
-    
+    //intitilize function data struct pointer and set starting block so we know what our preivous function is
     Function *new_func = Function::Create(FunctionType::get(dreamObjPtrTy, args, false), Function::ExternalLinkage, funcName, context->module);
-
+    FuncData * func_data = new FuncData(new_func);
+    func_data -> startingBlock = std::move((context->currentBlock));
+    
     //saving the arg names into metada was unnecessary in hindsight, but it might come in handy later...
     for(int i=0;i<arg_size;i++)meta_args.push_back(MDString::get(new_func->getContext(), arg_names[i]));
     new_func->setMetadata("arg_names", MDNode::get(new_func->getContext(),  meta_args));
     
-    //name context arg to prevent seggy
+    //name scope arg to prevent seggy
     Argument *context_arg = &*new_func->arg_begin();
     context_arg->setName("scope");
     
     context -> currentBlock = BasicBlock::Create(context -> context, "EntryBlock", new_func);
-  
     context->builder->get.SetInsertPoint(context->currentBlock);
     
     //save arguments into scope "obj"
     int i = 0;
     for (Argument& arg : new_func->args()) {
+        //skip first context argument because we want the value of the variables (for now...)
         if(i==0){
             i = 1;
             continue;
         }
-        
+        //get and store the value of each argument and set the name respectively
         llvm::AllocaInst* alloc = context->builder->get.CreateAlloca(dreamObjPtrTy, 0, "alloctmp");
         new StoreInst(&arg, alloc, context->currentBlock);
         LoadInst * arg_ref = new LoadInst(dreamObjPtrTy, alloc, "varName", context->currentBlock);
         (&arg)->setName(arg_names[(i++)-1]);
-        
-        set_var_llvm(context, context_arg, arg_names[i], arg_ref);
+       
+        set_var_llvm(context, context_arg, arg_names[i-2], arg_ref);
         
     }
-    call_standard(context, "print", context_arg);
-    return new_func;
+    
+    //store function name & scope so they can be used outside of this function
+    func_data -> scope = context_arg;
+    func_data -> name = funcName;
+ 
+    return func_data;
 }
 
-
+void end_func(LLVMData* context, Value * scope, FuncData * func_data){
+    context->builder->get.SetInsertPoint(func_data->startingBlock);
+    context->currentBlock = func_data->startingBlock;
+    set_var_llvm(context, scope, func_data->name, func_init(context, func_data->func));
+}
 
 Value * save(LLVMData* context, Value* obj, const char * varName, Value * value){
     return call_standard(context, "set_var", {obj, llvmStrConst(context, varName), value} );
@@ -502,26 +529,26 @@ int main(){
     //Value * result = divi(context, num1, num2);
     //call_standard(context, "print", result);
     
-    
+    //create scope
     Value * scope = str(context, "[scope]", "scope");
 
    
     //func start
-    BasicBlock * og_block = std::move((context->currentBlock));
+    FuncData *new_func = func(context, scope, "in_this_house", 2, new const char * []{"eat" ,"love"});
     
-    Value *new_func = func(context, scope, "in_this_house", 3, new const char * []{"eat", "pray", "love"});
-    
-    //func body
-    //set_var_llvm(context, scope, "fewfw", str(context, "fewfwfew"));
-    
-    context->builder->get.CreateRet(str(context, "You're so brave"));
+        //func body
+        call_standard(context, "print", get_var_llvm(context, new_func->scope, "love"));
+       // call_standard(context, "print", get_var_llvm(context, new_func->scope, "pray"));
+        call_standard(context, "print", get_var_llvm(context, new_func->scope, "eat"));
+        context->builder->get.CreateRet(str(context, "Thats what we do in this house!"));
    
     
     //func end
-    context->builder->get.SetInsertPoint(og_block);
-    context->currentBlock = og_block;
-    call_standard(context, "set_var", {scope, llvmStrConst(context, "in_this_house"), func_init(context, new_func)});
-    
+    end_func(context, scope, new_func);
+
+    //call & print function
+    Value * home = call_standard(context, "in_this_house", {scope, str(context, "live"),  str(context, "love") }, scope);
+    call_standard(context, "print", home);
     
     
     context->builder->get.CreateRet(context->builder->get.getInt32(69));
@@ -534,7 +561,7 @@ int main(){
     call_standard(context, "print", got);
     context->builder->get.CreateRet(context->builder->get.getInt32(69));*/
     
-    llvm_run(context, false, true);
+    llvm_run(context, false);
     return 0;
 
 }
