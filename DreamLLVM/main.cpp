@@ -81,6 +81,8 @@ void testing(){
 
 }
 
+Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *> args, Value * scope = nullptr);
+
 //expose standard.cpp functions to LLVM
 void loadStandard(LLVMData* context){
     
@@ -95,6 +97,7 @@ void loadStandard(LLVMData* context){
    // functions["get_var"] = context->owner->getOrInsertFunction("set_var", FunctionType::get(dreamObjPtrTy, dreamObjPtrTy, strType, false ));
     functions["str"] = context->owner->getOrInsertFunction("dreamStr", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
     functions["int"] = context->owner->getOrInsertFunction("dreamInt", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
+    functions["func"] = context->owner->getOrInsertFunction("dreamFunc", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
     functions["test"] = context->owner->getOrInsertFunction("testing", FunctionType::get(PointerType::getVoidTy(context->context), false));
 }
 
@@ -189,7 +192,9 @@ void llvm_run(LLVMData * context, bool link_obj=true, bool print_module = false)
     delete context -> engine;
     llvm_shutdown();
 }
-
+Value * llvmStrConst(LLVMData* context, const char * value){
+    return context->builder->get.CreateGlobalStringPtr(StringRef(value));
+}
 Value * num(LLVMData* context, int value){
     Value* builtInt = context->builder->get.getInt32(value);
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "int_stack", context->currentBlock);
@@ -199,18 +204,30 @@ Value * num(LLVMData* context, int value){
     return object;
 }
 
+
 bool isBuiltinFunc(const char * key){
-    return (functions.find(key) == functions.end());
+    
+    return !(functions.find(string(key)) == functions.end());
 }
 
-Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *> args){
+Value * get_var_llvm(LLVMData* context,  Value * scope, const char * key){
+    return call_standard(context, "get_var", {scope, llvmStrConst(context, key)});
+}
+
+Value * set_var_llvm(LLVMData* context,  Value * scope, const char * key, Value * value){
+    return call_standard(context, "set_var", {scope, llvmStrConst(context, key), value});
+}
+
+
+Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *> args, Value * scope ){
     
     Value * callResult;
-    //if (isBuiltinFunc(funcName)){
+    if (isBuiltinFunc(funcName)){
         callResult = context->builder->get.CreateCall(functions[funcName], args);
-   // }else{
-        //callResult = context->builder->get.CreateCall(func, args);
-   // }
+    }else{
+       // Value * var = call_standard(context, "get_var", {scope, llvmStrConst(context, "few")});
+        //callResult = context->builder->get.CreateCall
+    }
     
     return callResult;
 }
@@ -231,19 +248,68 @@ Value * llvmStr(LLVMData* context, char * value){
     return context->builder->get.CreateGlobalStringPtr(StringRef(value));
 }
 
-Value * llvmStrConst(LLVMData* context, const char * value){
-    return context->builder->get.CreateGlobalStringPtr(StringRef(value));
+Value * str(LLVMData* context, const char * value, const char * name="str"){
+    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "str_stack", context->currentBlock);
+    Value * callResult = context->builder->get.CreateCall(functions["str"], context->builder->get.CreateGlobalStringPtr(StringRef(value)));
+    new StoreInst(callResult, objStore, context->currentBlock);
+    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, name, context->currentBlock);
+    
+  
+  //  context->builder->get.CreateCall(functions["printf"], load2);
+    return object;
 }
 
 
-Value * func(LLVMData* context, Value* obj, const char * funcName, int arg_size){
-    vector<Type *> args;
+
+Value * func_init(LLVMData* context, Value * value){
+    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "func_stack", context->currentBlock);
+    Value * callResult = context->builder->get.CreateCall(functions["func"], value);
+    new StoreInst(callResult, objStore, context->currentBlock);
+    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "func", context->currentBlock);
+    
+  
+  //  context->builder->get.CreateCall(functions["printf"], load2);
+    return object;
+}
+
+Value * func(LLVMData* context, Value* obj, const char * funcName, int arg_size, const char * arg_names[arg_size]){
+    vector<Type *> args = {dreamObjPtrTy};
+    std::vector<Metadata*> meta_args;
+        
     for(int i=0;i<arg_size;i++)args.push_back(dreamObjPtrTy);
+
     
     Function *new_func = Function::Create(FunctionType::get(dreamObjPtrTy, args, false), Function::ExternalLinkage, funcName, context->module);
+
+    //saving the arg names into metada was unnecessary in hindsight, but it might come in handy later...
+    for(int i=0;i<arg_size;i++)meta_args.push_back(MDString::get(new_func->getContext(), arg_names[i]));
+    new_func->setMetadata("arg_names", MDNode::get(new_func->getContext(),  meta_args));
+    
+    //name context arg to prevent seggy
+    Argument *context_arg = &*new_func->arg_begin();
+    context_arg->setName("scope");
+    
     context -> currentBlock = BasicBlock::Create(context -> context, "EntryBlock", new_func);
-   // return call_standard(context, funcName, p);
-    //call_standard(context, "set_var", {obj, llvmStr(context, funcName)} );
+  
+    context->builder->get.SetInsertPoint(context->currentBlock);
+    
+    //save arguments into scope "obj"
+    int i = 0;
+    for (Argument& arg : new_func->args()) {
+        if(i==0){
+            i = 1;
+            continue;
+        }
+        
+        llvm::AllocaInst* alloc = context->builder->get.CreateAlloca(dreamObjPtrTy, 0, "alloctmp");
+        new StoreInst(&arg, alloc, context->currentBlock);
+        LoadInst * arg_ref = new LoadInst(dreamObjPtrTy, alloc, "varName", context->currentBlock);
+        (&arg)->setName(arg_names[(i++)-1]);
+        
+        set_var_llvm(context, context_arg, arg_names[i], arg_ref);
+        
+    }
+    call_standard(context, "print", context_arg);
     return new_func;
 }
 
@@ -283,16 +349,7 @@ Value * call_standardVal(LLVMData* context, const char * funcName, ArrayRef<Valu
 
 
 
-Value * str(LLVMData* context, const char * value){
-    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "str_stack", context->currentBlock);
-    Value * callResult = context->builder->get.CreateCall(functions["str"], context->builder->get.CreateGlobalStringPtr(StringRef(value)));
-    new StoreInst(callResult, objStore, context->currentBlock);
-    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "str", context->currentBlock);
-    
-  
-  //  context->builder->get.CreateCall(functions["printf"], load2);
-    return object;
-}
+
 
 Type * int_type(LLVMData* context){
     
@@ -444,17 +501,40 @@ int main(){
    // Value * num2 = num(context, 2);
     //Value * result = divi(context, num1, num2);
     //call_standard(context, "print", result);
-   Value * numStr = str(context, "thirteen");
-    Value * numVal = num(context, 13);
-    //Value * num1 = num(context, 13);
-    //Value * num1 = num(context, 13);
-    //FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
-    call_standard(context, "set_var", {numStr, llvmStr(context, "few"), numVal});
-    Value * got = call_standard(context, "get_var", {numStr, llvmStr(context, "few")});
-    call_standard(context, "print", got);
     
-    context->builder->get.CreateRet(context->builder->get.getInt32(0));
-    llvm_run(context, false);
+    
+    Value * scope = str(context, "[scope]", "scope");
+
+   
+    //func start
+    BasicBlock * og_block = std::move((context->currentBlock));
+    
+    Value *new_func = func(context, scope, "in_this_house", 3, new const char * []{"eat", "pray", "love"});
+    
+    //func body
+    //set_var_llvm(context, scope, "fewfw", str(context, "fewfwfew"));
+    
+    context->builder->get.CreateRet(str(context, "You're so brave"));
+   
+    
+    //func end
+    context->builder->get.SetInsertPoint(og_block);
+    context->currentBlock = og_block;
+    call_standard(context, "set_var", {scope, llvmStrConst(context, "in_this_house"), func_init(context, new_func)});
+    
+    
+    
+    context->builder->get.CreateRet(context->builder->get.getInt32(69));
+   
+    
+    /*
+    Value * scope = str(context, "[scope]");
+    call_standard(context, "set_var", {scope, llvmStrConst(context, "few"), str(context, "works,,,")});
+    Value * got = call_standard(context, "get_var", {scope, llvmStrConst(context, "few")});
+    call_standard(context, "print", got);
+    context->builder->get.CreateRet(context->builder->get.getInt32(69));*/
+    
+    llvm_run(context, false, true);
     return 0;
 
 }

@@ -80,7 +80,7 @@ dreamObj * make_dream(void * value, dreamObj * type = nullptr);
     dreamObj * nullDream = NULL;
     dreamObj * dreamStrType = make_dream((void *)"<Str Type>");
     dreamObj * dreamIntType = make_dream((void *)"<Int Type>");
-
+    dreamObj * dreamFuncType = make_dream((void *)"<Func Type>");
     dreamObj * dreamType = make_dream(nullptr);
 
 
@@ -108,13 +108,19 @@ dreamObj * make_dream(void * value, dreamObj * type = nullptr);
         return obj;
     }
 
-dreamObj * dreamInt(int value){
+    dreamObj * dreamInt(int value){
 
-    dreamObj * obj = make_dream((void *)value, dreamIntType);
-    
-    return obj;
-}
+        dreamObj * obj = make_dream((void *)value, dreamIntType);
+        
+        return obj;
+    }
 
+    dreamObj * dreamFunc(void * value){
+
+        dreamObj * obj = make_dream((void *)value, dreamFuncType);
+        
+        return obj;
+    }
 
     void print(dreamObj* obj){
         if (obj == NULL){
@@ -162,6 +168,7 @@ dreamObj * dreamInt(int value){
               return NULL;
             }
             hashval = hash_obj(name);
+           // printf("%d",value->next);
             value -> next = obj->vars[hashval];
             value ->name = (char *)name;
           //  printf("good check %d\n",hashval);
