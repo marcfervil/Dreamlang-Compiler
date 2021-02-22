@@ -62,7 +62,7 @@ typedef struct dreamObj{
     
     
    
-    char * name;
+    const char * name;
     dreamObj *next;
     
     void * value;
@@ -128,7 +128,7 @@ dreamObj * make_dream(void * value, dreamObj * type = nullptr);
             return;
         }
         if(obj->type == dreamStrType || obj->type == dreamType){
-            printf("[Dream]: %s\n", (char *)obj->value);
+            printf("[Dream]: %s\n", (const char *)obj->value);
         }else if(obj->type == dreamIntType){
             printf("[Dream]: %d\n", (int *)obj->value);
         }else if(obj->type == dreamFuncType){
@@ -172,7 +172,7 @@ dreamObj * make_dream(void * value, dreamObj * type = nullptr);
             hashval = hash_obj(name);
            // printf("%d",value->next);
             value -> next = obj->vars[hashval];
-            value ->name = (char *)name;
+            value ->name = (const char *)name;
           //  printf("good check %d\n",hashval);
             obj->vars[hashval] = value;
         } else //already there

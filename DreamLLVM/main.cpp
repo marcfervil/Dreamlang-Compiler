@@ -231,7 +231,7 @@ Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *
         
         Value * var = get_var_llvm(context, args[0], funcName);
         //TODO: IF THE PROGRAM RANDOMLY SEGFAULTS IT WAS PROBABLY CAUSED BY THIS LINE (I didn't pass in the correct number of args, but it doesn't seem to matter...)
-        FunctionType * func_ty = FunctionType::get(dreamObjPtrTy, {}, false);
+        FunctionType * func_ty = FunctionType::get(dreamObjPtrTy, { }, false);
         Type * func_ptr_ty = PointerType::get(func_ty, 0);
         Value * func_ptr = get_value(context, func_ptr_ty, var);
         //Function * func_ptr_func = cast<Function>(func_ptr);
@@ -253,7 +253,7 @@ Value * llvmInt(LLVMData* context, int value){
     return context->builder->get.getInt32(value);
 }
 
-Value * llvmStr(LLVMData* context, char * value){
+Value * llvmStr(LLVMData* context, const char * value){
     return context->builder->get.CreateGlobalStringPtr(StringRef(value));
 }
 
@@ -288,11 +288,12 @@ Value * func_init(LLVMData* context, Value * value){
 }
 
 FuncData * func(LLVMData* context, Value* obj, const char * funcName, int arg_size, const char * arg_names[arg_size]){
+    //const char * fn = new const char("rr");
     
-    printf("NEW FUNCTION: %s\n", funcName);
+    
     vector<Type *> args = {dreamObjPtrTy};
     std::vector<Metadata*> meta_args;
-        
+    
     for(int i=0;i<arg_size;i++)args.push_back(dreamObjPtrTy);
 
     //intitilize function data struct pointer and set starting block so we know what our preivous function is
@@ -308,6 +309,7 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, int arg_si
     Argument *context_arg = &*new_func->arg_begin();
     context_arg->setName("scope");
     
+    //create and enter method block
     context -> currentBlock = BasicBlock::Create(context -> context, "EntryBlock", new_func);
     context->builder->get.SetInsertPoint(context->currentBlock);
     
@@ -331,15 +333,17 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, int arg_si
     
     //store function name & scope so they can be used outside of this function
     func_data -> scope = context_arg;
-    func_data -> name = funcName;
- 
+    func_data -> name = (new std::string(funcName))->c_str();
+
     return func_data;
 }
 
 void end_func(LLVMData* context, Value * scope, FuncData * func_data){
+    
+   
     context->builder->get.SetInsertPoint(func_data->startingBlock);
     context->currentBlock = func_data->startingBlock;
-    printf("SAVE FUNCTION: %s\n", func_data->name);
+    
     set_var_llvm(context, scope, func_data->name, func_init(context, func_data->func));
 }
 
@@ -488,9 +492,12 @@ Value * sub(LLVMData* context, Value *var1, Value *var2){
 
 Value * retVal(LLVMData* context, Value * value ){
     return context->builder->get.CreateRet(value);
+    
 }
 
-
+Value * funcScope(FuncData * data){
+    return data -> scope;
+}
 
 void luv(LLVMData * context){
     //test2b(context);
@@ -534,29 +541,31 @@ int main(){
     
     //create scope
     Value * scope = str(context, "[scope]");
-    set_var_llvm(context, scope, "pointer", str(context, "outer scope works"));
-   
+    
+
     //func start
-    FuncData *new_func = func(context, scope, "in_this_house", 1, new const char * []{"war" });
+    FuncData *new_func = func(context, scope, "dog", 0, new const char * []{ });
     
         //func body
         //call_standard(context, "print", get_var_llvm(context, new_func->scope, "peace"));
        // call_standard(context, "print", get_var_llvm(context, new_func->scope, "pray"));
-        call_standard(context, "print", get_var_llvm(context, new_func->scope, "war"));
-        call_standard(context, "print", get_var_llvm(context, new_func->scope, "pointer"));
-        retVal(context, get_var_llvm(context, new_func->scope, "war"));
+        //for(int i=0;i<10;i++)
+        //call_standard_c(context, "print", 1, new Value *[]{str(context, "freak")});
+    
+        //retVal(context, get_var_llvm(context, new_func->scope, "war"));
+        retVal(context, str(context, "hello"));
     
     //func end
     end_func(context, scope, new_func);
 
     //call & print function
-    Value * home = call_standard(context, "in_this_house", {scope, str(context, "love")});
-    call_standard(context, "print", get_var_llvm(context, scope, "war"));
-    call_standard(context, "print", home);
+    Value * home = call_standard_c(context, "dog", 1, new Value*[]{scope});
+    //call_standard(context, "print", get_var_llvm(context, scope, "war"));
+    //call_standard(context, "print", home);
  //   call_standard(context, "print", get_var_llvm(context, scope, "in_this_house"));*/
     
    
-    context->builder->get.CreateRet(context->builder->get.getInt32(69));
+    context->builder->get.CreateRet(context->builder->get.getInt32(0));
    
     
     /*
