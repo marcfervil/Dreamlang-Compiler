@@ -7,6 +7,7 @@
 
 #include "main.hpp"
 #include "standard.hpp"
+
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
 #include "llvm/ExecutionEngine/GenericValue.h"
@@ -33,7 +34,17 @@
 #include <vector>
 #include <unistd.h>
 
-
+#include "llvm/IR/LegacyPassManager.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/Type.h"
+#include "llvm/IR/Verifier.h"
+#include "llvm/Support/FileSystem.h"
+#include "llvm/Support/Host.h"
+#include "llvm/Support/raw_ostream.h"
+#include "llvm/Support/TargetRegistry.h"
+#include "llvm/Support/TargetSelect.h"
+#include "llvm/Target/TargetMachine.h"
+#include "llvm/Target/TargetOptions.h"
 
 extern "C" {
 using namespace llvm;
@@ -107,6 +118,8 @@ LLVMData * llvm_init(){
     //initialize llvm
     InitializeNativeTarget();
     LLVMInitializeNativeAsmPrinter();
+    
+    
     llvm::sys::DynamicLibrary::LoadLibraryPermanently("dream.so");
     llvm::sys::DynamicLibrary::LoadLibraryPermanently("dream.o");
 
@@ -127,7 +140,7 @@ LLVMData * llvm_init(){
     
     //create main function & block
     Type * int32Type = Type::getInt32Ty(new_context -> context);
-    new_context -> mainFunc = Function::Create(FunctionType::get(int32Type, {}, false), Function::ExternalLinkage, "main_func", new_context->module);
+    new_context -> mainFunc = Function::Create(FunctionType::get(int32Type, {}, false), Function::ExternalLinkage, "main", new_context->module);
     new_context -> currentBlock = BasicBlock::Create(new_context -> context, "EntryBlock", new_context->mainFunc);
     
     new_context -> builder = new LLVMBuilder(new_context->currentBlock);
@@ -166,8 +179,64 @@ void llvm_link(LLVMData * context, string fileName ){
      context->engine->addObjectFile(std::move(owningObject));
 }
 
+int build(LLVMData * context){
+    InitializeAllTargetInfos();
+      InitializeAllTargets();
+      InitializeAllTargetMCs();
+      InitializeAllAsmParsers();
+      InitializeAllAsmPrinters();
+
+      auto TargetTriple = sys::getDefaultTargetTriple();
+      context->module->setTargetTriple(TargetTriple);
+
+      std::string Error;
+      auto Target = TargetRegistry::lookupTarget(TargetTriple, Error);
+
+      // Print an error and exit if we couldn't find the requested target.
+      // This generally occurs if we've forgotten to initialise the
+      // TargetRegistry or we have a bogus target triple.
+      if (!Target) {
+        errs() << Error;
+        return 1;
+      }
+
+    auto CPU  = sys::getHostCPUName();
+      auto Features = "";
+
+      TargetOptions opt;
+      auto RM = Optional<Reloc::Model>();
+      auto TheTargetMachine =
+          Target->createTargetMachine(TargetTriple, CPU, Features, opt, RM);
+
+    context->module->setDataLayout(TheTargetMachine->createDataLayout());
+
+      auto Filename = "lib/dream_output.o";
+      std::error_code EC;
+      raw_fd_ostream dest(Filename, EC, sys::fs::OF_None);
+
+      if (EC) {
+        errs() << "Could not open file: " << EC.message();
+        return 1;
+      }
+
+      legacy::PassManager pass;
+      auto FileType = CGFT_ObjectFile;
+
+      if (TheTargetMachine->addPassesToEmitFile(pass, dest, nullptr, FileType)) {
+        errs() << "TheTargetMachine can't emit a file of this type";
+        return 1;
+      }
+
+      pass.run(*context->module);
+      dest.flush();
+
+      outs() << "Wrote " << Filename << "\n";
+
+    return 0;
+}
+
 //run our llvm code
-void llvm_run(LLVMData * context, bool link_obj=true, bool print_module = false){
+void llvm_run(LLVMData * context, bool link_obj=true, bool print_module = false, bool build_obj = false){
     context -> engine = EngineBuilder(std::move(context->owner)).create();
     
     if(link_obj){
@@ -188,9 +257,12 @@ void llvm_run(LLVMData * context, bool link_obj=true, bool print_module = false)
     std::vector<GenericValue> noargs;
     GenericValue gv = context->engine->runFunction(context->mainFunc, noargs);
     printf("\n");
+    
     outs() << "Result: " << gv.IntVal << "\n";
+    if(build_obj)build(context);
     delete context -> engine;
     llvm_shutdown();
+    
 }
 Value * llvmStrConst(LLVMData* context, const char * value){
     return context->builder->get.CreateGlobalStringPtr(StringRef(value));
