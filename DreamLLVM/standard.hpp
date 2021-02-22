@@ -57,6 +57,7 @@ extern "C" {
 #include <unistd.h>
 
 #define HASHSIZE 101
+
 extern "C" {
 typedef struct dreamObj{
     
@@ -165,21 +166,29 @@ dreamObj * make_dream(void * value, dreamObj * type = nullptr);
         unsigned hashval;
         if ((np = get_var(obj, name)) == NULL) { // not found
             np = ( dreamObj *) malloc(sizeof(*np));
-            if (np == NULL || (np->name = strdup(name)) == NULL){
-               
-              return NULL;
-            }
+            //np = new dreamObj();
+           
             hashval = hash_obj(name);
            // printf("%d",value->next);
             value -> next = obj->vars[hashval];
-            value ->name = (const char *)name;
+            value->name = strdup(name);
+           // value -> name =  name;
           //  printf("good check %d\n",hashval);
             obj->vars[hashval] = value;
-        } else //already there
-            free((void *) np->value); //free previous defn
-        if ((np->value = value) == NULL){
-            printf("null check");
-           return NULL;
+        } else{ //already there
+            //free[](np->vars);
+            // np->name = "e";
+            
+            free(np); //free previous defn
+            np = ( dreamObj *) malloc(sizeof(*np));
+            //np = new dreamObj();
+    
+            hashval = hash_obj(name);
+            value->name = strdup(name);
+           // printf("%d",value->next);
+            value -> next = obj->vars[hashval];
+            obj->vars[hashval] = value;
+           // value -> name =  name;
         }
         return np;
     }

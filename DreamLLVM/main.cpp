@@ -552,11 +552,22 @@ int main(){
     //call_standard(context, "print", result);
     
     
-    
+    //for(int i=0;i<1000;i++){
     //create scope
-    Value * scope = str(context, "[scope]");
-    
-
+        Value * scope = str(context, "[scope]");
+        set_var_llvm(context, scope, "he", str(context, "wooo"));
+        Value * f = get_var_llvm(context, scope, "he");
+        call_standard(context, "print", f);
+        
+        set_var_llvm(context, scope, "he", str(context, "meow"));
+        Value * a = get_var_llvm(context, scope, "he");
+            
+        set_var_llvm(context, scope, "he", str(context, "meow"));
+        Value * b = get_var_llvm(context, scope, "he");
+      
+    call_standard(context, "print", b);
+    //}
+    /*
     //func start
     FuncData *new_func = func(context, scope, "dog", 0, new const char * []{ });
     
@@ -576,10 +587,10 @@ int main(){
     //Value * home = call_standard_c(context, "dog", 1, new Value*[]{scope});
     //call_standard(context, "print", get_var_llvm(context, scope, "war"));
     //call_standard(context, "print", home);
- //   call_standard(context, "print", get_var_llvm(context, scope, "in_this_house"));*/
+ //   call_standard(context, "print", get_var_llvm(context, scope, "in_this_house"));
     
     call(context, load(context, scope, "print"), 1, new Value*[]{scope});
-    context->builder->get.CreateRet(context->builder->get.getInt32(0));
+    context->builder->get.CreateRet(context->builder->get.getInt32(0));*/
    
     
     /*
@@ -587,8 +598,8 @@ int main(){
     call_standard(context, "set_var", {scope, llvmStrConst(context, "few"), str(context, "works,,,")});
     Value * got = call_standard(context, "get_var", {scope, llvmStrConst(context, "few")});
     call_standard(context, "print", got);
-    context->builder->get.CreateRet(context->builder->get.getInt32(69));*/
-    
+   */
+    context->builder->get.CreateRet(context->builder->get.getInt32(69));
     llvm_run(context, false, false);
     return 0;
 
