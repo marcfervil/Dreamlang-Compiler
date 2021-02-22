@@ -14,10 +14,10 @@
             filePath = "DreamLLVM/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "582"
-            endingLineNumber = "582"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "596"
+            endingLineNumber = "596"
+            landmarkName = "load(context, obj, varName)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -30,10 +30,10 @@
             filePath = "DreamLLVM/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "582"
-            endingLineNumber = "582"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "596"
+            endingLineNumber = "596"
+            landmarkName = "load(context, obj, varName)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -46,9 +46,9 @@
             filePath = "DreamLLVM/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "580"
-            endingLineNumber = "580"
-            landmarkName = "main()"
+            startingLineNumber = "594"
+            endingLineNumber = "594"
+            landmarkName = "load(context, obj, varName)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -62,10 +62,10 @@
             filePath = "DreamLLVM/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "582"
-            endingLineNumber = "582"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "596"
+            endingLineNumber = "596"
+            landmarkName = "load(context, obj, varName)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

@@ -234,7 +234,7 @@ Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *
         FunctionType * func_ty = FunctionType::get(dreamObjPtrTy, { }, false);
         Type * func_ptr_ty = PointerType::get(func_ty, 0);
         Value * func_ptr = get_value(context, func_ptr_ty, var);
-        //Function * func_ptr_func = cast<Function>(func_ptr);
+        
         callResult = context->builder->get.CreateCall(func_ty, func_ptr, args);
     }
     
@@ -246,6 +246,18 @@ Value * call_standard_c(LLVMData* context, const char * funcName, int size, Valu
     for(int i=0;i<size;i++)args.push_back(c_args[i]);
     
     return call_standard(context, funcName, args);
+   // return v;
+}
+
+Value * call(LLVMData* context, Value * var,  int size, Value * c_args[size]){
+    vector<Value *> args;
+    for(int i=0;i<size;i++)args.push_back(c_args[i]);
+    
+    FunctionType * func_ty = FunctionType::get(dreamObjPtrTy, { }, false);
+    Type * func_ptr_ty = PointerType::get(func_ty, 0);
+    Value * func_ptr = get_value(context, func_ptr_ty, var);
+    
+    return context->builder->get.CreateCall(func_ty, func_ptr, args);
    // return v;
 }
 
@@ -352,6 +364,8 @@ Value * save(LLVMData* context, Value* obj, const char * varName, Value * value)
 }
 
 Value * load(LLVMData* context, Value* obj, const char * varName){
+    if(isBuiltinFunc(varName))return func_init(context, functions[varName].getCallee());
+    
     return call_standard(context, "get_var", {obj, llvmStrConst(context, varName)} );
 }
 
@@ -548,7 +562,7 @@ int main(){
     
         //func body
         //call_standard(context, "print", get_var_llvm(context, new_func->scope, "peace"));
-       // call_standard(context, "print", get_var_llvm(context, new_func->scope, "pray"));
+        call_standard(context, "print", str(context, "oo"));
         //for(int i=0;i<10;i++)
         //call_standard_c(context, "print", 1, new Value *[]{str(context, "freak")});
     
@@ -559,12 +573,12 @@ int main(){
     end_func(context, scope, new_func);
 
     //call & print function
-    Value * home = call_standard_c(context, "dog", 1, new Value*[]{scope});
+    //Value * home = call_standard_c(context, "dog", 1, new Value*[]{scope});
     //call_standard(context, "print", get_var_llvm(context, scope, "war"));
     //call_standard(context, "print", home);
  //   call_standard(context, "print", get_var_llvm(context, scope, "in_this_house"));*/
     
-   
+    call(context, load(context, scope, "print"), 1, new Value*[]{scope});
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
    
     
@@ -575,7 +589,7 @@ int main(){
     call_standard(context, "print", got);
     context->builder->get.CreateRet(context->builder->get.getInt32(69));*/
     
-    llvm_run(context, false, true);
+    llvm_run(context, false, false);
     return 0;
 
 }
