@@ -110,6 +110,8 @@ void loadStandard(LLVMData* context){
     functions["int"] = context->owner->getOrInsertFunction("dreamInt", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
     functions["func"] = context->owner->getOrInsertFunction("dreamFunc", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
     functions["test"] = context->owner->getOrInsertFunction("testing", FunctionType::get(PointerType::getVoidTy(context->context), false));
+    functions["new_scope"] = context->owner->getOrInsertFunction("new_scope", FunctionType::get(dreamObjPtrTy,dreamObjPtrTy, false));
+    functions["dict"] = context->owner->getOrInsertFunction("dict", FunctionType::get(dreamObjPtrTy, false));
 }
 
 
@@ -135,7 +137,33 @@ LLVMData * llvm_init(){
     voidPointerTy = PointerType::get(PointerType::getVoidTy(new_context -> context), 0);
     dreamObjTy = StructType::create(new_context -> context, "dreamObj");
     dreamObjPtrTy = PointerType::get(dreamObjTy, 0);
-    dreamObjTy->setBody({ Type::getInt8PtrTy(new_context -> context) , dreamObjPtrTy , voidPointerTy, dreamObjPtrTy });
+    
+    
+    /*
+     const char * name;
+     dreamObj *next;
+     
+     void * value;
+
+     dreamObj * type ;
+     
+     dreamObj *first_var;
+     dreamObj *last_var;
+     dreamObj * parent_scope;
+     dreamObj * vars [HASHSIZE];
+     */
+    
+    dreamObjTy->setBody({
+        Type::getInt8PtrTy(new_context -> context) , //const char * name;
+        dreamObjPtrTy , // dreamObj *next;
+        voidPointerTy, //  void * value;
+        dreamObjPtrTy,//dreamObj * type ;
+        dreamObjPtrTy,// *dreamObj *first_var;
+        dreamObjPtrTy,//dreamObj *last_var;
+        dreamObjPtrTy, //  dreamObj * parent_scope;
+        ArrayType::get(dreamObjPtrTy, HASHSIZE) // dreamObj * vars [HASHSIZE];
+        
+    });
     
     
     //create main function & block
@@ -371,6 +399,16 @@ Value * func_init(LLVMData* context, Value * value){
     return object;
 }
 
+Value * load_store(LLVMData* context, Value * value){
+    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "func_stack", context->currentBlock);
+    new StoreInst(value, objStore, context->currentBlock);
+    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "func", context->currentBlock);
+    
+  
+  //  context->builder->get.CreateCall(functions["printf"], load2);
+    return object;
+}
+
 FuncData * func(LLVMData* context, Value* obj, const char * funcName, int arg_size, const char * arg_names[arg_size]){
     //const char * fn = new const char("rr");
     
@@ -393,11 +431,16 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, int arg_si
     Argument *context_arg = &*new_func->arg_begin();
     context_arg->setName("scope");
     
+    //call_standard(context, "print", {obj});
+    //set_var_llvm(context, obj, "foewpk", str(context, "fopkwe"));
+    
+    
     //create and enter method block
     context -> currentBlock = BasicBlock::Create(context -> context, "EntryBlock", new_func);
     context->builder->get.SetInsertPoint(context->currentBlock);
     
     //save arguments into scope "obj"
+    
     int i = 0;
     for (Argument& arg : new_func->args()) {
         //skip first context argument because we want the value of the variables (for now...)
@@ -416,7 +459,7 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, int arg_si
     }
     
     //store function name & scope so they can be used outside of this function
-    func_data -> scope = context_arg;
+    func_data -> scope = load_store(context, context_arg);
     func_data -> name = (new std::string(funcName))->c_str();
 
     return func_data;
@@ -435,11 +478,27 @@ Value * save(LLVMData* context, Value* obj, const char * varName, Value * value)
     return call_standard(context, "set_var", {obj, llvmStrConst(context, varName), value} );
 }
 
+
 Value * load(LLVMData* context, Value* obj, const char * varName){
     if(isBuiltinFunc(varName))return func_init(context, functions[varName].getCallee());
     
     return call_standard(context, "get_var", {obj, llvmStrConst(context, varName)} );
 }
+
+Value * init_scope(LLVMData* context, Value* scope){
+    
+    Value * res = call_standard(context, "new_scope", scope);
+    
+    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "scope_stack", context->currentBlock);
+    
+    new StoreInst(res, objStore, context->currentBlock);
+    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "new_scope", context->currentBlock);
+    //call_standard(context, "print", res);
+    //call_standard(context, "print", str(context,"lowkey"));
+    //call_standard(context, "print", load(context, res, "dog"));
+    return object;
+}
+
 
 
 /*
@@ -626,31 +685,54 @@ int main(){
     
     //for(int i=0;i<1000;i++){
     //create scope
-        Value * scope = str(context, "[scope]");
-        set_var_llvm(context, scope, "he", str(context, "wooo"));
-        Value * f = get_var_llvm(context, scope, "he");
-        call_standard(context, "print", f);
-        
-        set_var_llvm(context, scope, "he", str(context, "meow"));
-        Value * a = get_var_llvm(context, scope, "he");
-            
-        set_var_llvm(context, scope, "he", str(context, "meow"));
-        Value * b = get_var_llvm(context, scope, "he");
-      
-    call_standard(context, "print", b);
-    //}
-    /*
+    Value * scope = str(context, "[scope]");
     //func start
-    FuncData *new_func = func(context, scope, "dog", 0, new const char * []{ });
+    
+    set_var_llvm(context, scope, "apples", str(context,"Hungry 4"));
+    set_var_llvm(context, scope, "bees", str(context,"holder"));
+   
+    FuncData *new_func2 = func(context, scope, "cat", 1, new const char * []{"mind"});
     
         //func body
         //call_standard(context, "print", get_var_llvm(context, new_func->scope, "peace"));
-        call_standard(context, "print", str(context, "oo"));
+        //call_standard(context, "print", str(context, "oo"));
+        //for(int i=0;i<10;i++)
+        //call_standard_c(context, "print", 1, );
+    
+    
+        //call(context, load(context, new_func2->scope, "print"), 1, new Value *[]{get_var_llvm(context, new_func2->scope, "mind")});
+    
+    
+        //retVal(context, str(context, "oo"));
+        retVal(context, str(context,"cat return"));
+    
+    //func end
+    end_func(context, scope, new_func2);
+    //
+    FuncData *new_func = func(context, scope, "dog", 1, new const char * []{ "peace"});
+    
+        //func body
+        //call_standard(context, "print", get_var_llvm(context, new_func->scope, "peace"));
+        //call_standard(context, "print", str(context, "oo"));
         //for(int i=0;i<10;i++)
         //call_standard_c(context, "print", 1, new Value *[]{str(context, "freak")});
     
-        //retVal(context, get_var_llvm(context, new_func->scope, "war"));
-        retVal(context, str(context, "hello"));
+        set_var_llvm(context, new_func->scope, "bees", str(context,"Hungry 6"));
+    //set_var_llvm(context, new_func->scope, "apples", str(context,"eyes"));
+        Value * inner_inner_scope = init_scope(context, new_func->scope);
+    call(context, load(context, new_func->scope, "cat"), 2, new Value*[]{inner_inner_scope, str(context, "we oo")});
+        //call_standard(context, "dict", funcScope(new_func));
+    
+    
+    /*
+        call_standard(context, "print", get_var_llvm(context, new_func->scope, "apples"));
+        set_var_llvm(context, new_func->scope, "apples", str(context,"Hungry 6"));
+        call_standard(context, "print", get_var_llvm(context, new_func->scope, "apples"));
+    
+        call(context, load(context, new_func->scope, "cat"), 2, new Value*[]{inner_inner_scope, str(context, "we oo")});*/
+
+        //retVal(context, str(context, "oo"));
+        retVal(context,  str(context, "oo"));
     
     //func end
     end_func(context, scope, new_func);
@@ -661,9 +743,25 @@ int main(){
     //call_standard(context, "print", home);
  //   call_standard(context, "print", get_var_llvm(context, scope, "in_this_house"));
     
-    call(context, load(context, scope, "print"), 1, new Value*[]{scope});
-    context->builder->get.CreateRet(context->builder->get.getInt32(0));*/
    
+    
+ 
+       Value * inner_scope = init_scope(context, scope);
+       // init_scope(context, inner_scope);
+    //    call(context, load(context, scope, "print"), 1, new Value*[]{
+            call(context, load(context, scope, "dog"), 2, new Value*[]{
+                inner_scope, str(context, "lalalla")
+                
+            });
+                
+            
+            
+     //   });
+    
+
+    
+    
+    //call(context, load(context, scope, "print"), 1, new Value*[]{});
     
     /*
     Value * scope = str(context, "[scope]");
