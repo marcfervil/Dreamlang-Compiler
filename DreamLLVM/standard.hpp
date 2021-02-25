@@ -79,6 +79,7 @@ typedef struct dreamObj{
     dreamObj *first_var;
     dreamObj *last_var;
     dreamObj * parent_scope;
+    int  pointer;
     dreamObj * vars [HASHSIZE];
     //
     // etc..
@@ -107,8 +108,12 @@ typedef struct dreamObj{
         new_obj -> type = type;
         new_obj -> first_var = NULL;
         new_obj -> next = NULL;
+        new_obj -> name = NULL;
         new_obj -> last_var = NULL;
         new_obj -> parent_scope = NULL;
+        
+        new_obj->pointer = 0;
+       
         for(int i=0; i<HASHSIZE; i++){
             new_obj -> vars[i] = NULL;
         }
@@ -154,6 +159,8 @@ dreamObj * copy(dreamObj * obj);
         return obj;
     }
 
+   
+    
     dreamObj * dreamFunc(void * value){
 
         dreamObj * obj = make_dream((void *)value, dreamFuncType);
@@ -264,8 +271,8 @@ dreamObj * copy(dreamObj * obj);
            // dreamObj * t = obj->vars[hash_obj(s)];
             
             if (np->name != NULL && strcmp(s, np->name) == 0){
-                
-                return copy(np); // found
+                //copy
+                return (np); // found
             }
         }
         
@@ -275,7 +282,7 @@ dreamObj * copy(dreamObj * obj);
 
 
   
-
+void * copy_value(void * value, dreamObj *type);
 
 struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
    
@@ -283,15 +290,22 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
    
     hashval = hash_obj(name);
     
-    value->name = strdup(name);
+    
+        
+    
     if(obj->vars[hashval] != NULL){
         //void * new_val = copy_value(value->value, obj->vars[hashval]->type);
         if(obj->vars[hashval]->type==dreamIntType || obj->vars[hashval]->type==dreamBoolType)free(obj->vars[hashval]->value);
-        obj->vars[hashval]->value = value->value;
+        obj->vars[hashval]->value = copy_value(value->value,  value->type);
         obj->vars[hashval]->type = value->type;
+        obj->vars[hashval]->name =  strdup(name);
         return NULL;
     }else{
-        obj->vars[hashval] = value;
+        //if(value->name ==NULL)value->name = strdup(name);
+        obj->vars[hashval] = copy(value);
+        obj->vars[hashval]->name =  strdup(name);
+       // obj->vars[hashval]->value = copy_value(value->value,  value->type);
+        //obj->vars[hashval]->type = value->type;
     }
     
     if(obj->first_var == NULL){
@@ -317,7 +331,9 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
          //  printf("up-set: (%s: %s)\n", name, rep(value));
             //print(value);
          //   dict(obj->parent_scope);
+            
             set_var(obj->parent_scope, strdup(name), (value));
+           
           //  dict(obj->parent_scope);
             return nullptr;
         }
@@ -326,6 +342,12 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         
         return set_var_soft(obj, name, value);
     }
+
+void pointer(dreamObj* value){
+   // printf("point val%d\n", value->pointer);
+    value->pointer = 1;
+
+}
 
     struct dreamObj *set_var_c(dreamObj *obj, dreamObj *name_obj, dreamObj *value){
   
@@ -351,7 +373,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         //dreamObj * np = make_dream((void *)"ijdoq", dreamStrType);
         
         if(obj==NULL || obj->type==dreamFuncType)return obj;
-        
+        //printf("copying %s\n",rep(obj));
         dreamObj *np = make_dream(copy_value(obj->value,  obj->type), obj->type);
         //np->type = dreamStrType;
         if(obj->name!=NULL){

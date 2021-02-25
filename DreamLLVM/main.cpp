@@ -99,8 +99,10 @@ void loadStandard(LLVMData* context){
     
     Type * strType = PointerType::get(Type::getInt8Ty(context->context), 0);
     Type * intType = IntegerType::getInt32Ty(context->context);
+    Type * voidTy =  PointerType::getVoidTy(context->context);
     
-    functions["print"] = context->owner->getOrInsertFunction("print", FunctionType::get(PointerType::getVoidTy(context->context),{intType,dreamObjPtrTy}, true));
+    functions["print"] = context->owner->getOrInsertFunction("print", FunctionType::get(voidTy,{intType,dreamObjPtrTy}, true));
+    functions["pointer"] = context->owner->getOrInsertFunction("pointer", FunctionType::get(voidTy, {dreamObjPtrTy}, false));
     functions["printf"] = context->owner->getOrInsertFunction("printf", FunctionType::get(intType, strType, true));
     functions["object"] = context->owner->getOrInsertFunction("make_dream", FunctionType::get(dreamObjPtrTy, voidPointerTy, false ));
     functions["set_var"] = context->owner->getOrInsertFunction("set_var", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
@@ -140,21 +142,9 @@ LLVMData * llvm_init(){
     voidPointerTy = PointerType::get(PointerType::getVoidTy(new_context -> context), 0);
     dreamObjTy = StructType::create(new_context -> context, "dreamObj");
     dreamObjPtrTy = PointerType::get(dreamObjTy, 0);
+    Type * int32Type = Type::getInt32Ty(new_context -> context);
     
-    
-    /*
-     const char * name;
-     dreamObj *next;
-     
-     void * value;
-
-     dreamObj * type ;
-     
-     dreamObj *first_var;
-     dreamObj *last_var;
-     dreamObj * parent_scope;
-     dreamObj * vars [HASHSIZE];
-     */
+   
     
     dreamObjTy->setBody({
         Type::getInt8PtrTy(new_context -> context) , //const char * name;
@@ -164,13 +154,14 @@ LLVMData * llvm_init(){
         dreamObjPtrTy,// *dreamObj *first_var;
         dreamObjPtrTy,//dreamObj *last_var;
         dreamObjPtrTy, //  dreamObj * parent_scope;
+        int32Type, // bool * pointer;
         ArrayType::get(dreamObjPtrTy, HASHSIZE) // dreamObj * vars [HASHSIZE];
         
     });
     
     
     //create main function & block
-    Type * int32Type = Type::getInt32Ty(new_context -> context);
+   
     new_context -> mainFunc = Function::Create(FunctionType::get(int32Type, {}, false), Function::ExternalLinkage, "main", new_context->module);
     new_context -> currentBlock = BasicBlock::Create(new_context -> context, "EntryBlock", new_context->mainFunc);
     
@@ -688,40 +679,8 @@ int main(){
     //return 0;
     LLVMData * context = llvm_init();
     Value * scope = str(context, "[scope]");
-   // set_var_llvm(context, scope, "x", num(context, 4));
-    //set_var_llvm(context, scope, "c", get_var_llvm(context, scope, "x"));
-    FuncData *new_func2 = func(context, scope, "cat", 1, new const char * []{"mind"});
-    
-        //func body
-        //call_standard(context, "print", get_var_llvm(context, new_func->scope, "peace"));
-        //call_standard(context, "print", str(context, "oo"));
-        //for(int i=0;i<10;i++)
-        //call_standard_c(context, "print", 1, );
-    
-    
-        //call(context, load(context, new_func2->scope, "print"), 1, new Value *[]{get_var_llvm(context, new_func2->scope, "mind")});
-    
-    
-        //retVal(context, str(context, "oo"));
-        retVal(context, str(context,"cat return"));
-    
-    //func end
-    end_func(context, scope, new_func2);
-    
-    Value * cat_call = call(context, load(context, scope, "print"),  2, new Value *[]{ str(context, "woooow"),str(context, "wow2")});
-    
-    //call(context, load(context, scope, "print"),  1, new Value *[]{load(context, scope, "cat")});
-    //call(context, load(context, scope, "luvme"), 2, new Value *[]{scope, str(context, "yas")});
-    
-    
-    /*
-    FuncData *_func = func(context, scope, "equals", 0, new const char * []{});
-        retVal(context, str(context,"YESS!!!!"));
-    end_func(context, scope, _func);*/
-    
-    //num(context, 5)
-     //get_var_llvm(context, scope, "x");
-    //call_standard(context, "dict", get_var_llvm(context, scope, "x"));
+    set_var_llvm(context, scope, "x", num(context, 4));
+    set_var_llvm(context, scope, "y", get_var_llvm(context, scope, "x"));
     
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
     llvm_run(context, false, true);
