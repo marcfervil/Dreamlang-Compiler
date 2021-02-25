@@ -197,9 +197,20 @@ dreamObj * copy(dreamObj * obj);
         }
     }
 
-    void print(dreamObj* obj){
-        const char* str = rep(obj);
-        printf("[Dream]: %s\n", str);
+    void print(int num_args, ...){
+        va_list valist;
+        va_start(valist, num_args);
+
+        printf("[Dream]: ");
+        for (int i = 0; i < num_args; i++) {
+            const char* str = rep(va_arg(valist, dreamObj *));
+            const char* ending = " ";
+            if(i==num_args-1) ending = "\n";
+            printf("%s%s", str, ending);
+        }
+
+       
+       va_end(valist);
     }
 
 
@@ -300,7 +311,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
 
     struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
        
-        unsigned hashval;
+      
        
         if(obj->parent_scope != NULL && get_var(obj->parent_scope, name)!=NULL){
          //  printf("up-set: (%s: %s)\n", name, rep(value));
@@ -310,9 +321,10 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
           //  dict(obj->parent_scope);
             return nullptr;
         }
-        set_var_soft(obj, name, value);
+        //printf("name %s\n",name);
+       //
         
-        return nullptr;
+        return set_var_soft(obj, name, value);
     }
 
     struct dreamObj *set_var_c(dreamObj *obj, dreamObj *name_obj, dreamObj *value){
