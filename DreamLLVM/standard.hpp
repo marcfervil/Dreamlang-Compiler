@@ -59,6 +59,8 @@ extern "C" {
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstdarg>
+
 #define HASHSIZE 101
 
 extern "C" {
@@ -83,7 +85,7 @@ typedef struct dreamObj{
 } dreamObj;
 
 
-dreamObj * make_dream(void * value, dreamObj * type = nullptr);
+    dreamObj * make_dream(void * value, dreamObj * type = nullptr);
 
 
     dreamObj * nullDream = NULL;
@@ -91,9 +93,10 @@ dreamObj * make_dream(void * value, dreamObj * type = nullptr);
     dreamObj * dreamObjType = make_dream((void *)"<Obj Type>",dreamType);
     dreamObj * dreamStrType = make_dream((void *)"<Str Type>",dreamType);
     dreamObj * dreamIntType = make_dream((void *)"<Int Type>",dreamType);
+    dreamObj * dreamBoolType = make_dream((void *)"<Bool Type>",dreamType);
     dreamObj * dreamFuncType = make_dream((void *)"<Func Type>",dreamType);
     
-
+    dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value);
 
     dreamObj * make_dream(void * value, dreamObj * type){
         if (type == nullptr)type = dreamObjType;
@@ -111,19 +114,42 @@ dreamObj * make_dream(void * value, dreamObj * type = nullptr);
         
         return new_obj;
     }
+    
+    dreamObj * dreamFunc(void * value);
+    dreamObj * dreamBool(int value);
 
+    dreamObj * num_equals(dreamObj * me, dreamObj * other){
+        return dreamBool((other->type==dreamIntType && (*(int*) me->value)==(*(int*) other->value)));
+    }
 
-
-    dreamObj * dreamStr(const char * value){
+    dreamObj * str_equals(dreamObj * me, dreamObj * other){
+        const char * me_val = (const char *) me->value;
+        const char * other_val = (const char *) me->value;
         
-        dreamObj * obj = make_dream((void *)value, dreamStrType);
+        return dreamBool(other->type==dreamStrType && strcmp(me_val, other_val)==0);
+    }
+        
+    dreamObj * dreamStr(const char * value){
+        dreamObj * obj = make_dream((void *) value, dreamStrType);
+        set_var(obj, "equals", dreamFunc((void *) str_equals));
         return obj;
     }
 
-    dreamObj * dreamInt(int value){
+    
 
-        dreamObj * obj = make_dream((void *)value, dreamIntType);
-        
+    dreamObj * dreamInt(int value){
+        int *num = (int *)malloc(sizeof *num);
+        *num = value;
+        dreamObj * obj = make_dream((void *)num, dreamIntType);
+        set_var(obj, "equals", dreamFunc((void *)num_equals));
+        return obj;
+    }
+
+    dreamObj * dreamBool(int value){
+        int *num = (int *)malloc(sizeof *num);
+        *num = value;
+        dreamObj * obj = make_dream((void *)num, dreamBoolType);
+        set_var(obj, "equals", dreamFunc((void *)num_equals));
         return obj;
     }
 
@@ -143,13 +169,19 @@ dreamObj * make_dream(void * value, dreamObj * type = nullptr);
             return (const char *)obj->value;
         }else if(obj->type == dreamIntType){
             int * num = (int *)obj->value;
-            int length = snprintf( NULL, 0, "%d", num);
+            int length = snprintf( NULL, 0, "%d", *num);
             char* str_ref = (char *)malloc(length + 1);
-            snprintf(str_ref, length + 1, "%d", num);
+            snprintf(str_ref, length + 1, "%d", *num);
             
             const char * str = strdup(str_ref);
             free(str_ref);
             return str;
+        }else if(obj->type == dreamBoolType){
+            int * num = ((int *)obj->value);
+            if (*num == 1) return "true";
+            else if (*num == 0) return "false";
+            //printf("%d")
+            return "<Invalid Bool Data>";
         }else if(obj->type == dreamFuncType){
             const char * name = (const char *)obj->name;
             int length = snprintf( NULL, 0, "<Function %s>", name);
@@ -168,6 +200,23 @@ dreamObj * make_dream(void * value, dreamObj * type = nullptr);
         const char* str = rep(obj);
         printf("[Dream]: %s\n", str);
     }
+
+
+    void print2(dreamObj *fmt, ...)
+    {
+        va_list args;
+        va_start(args, fmt);
+
+        while (fmt != NULL) {
+           
+            const char* str = rep(va_arg(args, dreamObj*));
+            printf("[Dream]: %s\n", str);
+            ++fmt;
+        }
+
+        va_end(args);
+    }
+
 
     void dict(dreamObj* obj){
         dreamObj * var;
@@ -318,6 +367,18 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         return NULL;
     }
 
+
+    
+    dreamObj * equals(dreamObj * var1, dreamObj * var2){
+        dreamObj * equ;
+        if((equ = get_var(var1, "equals")) != NULL){
+            dreamObj * b = ((dreamObj* (*)(dreamObj *, dreamObj *)) equ->value)(var1, var2);
+
+            return b;
+        }
+        printf("[Nightmare]: <Undefined Equals>\n");
+        return dreamBool(-1);
+    }
 
 
 }

@@ -1,0 +1,74 @@
+    Value * scope = str(context, "[scope]");
+    //func start
+    
+    set_var_llvm(context, scope, "apples", str(context,"Hungry 4"));
+    set_var_llvm(context, scope, "bees", str(context,"holder"));
+   
+    FuncData *new_func2 = func(context, scope, "cat", 1, new const char * []{"mind"});
+    
+        //func body
+        //call_standard(context, "print", get_var_llvm(context, new_func->scope, "peace"));
+        //call_standard(context, "print", str(context, "oo"));
+        //for(int i=0;i<10;i++)
+        //call_standard_c(context, "print", 1, );
+    
+    
+        //call(context, load(context, new_func2->scope, "print"), 1, new Value *[]{get_var_llvm(context, new_func2->scope, "mind")});
+    
+    
+        //retVal(context, str(context, "oo"));
+        retVal(context, str(context,"cat return"));
+    
+    //func end
+    end_func(context, scope, new_func2);
+    //
+    FuncData *new_func = func(context, scope, "dog", 1, new const char * []{ "peace"});
+    
+        //func body
+        //call_standard(context, "print", get_var_llvm(context, new_func->scope, "peace"));
+        //call_standard(context, "print", str(context, "oo"));
+        //for(int i=0;i<10;i++)
+        //call_standard_c(context, "print", 1, new Value *[]{str(context, "freak")});
+    
+        set_var_llvm(context, new_func->scope, "bees", str(context,"Hungry 6"));
+    //set_var_llvm(context, new_func->scope, "apples", str(context,"eyes"));
+        Value * inner_inner_scope = init_scope(context, new_func->scope);
+    call(context, load(context, new_func->scope, "cat"), 2, new Value*[]{inner_inner_scope, str(context, "we oo")});
+        //call_standard(context, "dict", funcScope(new_func));
+    
+    
+    /*
+        call_standard(context, "print", get_var_llvm(context, new_func->scope, "apples"));
+        set_var_llvm(context, new_func->scope, "apples", str(context,"Hungry 6"));
+        call_standard(context, "print", get_var_llvm(context, new_func->scope, "apples"));
+    
+        call(context, load(context, new_func->scope, "cat"), 2, new Value*[]{inner_inner_scope, str(context, "we oo")});*/
+
+        //retVal(context, str(context, "oo"));
+        retVal(context,  str(context, "oo"));
+    
+    //func end
+    end_func(context, scope, new_func);
+
+    //call & print function
+    //Value * home = call_standard_c(context, "dog", 1, new Value*[]{scope});
+    //call_standard(context, "print", get_var_llvm(context, scope, "war"));
+    //call_standard(context, "print", home);
+ //   call_standard(context, "print", get_var_llvm(context, scope, "in_this_house"));
+    
+   
+    
+ 
+       Value * inner_scope = init_scope(context, scope);
+       // init_scope(context, inner_scope);
+    //    call(context, load(context, scope, "print"), 1, new Value*[]{
+            call(context, load(context, scope, "dog"), 2, new Value*[]{
+                inner_scope, str(context, "lalalla")
+                
+            });
+                
+            
+            
+     //   });
+    
+

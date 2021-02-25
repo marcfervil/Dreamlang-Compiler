@@ -54,6 +54,7 @@
 		948AB2F725DB7935009FCA3B /* standard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = standard.cpp; sourceTree = "<group>"; };
 		948AB2F825DB7935009FCA3B /* standard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = standard.hpp; sourceTree = "<group>"; };
 		94B551D125E3E0ED00F1DCB8 /* pass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pass.h; sourceTree = "<group>"; };
+		94FD512925E73393003689BE /* example */ = {isa = PBXFileReference; lastKnownFileType = text; path = example; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +105,7 @@
 				948AB2F725DB7935009FCA3B /* standard.cpp */,
 				948AB2F825DB7935009FCA3B /* standard.hpp */,
 				94B551D125E3E0ED00F1DCB8 /* pass.h */,
+				94FD512925E73393003689BE /* example */,
 			);
 			path = DreamLLVM;
 			sourceTree = "<group>";
