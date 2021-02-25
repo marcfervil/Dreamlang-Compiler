@@ -88,8 +88,9 @@ typedef struct dreamObj{
     dreamObj * make_dream(void * value, dreamObj * type = nullptr);
 
 
-    dreamObj * nullDream = NULL;
+    
     dreamObj * dreamType = make_dream(nullptr);
+    dreamObj * nullDream = make_dream((void *)"<Undefined>", nullDream);
     dreamObj * dreamObjType = make_dream((void *)"<Obj Type>",dreamType);
     dreamObj * dreamStrType = make_dream((void *)"<Str Type>",dreamType);
     dreamObj * dreamIntType = make_dream((void *)"<Int Type>",dreamType);
@@ -117,7 +118,7 @@ typedef struct dreamObj{
     
     dreamObj * dreamFunc(void * value);
     dreamObj * dreamBool(int value);
-
+dreamObj * copy(dreamObj * obj);
     dreamObj * num_equals(dreamObj * me, dreamObj * other){
         return dreamBool((other->type==dreamIntType && (*(int*) me->value)==(*(int*) other->value)));
     }
@@ -162,7 +163,7 @@ typedef struct dreamObj{
 
     const char * rep(dreamObj* obj){
         
-        if (obj == NULL) return "<Undefined>";
+        if (obj == NULL || obj==nullDream) return "<Undefined>";
             
         
         if(obj->type == dreamStrType || obj->type == dreamType){
@@ -252,18 +253,19 @@ typedef struct dreamObj{
            // dreamObj * t = obj->vars[hash_obj(s)];
             
             if (np->name != NULL && strcmp(s, np->name) == 0){
-                return np; // found
+                
+                return copy(np); // found
             }
         }
         
-        return NULL; // not found
+        return nullDream; // not found
     }
 
 
 
-    dreamObj * copy(dreamObj * obj);
+  
 
-    
+
 struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
    
     unsigned hashval;
@@ -271,17 +273,14 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
     hashval = hash_obj(name);
     
     value->name = strdup(name);
-    if(obj->vars[hashval]!=NULL){
-     //   free(obj->vars[hashval]);
-      //  obj->vars[hashval] = value; /* (dreamObj *) realloc(value,sizeof(struct dreamObj));*/
-        //obj->vars[hashval] ->name ="fewf";
-        //printf("fefw");
-        //free(obj->vars[hashval]->value);
+    if(obj->vars[hashval] != NULL){
+        //void * new_val = copy_value(value->value, obj->vars[hashval]->type);
+        if(obj->vars[hashval]->type==dreamIntType || obj->vars[hashval]->type==dreamBoolType)free(obj->vars[hashval]->value);
         obj->vars[hashval]->value = value->value;
         obj->vars[hashval]->type = value->type;
         return NULL;
     }else{
-        obj->vars[hashval] = (value);
+        obj->vars[hashval] = value;
     }
     
     if(obj->first_var == NULL){
@@ -296,6 +295,8 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
     return nullptr;
 }
 
+
+   
 
     struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
        
@@ -314,18 +315,37 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         return nullptr;
     }
 
+    struct dreamObj *set_var_c(dreamObj *obj, dreamObj *name_obj, dreamObj *value){
+  
+        const char * name = (const char *)name_obj->value;
+        return set_var(obj, name, value);
+    }
+
+    void * copy_value(void * value, dreamObj *type){
+    // print(type);
+         if(type == dreamIntType || type == dreamBoolType){
+             int *num = (int *)malloc(sizeof *num);
+             *num = *(int *)value;
+             //printf("Copied int to %d\n", (int *)value);
+             return num;
+         }
+         return value;
+    }
+
 
     dreamObj * copy(dreamObj * obj){
 //return obj;
         //print(obj->type);
         //dreamObj * np = make_dream((void *)"ijdoq", dreamStrType);
-        if(obj->type==dreamFuncType)return obj;
         
-        dreamObj *np = make_dream((void *)obj->value, obj->type);
+        if(obj==NULL || obj->type==dreamFuncType)return obj;
+        
+        dreamObj *np = make_dream(copy_value(obj->value,  obj->type), obj->type);
         //np->type = dreamStrType;
         if(obj->name!=NULL){
             np->name =strdup( obj->name);
         }
+        
         
         //printf("fwlew");
      

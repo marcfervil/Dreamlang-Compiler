@@ -104,6 +104,7 @@ void loadStandard(LLVMData* context){
     functions["printf"] = context->owner->getOrInsertFunction("printf", FunctionType::get(intType, strType, true));
     functions["object"] = context->owner->getOrInsertFunction("make_dream", FunctionType::get(dreamObjPtrTy, voidPointerTy, false ));
     functions["set_var"] = context->owner->getOrInsertFunction("set_var", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
+    functions["set_var_c"] = context->owner->getOrInsertFunction("set_var_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
     functions["get_var"] = context->owner->getOrInsertFunction("get_var", FunctionType::get(dreamObjPtrTy, strType, false ));
     functions["equals"] = context->owner->getOrInsertFunction("equals", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));
    // functions["get_var"] = context->owner->getOrInsertFunction("set_var", FunctionType::get(dreamObjPtrTy, dreamObjPtrTy, strType, false ));
@@ -677,15 +678,16 @@ int main(){
     //return 0;
     LLVMData * context = llvm_init();
     Value * scope = str(context, "[scope]");
-    
+   // set_var_llvm(context, scope, "x", num(context, 4));
+    set_var_llvm(context, scope, "c", get_var_llvm(context, scope, "x"));
     /*
     FuncData *_func = func(context, scope, "equals", 0, new const char * []{});
         retVal(context, str(context,"YESS!!!!"));
     end_func(context, scope, _func);*/
     
     //num(context, 5)
-  
-    call_standard(context, "print", equals_c(context,num(context, 7), num(context, 7)));
+     //get_var_llvm(context, scope, "x");
+    //call_standard(context, "dict", get_var_llvm(context, scope, "x"));
     
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
     llvm_run(context, false, false);
