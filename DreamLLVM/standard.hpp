@@ -111,7 +111,7 @@ typedef struct dreamObj{
         new_obj -> next = NULL;
         new_obj -> name = NULL;
         new_obj -> last_var = NULL;
-        new_obj -> parent_scope = NULL;
+        new_obj -> parent_scope = nullDream;
         
         new_obj->pointer = 0;
        
@@ -266,8 +266,10 @@ dreamObj * copy(dreamObj * obj);
 
     dreamObj * get_var(dreamObj * obj, const char *s){
         dreamObj *np;
-        //printf("%d",obj->parent_scope== &nullDream);
-        if(obj->parent_scope != NULL && get_var(obj->parent_scope, s)!=NULL){
+        //printf("%s parent is %s\n",s,rep(obj));
+       // dict(obj);
+       // if(obj->parent_scope != NULL)dict(obj->parent_scope);
+        if(obj->parent_scope != nullDream && get_var(obj->parent_scope, s)!=nullDream){
             //printf("up-get: %s\n",s);
            
             return get_var(obj->parent_scope, s);
@@ -295,7 +297,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
    
     hashval = hash_obj(name);
     
-    
+    //printf("setting %s onto %s\n",rep(value),rep(obj));
         
     
     if(obj->vars[hashval] != NULL){
@@ -345,8 +347,8 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
     struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
        
       
-       
-        if(obj->parent_scope != NULL && get_var(obj->parent_scope, name)!=NULL){
+        
+        if(obj->parent_scope != nullDream && get_var(obj->parent_scope, name)!=nullDream){
          //  printf("up-set: (%s: %s)\n", name, rep(value));
             //print(value);
          //   dict(obj->parent_scope);
@@ -363,7 +365,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
     }
 
     dreamObj* pointer(dreamObj* value){
-        dreamObj* ref = value;
+       // dreamObj* ref = value;
         
         dreamObj* ptr = make_dream(value, dreamPointerType);
         
@@ -402,7 +404,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         if(obj->name!=NULL){
             np->name =strdup( obj->name);
         }
-        
+       // np->parent_scope = copy(obj->parent_scope);
         
         //printf("fwlew");
      
@@ -427,13 +429,16 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             dreamObj * new_scope = dreamStr("[scope]");
          //   dreamObj ** ref = & new_scope;
             new_scope->parent_scope = (obj);
+         
           //  scope(new_scope);
            // printf("yuh, %d",new_scope->parent_scope == &nullDream);
           //  (*obj).parent_scope =obj;
             return new_scope;
         }else{
+            
             dreamObj * new_scope = dreamStr("[sub scope]");
-            new_scope->parent_scope = obj->parent_scope;
+            new_scope->parent_scope = (obj->parent_scope);
+           
            // dict(obj->parent_scope);
            // print(obj->parent_scope);
             //printf("%d",obj->parent_scope->first_var==NULL);
