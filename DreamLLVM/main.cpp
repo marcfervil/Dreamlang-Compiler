@@ -117,6 +117,7 @@ void loadStandard(LLVMData* context){
     functions["test"] = context->owner->getOrInsertFunction("testing", FunctionType::get(PointerType::getVoidTy(context->context), false));
     functions["new_scope"] = context->owner->getOrInsertFunction("new_scope", FunctionType::get(dreamObjPtrTy,dreamObjPtrTy, false));
     functions["dict"] = context->owner->getOrInsertFunction("dict", FunctionType::get(dreamObjPtrTy, false));
+    functions["add"] = context->owner->getOrInsertFunction("add_c", FunctionType::get(dreamObjPtrTy,{dreamObjPtrTy,dreamObjPtrTy}, false));
 }
 
 
@@ -638,9 +639,12 @@ Value* get_pointer_value(LLVMData* context, Type * type, Value * obj ){
 
 Value * add(LLVMData* context, Value *var1, Value *var2){
     
+    /*
     Value* value1 = get_pointer_value(context, Type::getInt32Ty(context->context), var1);
     Value* value2 = get_pointer_value(context, Type::getInt32Ty(context->context), var2);
-    return numVal(context, context->builder->get.CreateAdd(value1, value2));
+    return numVal(context, context->builder->get.CreateAdd(value1, value2));*/
+    Value * result = call_standard(context, "add", {var1, var2});
+    return result;
     //return context->builder->get.CreateAdd(value1, value2);
 }
 

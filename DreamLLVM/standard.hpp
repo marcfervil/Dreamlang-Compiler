@@ -60,6 +60,7 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstdarg>
+#include <string.h>
 
 #define HASHSIZE 101
 
@@ -124,9 +125,27 @@ typedef struct dreamObj{
     
     dreamObj * dreamFunc(void * value);
     dreamObj * dreamBool(int value);
-dreamObj * copy(dreamObj * obj);
+    dreamObj * copy(dreamObj * obj);
+    dreamObj * dreamInt(int value);
+    dreamObj * dreamStr(const char * value);
+
     dreamObj * num_equals(dreamObj * me, dreamObj * other){
         return dreamBool((other->type==dreamIntType && (*(int*) me->value)==(*(int*) other->value)));
+    }
+
+    dreamObj * num_add(dreamObj * me, dreamObj * other){
+        return dreamInt( (*(int*) me->value) + (*(int*) other->value));
+    }
+
+    //TODO: FREE CONCATONATED STRING
+    dreamObj * str_add(dreamObj * me, dreamObj * other){
+        const char * me_val = (const char *) me->value;
+        const char * other_val = (const char *) other->value;
+        char* result;
+        result = ( char*) calloc(strlen(me_val)+strlen(other_val)+1, sizeof(char));
+        strcpy(result, me_val);
+        strcat(result, other_val);
+        return dreamStr((const char * )result);
     }
 
     dreamObj * str_equals(dreamObj * me, dreamObj * other){
@@ -135,10 +154,13 @@ dreamObj * copy(dreamObj * obj);
         
         return dreamBool(other->type==dreamStrType && strcmp(me_val, other_val)==0);
     }
-        
+
+  
+            
     dreamObj * dreamStr(const char * value){
         dreamObj * obj = make_dream((void *) value, dreamStrType);
         set_var(obj, "equals", dreamFunc((void *) str_equals));
+        set_var(obj, "add", dreamFunc((void *)str_add));
         return obj;
     }
 
@@ -149,6 +171,7 @@ dreamObj * copy(dreamObj * obj);
         *num = value;
         dreamObj * obj = make_dream((void *)num, dreamIntType);
         set_var(obj, "equals", dreamFunc((void *)num_equals));
+        set_var(obj, "add", dreamFunc((void *)num_add));
         return obj;
     }
 
@@ -309,7 +332,9 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             return NULL;
         }
         
-        if(obj->vars[hashval]->type==dreamIntType || obj->vars[hashval]->type==dreamBoolType)free(obj->vars[hashval]->value);
+        if(obj->vars[hashval]->type==dreamIntType || obj->vars[hashval]->type==dreamBoolType){
+            free(obj->vars[hashval]->value);
+        }
         obj->vars[hashval]->value = copy_value(value->value,  value->type);
         obj->vars[hashval]->type = value->type;
         obj->vars[hashval]->name =  strdup(name);
@@ -458,7 +483,20 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
 
             return b;
         }
-        printf("[Nightmare]: <Undefined Equals>\n");
+        printf("[Nightmare]: <Undefined Equals Operation>\n");
+        return dreamBool(-1);
+    }
+
+
+    dreamObj * add_c(dreamObj * var1, dreamObj * var2){
+        
+        dreamObj * equ;
+        if((equ = get_var(var1, "add")) != NULL){
+            dreamObj * result = ((dreamObj* (*)(dreamObj *, dreamObj *)) equ->value)(var1, var2);
+            
+            return result;
+        }
+        printf("[Nightmare]: <Undefined Add Operation>\n");
         return dreamBool(-1);
     }
 
