@@ -79,7 +79,7 @@ typedef struct dreamObj{
     dreamObj *first_var;
     dreamObj *last_var;
     dreamObj * parent_scope;
-    int  pointer;
+    int pointer;
     dreamObj * vars [HASHSIZE];
     //
     // etc..

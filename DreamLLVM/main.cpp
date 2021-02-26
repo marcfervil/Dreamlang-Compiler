@@ -622,35 +622,46 @@ Value* get_value(LLVMData* context, Type * type, Value * obj ){
     return value;
 }
 
+Value* get_pointer_value(LLVMData* context, Type * type, Value * obj ){
+    std::vector<llvm::Value*> indices(2);
+    indices[0] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
+    indices[1] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 2, true));
+    Value *valuePointer = context->builder->get.CreateGEP(obj, indices,  "memberptr");
+
+    LoadInst *value = new LoadInst(PointerType::get(type, 0), valuePointer, "temp", context->currentBlock);
+
+    return new LoadInst(type, value, "temp", context->currentBlock);
+}
+
 
 
 
 Value * add(LLVMData* context, Value *var1, Value *var2){
     
-    Value* value1 = get_value(context, Type::getInt32Ty(context->context), var1);
-    Value* value2 = get_value(context, Type::getInt32Ty(context->context), var2);
+    Value* value1 = get_pointer_value(context, Type::getInt32Ty(context->context), var1);
+    Value* value2 = get_pointer_value(context, Type::getInt32Ty(context->context), var2);
     return numVal(context, context->builder->get.CreateAdd(value1, value2));
     //return context->builder->get.CreateAdd(value1, value2);
 }
 
 Value * mul(LLVMData* context, Value *var1, Value *var2){
-    Value* value1 = get_value(context, Type::getInt32Ty(context->context), var1);
-    Value* value2 = get_value(context, Type::getInt32Ty(context->context), var2);
+    Value* value1 = get_pointer_value(context, Type::getInt32Ty(context->context), var1);
+    Value* value2 = get_pointer_value(context, Type::getInt32Ty(context->context), var2);
     return numVal(context, context->builder->get.CreateMul(value1, value2));
     //return context->builder->get.CreateAdd(value1, value2);
 }
 
 Value * divi(LLVMData* context, Value *var1, Value *var2){
-    Value* value1 = get_value(context, Type::getInt32Ty(context->context), var1);
-    Value* value2 = get_value(context, Type::getInt32Ty(context->context), var2);
+    Value* value1 = get_pointer_value(context, Type::getInt32Ty(context->context), var1);
+    Value* value2 = get_pointer_value(context, Type::getInt32Ty(context->context), var2);
     //return numVal(context, context->builder->get.CreateSDiv(value1, value2));
     return numVal(context, context->builder->get.CreateSDiv(value1, value2));
     //return context->builder->get.CreateAdd(value1, value2);
 }
 
 Value * sub(LLVMData* context, Value *var1, Value *var2){
-    Value* value1 = get_value(context, Type::getInt32Ty(context->context), var1);
-    Value* value2 = get_value(context, Type::getInt32Ty(context->context), var2);
+    Value* value1 = get_pointer_value(context, Type::getInt32Ty(context->context), var1);
+    Value* value2 = get_pointer_value(context, Type::getInt32Ty(context->context), var2);
     return numVal(context, context->builder->get.CreateSub(value1, value2));
     //return context->builder->get.CreateAdd(value1, value2);
 }
