@@ -102,7 +102,7 @@ void loadStandard(LLVMData* context){
     Type * voidTy =  PointerType::getVoidTy(context->context);
     
     functions["print"] = context->owner->getOrInsertFunction("print", FunctionType::get(voidTy,{intType,dreamObjPtrTy}, true));
-    functions["pointer"] = context->owner->getOrInsertFunction("pointer", FunctionType::get(voidTy, {dreamObjPtrTy}, false));
+    functions["pointer"] = context->owner->getOrInsertFunction("pointer", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["printf"] = context->owner->getOrInsertFunction("printf", FunctionType::get(intType, strType, true));
     functions["object"] = context->owner->getOrInsertFunction("make_dream", FunctionType::get(dreamObjPtrTy, voidPointerTy, false ));
     functions["set_var"] = context->owner->getOrInsertFunction("set_var", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
