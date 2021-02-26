@@ -103,6 +103,7 @@ void loadStandard(LLVMData* context){
     
     functions["print"] = context->owner->getOrInsertFunction("print", FunctionType::get(voidTy,{intType,dreamObjPtrTy}, true));
     functions["pointer"] = context->owner->getOrInsertFunction("pointer", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
+    functions["ptr"] = context->owner->getOrInsertFunction("ptr", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["printf"] = context->owner->getOrInsertFunction("printf", FunctionType::get(intType, strType, true));
     functions["object"] = context->owner->getOrInsertFunction("make_dream", FunctionType::get(dreamObjPtrTy, voidPointerTy, false ));
     functions["set_var"] = context->owner->getOrInsertFunction("set_var", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
@@ -692,14 +693,25 @@ void luv(LLVMData * context){
 
 int main(){
     //print(equals(dreamInt(1),dreamInt(7)));
+    
+    dreamObj * obj = dreamStr("fwfew");
+    rep(obj);
+    return 0;
+    //dreamObj * obj = dreamStr("fwfew");
+   // printf("str: %s\n",   *((const char **)obj->value) );
     //return 0;
     LLVMData * context = llvm_init();
-    Value * scope = str(context, "[scope]");
-    set_var_llvm(context, scope, "x", num(context, 4));
-    set_var_llvm(context, scope, "y", get_var_llvm(context, scope, "x"));
+        
     
+    
+   // set_var_llvm(context, scope, "x", num(context, 4)); //x = 4
+ //   set_var_llvm(context, scope, "ptr", get_var_llvm(context, scope, "x")); // ptr = x
+    //set_var_llvm(context, scope, "ptr", num(context, 69)); //ptr = 69
+   // set_var_llvm(context, scope, "y", num(context, 4));
+     //get_var_llvm(context, scope, "x");
+    call_standard(context, "print", {llvmInt(context, 1),str(context,"fefwe")});
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
-    llvm_run(context, false, true);
+    llvm_run(context, false, false);
     return 0;
 
 }
