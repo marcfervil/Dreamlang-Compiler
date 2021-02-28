@@ -83,6 +83,7 @@ typedef struct dreamObj{
     dreamObj *last_var;
     dreamObj * parent_scope;
     int pointer;
+    
     dreamObj * vars [HASHSIZE];
     //
     // etc..
@@ -157,12 +158,12 @@ typedef struct dreamObj{
         return dreamBool(other->type==dreamStrType && strcmp(me_val, other_val)==0);
     }
 
-const char * rep(dreamObj* obj);
+    const char * rep(dreamObj* obj, dreamObj* type=NULL);
             
     dreamObj * dreamStr(const char * value){
         
         char* result = (char*) malloc( strlen(value) + 1 );
-     
+       // printf("Length () %zu \n",strlen(value));
         strcpy(result, value);
         
         dreamObj * obj = make_dream((void *) result, dreamStrType);
@@ -191,7 +192,9 @@ const char * rep(dreamObj* obj);
         return obj;
     }
 
-   
+void print(int num_args, ...);
+
+dreamObj * get_var(dreamObj * obj, const char *s);
     
     dreamObj * dreamFunc(void * value){
 
@@ -200,17 +203,23 @@ const char * rep(dreamObj* obj);
         return obj;
     }
 
-    const char * rep(dreamObj* obj){
+    const char * rep(dreamObj* obj, dreamObj* type){
         
+        if (type==NULL) type = obj->type;
         if (obj == NULL || obj==nullDream) return "<Undefined>";
-            
         
-        if(obj->type == dreamStrType || obj->type == dreamType){
+        void * value =obj->value;
+        
+    start:
+        if(type == dreamStrType || type == dreamType){
             
            // printf("str: %s\n",   (( char *)obj->value) );
-            return (( char *)(obj->value));
-        }else if(obj->type == dreamIntType){
-            int * num = (int *)obj->value;
+           
+   
+           // printf("\n");
+            return (( char *)value);
+        }else if(type == dreamIntType){
+            int * num = (int *)value;
             int length = snprintf( NULL, 0, "%d", *num);
             char* str_ref = (char *)malloc(length + 1);
             snprintf(str_ref, length + 1, "%d", *num);
@@ -218,13 +227,13 @@ const char * rep(dreamObj* obj);
             const char * str = strdup(str_ref);
             free(str_ref);
             return str;
-        }else if(obj->type == dreamBoolType){
-            int * num = ((int *)obj->value);
+        }else if(type == dreamBoolType){
+            int * num = ((int *)value);
             if (*num == 1) return "true";
             else if (*num == 0) return "false";
             //printf("%d")
             return "<Invalid Bool Data>";
-        }else if(obj->type == dreamFuncType){
+        }else if(type == dreamFuncType){
             const char * name = (const char *)obj->name;
             int length = snprintf( NULL, 0, "<Function %s>", name);
             char* str_ref = (char *)malloc(length + 1);
@@ -233,8 +242,19 @@ const char * rep(dreamObj* obj);
             const char * str = strdup(str_ref);
             free(str_ref);
             return str;
-        }else if(obj->type == dreamPointerType){
-            return rep(((dreamObj *)obj->value));
+        }else if(type == dreamPointerType){
+           
+            value = *((void **)obj->value);
+           // printf("\n\n%s",(char *) *((void **)obj->value));
+           type = get_var(obj, "ptr_type");
+            //TODO: FIX THIS BECAUSE IT IS DUMB
+            if(strcmp(rep(type),rep(dreamStrType))==0)type = dreamStrType;
+            else if(strcmp(rep(type),rep(dreamIntType))==0)type = dreamIntType;
+            else if(strcmp(rep(type),rep(dreamBoolType))==0)type = dreamBoolType;
+            //type = dreamStrType;
+            //printf("\ntype %s\n",rep(type));
+            goto start;
+            //return rep( ,);
         
             
         }else{
@@ -312,6 +332,9 @@ const char * rep(dreamObj* obj);
             //if(np->name != NULL)printf("looking %s\n",np->name);
             if (np->name != NULL && strcmp(s, np->name) == 0){
                 //copy
+                //if(np->pointer==1){
+                    //printf("got pointer named %s\n",s);
+                //}
                 return (np); // found
             }
         }
@@ -322,7 +345,7 @@ const char * rep(dreamObj* obj);
 dreamObj* ptr(dreamObj* value){
    // dreamObj* ref = value;
     
-    value->pointer = 1;
+    value->pointer = 2;
     
     //set_var(ptr, "equals", dreamFunc((void *) str_equals));
     return value;
@@ -332,14 +355,22 @@ dreamObj* ptr(dreamObj* value){
 dreamObj* pointer(dreamObj* value){
    // dreamObj* ref = value;
     
-    
-    dreamObj* ptr = make_dream(value->value, value->type);
+   // printf("fopkwe?");
+    dreamObj* ptr = make_dream(&value->value, dreamPointerType);
+    dreamObj* ty;
+    //print(1,value->type);
+    if(value->type == dreamStrType){
+        //printf("fewofkewp");
+        ty = dreamStrType;
+    }
+    set_var(ptr, "ptr_type", value->type);
     //set_var(ptr, "equals", dreamFunc((void *) str_equals));
     return ptr;
     
 }
   
 void * copy_value(void * value, dreamObj *type);
+void * copy_value_re(void * value, dreamObj *obj);
 
 struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
    
@@ -349,44 +380,74 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
     
     //printf("setting %s onto %s\n",rep(value),rep(obj));
     
-        
+    
     
     if(obj->vars[hashval] != NULL){
         //void * new_val = copy_value(value->value, obj->vars[hashval]->type);
         
-        if(obj->vars[hashval]->pointer){
-           
-        }
+        
         //printf("name: %s, pointer %d\n",name,obj->vars[hashval]->pointer);
        // if(obj->vars[hashval]->type==dreamIntType || obj->vars[hashval]->type==dreamBoolType){
+       
+       // char * val =(char *)value->value;
+        
+        if(obj->vars[hashval] ->type == dreamPointerType){
+            //printf("living the dream");
+
+            *(((void **)obj->vars[hashval]->value)) = copy_value(value->value,  value->type);
+            //ptr_obj = copy_value(value->value,  value->type);
+            //=copy_value(value->value,  value->type);
+        }else{
             free(obj->vars[hashval]->value);
-       // }
-        
-        obj->vars[hashval]->value = copy_value(value->value,  value->type);
+            obj->vars[hashval]->value = copy_value(value->value,  value->type);
+
+            obj->vars[hashval]->name = strdup(name);
             
-        obj->vars[hashval]->name = strdup(name);
+            obj->vars[hashval]->type = value->type;
+        }
         
-        obj->vars[hashval]->type = value->type;
+       // char * temp = (char*) realloc( obj->vars[hashval]->value, strlen(val + 1 ));
+       
+        
+        
+       // temp = val;
+        //free(obj->vars[hashval]->value);
+        
+      
+      //  strcpy((char *)obj->vars[hashval]->value, val);
+        //printf("\ntemp: %s; \nog: %s\n",temp, (char *)obj->vars[hashval]->value);
+        //obj->vars[hashval]->value= temp;
+        //free(obj->vars[hashval]->value);
+        
+   
+        
         
         return NULL;
     }else{
         //if(value->name ==NULL)value->name = strdup(name);
         //bool ptr = false;
-        if(value->pointer){
+        if(value->pointer==2){
           //  printf("making pointer");
         //if(strcmp(name, "new_test")==0){
             //printf("poiterrr");
-            //value->pointer = 0;
+            value->pointer = 0;
+//            (char*) malloc( strlen(value) + 1 );
+           // free(obj->vars[hashval]);
             obj->vars[hashval] = pointer(value);
-           
+            obj->vars[hashval] -> pointer = 1;
             //printf("POINTER");
            // obj->vars[hashval] -> pointer = 1;
             //return NULL;
             //obj->vars[hashval]->type = value->type;
             
+        }else if(value->pointer==1){
+          //  free(obj->vars[hashval]);
+            //printf("wooop %s\n",name);
+            obj->vars[hashval] = copy(value);
+            obj->vars[hashval] ->pointer = 1;
+          //  printf("chosen one %s\n",name);
         }else{
-            
-             obj->vars[hashval] = copy(value);
+            obj->vars[hashval] = copy(value);
         }
         
        
@@ -439,8 +500,9 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
  
 
     struct dreamObj *set_var_c(dreamObj *obj, dreamObj *name_obj, dreamObj *value){
-  
-        const char * name = (const char *)name_obj->value;
+       
+        char * name = ( char *)name_obj->value;
+        //printf("ofkwpok %s", name);
         return set_var(obj, name, value);
     }
 
@@ -452,7 +514,38 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
              //printf("Copied int to %d\n", (int *)value);
              return num;
          }else if(type == dreamStrType){
+             //printf("copy %s %zu\n ",(char *)value, strlen((char *)value));
+           //  printf("copy %s %zu\n",(char *)value,strlen((char *)value));
+            // printf("")
+  
              char* result = (char*) malloc( strlen((char *)value) + 1 );
+         
+             strncpy(result, (char *)value, strlen((char *)value) + 1);
+             
+              //strdup((char *)value);
+             return result;
+         }
+         return value;
+    }
+
+    void fuck(dreamObj * obj){
+        for(int i=0;i< strlen((char *)obj->value); i++){
+         //   result[i] = ((char *)obj->value)[i];
+            printf("%c",((char *)obj->value)[i]);
+        }
+        printf("\n");
+    }
+
+
+    void * copy_value_re(void * value, dreamObj *obj){
+    // print(type);
+         if(obj->type == dreamIntType || obj->type == dreamBoolType){
+             int *num = (int *)malloc(sizeof *num);
+             *num = *(int *)value;
+             //printf("Copied int to %d\n", (int *)value);
+             return num;
+         }else if(obj->type == dreamStrType){
+             char* result = (char*) malloc(strlen((char *)value) + 1 );
           
              strcpy(result, (char *)value);
              return result;

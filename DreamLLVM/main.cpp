@@ -150,6 +150,7 @@ LLVMData * llvm_init(){
     
     dreamObjTy->setBody({
         Type::getInt8PtrTy(new_context -> context) , //const char * name;
+        
         dreamObjPtrTy , // dreamObj *next;
         voidPointerTy, //  void * value;
         dreamObjPtrTy,//dreamObj * type ;
@@ -480,12 +481,14 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, int arg_si
             i = 1;
             continue;
         }
+        
         //get and store the value of each argument and set the name respectively
         llvm::AllocaInst* alloc = context->builder->get.CreateAlloca(dreamObjPtrTy, 0, "alloctmp");
         new StoreInst(&arg, alloc, context->currentBlock);
         LoadInst * arg_ref = new LoadInst(dreamObjPtrTy, alloc, "varName", context->currentBlock);
         (&arg)->setName(arg_names[(i++)-1]);
        
+        //set_var_llvm(context, context_arg, arg_names[i-2], arg_ref);
         set_var_llvm(context, context_arg, arg_names[i-2], arg_ref);
         
     }
@@ -691,25 +694,37 @@ void luv(LLVMData * context){
     //retVal(context, llvmInt(context, 59));
 }
 
+void makeme(dreamObj * scope){
+    //print(1,get_var(scope, "x_ptr"));
+}
+
 int main(){
     //print(equals(dreamInt(1),dreamInt(7)));
+    dreamObj * scope = dreamStr("scope");
     
-    dreamObj * obj = dreamStr("fwfew");
-    rep(obj);
-    return 0;
-    //dreamObj * obj = dreamStr("fwfew");
+ 
+  
+    //
    // printf("str: %s\n",   *((const char **)obj->value) );
     //return 0;
     LLVMData * context = llvm_init();
-        
-    
+    //set_var_llvm(context, scope, "set_var_c", str(context,"dododo"));
+    /*
+   
+    Value * scope = str(context,"scope");
+    set_var_llvm(context, scope, "x", str(context,"dododo"));
+    set_var_llvm(context, scope, "x_ptr", call(context, load(context, scope, "ptr"), 1, new Value *[]{
+        get_var_llvm(context, scope, "x")
+    }));
+    set_var_llvm(context, scope, "x_ptr", str(context,"1234567891234567"));
+    call_standard(context, "dict", {scope});*/
     
    // set_var_llvm(context, scope, "x", num(context, 4)); //x = 4
  //   set_var_llvm(context, scope, "ptr", get_var_llvm(context, scope, "x")); // ptr = x
     //set_var_llvm(context, scope, "ptr", num(context, 69)); //ptr = 69
    // set_var_llvm(context, scope, "y", num(context, 4));
      //get_var_llvm(context, scope, "x");
-    call_standard(context, "print", {llvmInt(context, 1),str(context,"fefwe")});
+    
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
     llvm_run(context, false, false);
     return 0;
