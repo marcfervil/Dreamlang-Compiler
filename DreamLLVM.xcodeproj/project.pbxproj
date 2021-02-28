@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		944C9FDB25EB69DB0012B74B /* IfGen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 944C9FD925EB69DB0012B74B /* IfGen.cpp */; };
+		944C9FE025EB8C5B0012B74B /* pylink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 944C9FDE25EB8C5B0012B74B /* pylink.cpp */; };
 		946864DE25D0DFB20090421F /* referance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946864DD25D0DFB20090421F /* referance.cpp */; };
 		9468650825D1F8340090421F /* libLLVM.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9468650725D1F8340090421F /* libLLVM.dylib */; };
 		9468650925D1F8340090421F /* libLLVM.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 9468650725D1F8340090421F /* libLLVM.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -41,6 +43,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		944C9FD925EB69DB0012B74B /* IfGen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IfGen.cpp; sourceTree = "<group>"; };
+		944C9FDA25EB69DB0012B74B /* IfGen.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = IfGen.hpp; sourceTree = "<group>"; };
+		944C9FDE25EB8C5B0012B74B /* pylink.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pylink.cpp; sourceTree = "<group>"; };
+		944C9FDF25EB8C5B0012B74B /* pylink.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pylink.c; sourceTree = "<group>"; };
 		946864DA25D0DFB20090421F /* DreamLLVM */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DreamLLVM; sourceTree = BUILT_PRODUCTS_DIR; };
 		946864DD25D0DFB20090421F /* referance.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = referance.cpp; sourceTree = "<group>"; };
 		946864EC25D1C93B0090421F /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
@@ -106,6 +112,10 @@
 				948AB2F825DB7935009FCA3B /* standard.hpp */,
 				94B551D125E3E0ED00F1DCB8 /* pass.h */,
 				94FD512925E73393003689BE /* example */,
+				944C9FD925EB69DB0012B74B /* IfGen.cpp */,
+				944C9FDA25EB69DB0012B74B /* IfGen.hpp */,
+				944C9FDE25EB8C5B0012B74B /* pylink.cpp */,
+				944C9FDF25EB8C5B0012B74B /* pylink.c */,
 			);
 			path = DreamLLVM;
 			sourceTree = "<group>";
@@ -220,7 +230,9 @@
 			files = (
 				948AB2F625DB5DA3009FCA3B /* main.cpp in Sources */,
 				946864DE25D0DFB20090421F /* referance.cpp in Sources */,
+				944C9FE025EB8C5B0012B74B /* pylink.cpp in Sources */,
 				948AB2F925DB7935009FCA3B /* standard.cpp in Sources */,
+				944C9FDB25EB69DB0012B74B /* IfGen.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,91 +8,25 @@
 #include "main.hpp"
 #include "standard.hpp"
 
-#include "llvm/ADT/STLExtras.h"
-#include "llvm/ExecutionEngine/ExecutionEngine.h"
-#include "llvm/ExecutionEngine/GenericValue.h"
-#include "llvm/ExecutionEngine/MCJIT.h"
-#include "llvm/IR/Argument.h"
-#include "llvm/IR/BasicBlock.h"
-#include "llvm/IR/Constants.h"
-#include "llvm/IR/DerivedTypes.h"
-#include "llvm/IR/Function.h"
-#include "llvm/IR/IRBuilder.h"
-#include "llvm/IR/Instructions.h"
-#include "llvm/IR/LLVMContext.h"
-#include "llvm/IR/Module.h"
-#include "llvm/IR/Type.h"
-#include "llvm/Support/Casting.h"
-#include "llvm/Support/DynamicLibrary.h"
-#include "llvm/Support/ManagedStatic.h"
-#include "llvm/Support/TargetSelect.h"
-#include "llvm/Object/ObjectFile.h"
-#include "llvm/Support/raw_ostream.h"
-#include <algorithm>
-#include <cassert>
-#include <memory>
-#include <vector>
-#include <unistd.h>
 
-#include "llvm/IR/LegacyPassManager.h"
-#include "llvm/IR/Module.h"
-#include "llvm/IR/Type.h"
-#include "llvm/IR/Verifier.h"
-#include "llvm/Support/FileSystem.h"
-#include "llvm/Support/Host.h"
-#include "llvm/Support/raw_ostream.h"
-#include "llvm/Support/TargetRegistry.h"
-#include "llvm/Support/TargetSelect.h"
-#include "llvm/Target/TargetMachine.h"
-#include "llvm/Target/TargetOptions.h"
 
 extern "C" {
-using namespace llvm;
-using namespace std;
 
 
 StructType * dreamObjTy;
 PointerType * dreamObjPtrTy;
 PointerType * voidPointerTy;
 
-class LLVMBuilder
-{
-    // Access specifier
-    public:
-  
-    // Data Members
-    IRBuilder<> get;
-  
-    // Member Functions()
-    LLVMBuilder(BasicBlock *block) : get(block) {
-  
-    }
- 
-};
 
-//struct that represents llvm data
-typedef struct LLVMData{
-    LLVMContext context;
-    Module * module;
-    Function *mainFunc;
-    BasicBlock *currentBlock;
-    ExecutionEngine* engine;
-    LLVMBuilder * builder;
-    std::unique_ptr<Module> owner;
-    
-} LLVMData;
+
+
 
 
 
 map<string, FunctionCallee> functions;
 
 
-void testing(){
-    printf("IT WORKS!!");
 
-}
-
-Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *> args);
 
 //expose standard.cpp functions to LLVM
 void loadStandard(LLVMData* context){
@@ -110,12 +44,11 @@ void loadStandard(LLVMData* context){
     functions["set_var_c"] = context->owner->getOrInsertFunction("set_var_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
     functions["get_var"] = context->owner->getOrInsertFunction("get_var", FunctionType::get(dreamObjPtrTy, strType, false ));
     functions["equals"] = context->owner->getOrInsertFunction("equals", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));
-   // functions["get_var"] = context->owner->getOrInsertFunction("set_var", FunctionType::get(dreamObjPtrTy, dreamObjPtrTy, strType, false ));
     functions["str"] = context->owner->getOrInsertFunction("dreamStr", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
     functions["int"] = context->owner->getOrInsertFunction("dreamInt", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
     functions["bool"] = context->owner->getOrInsertFunction("dreamBool", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
     functions["func"] = context->owner->getOrInsertFunction("dreamFunc", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
-    functions["test"] = context->owner->getOrInsertFunction("testing", FunctionType::get(PointerType::getVoidTy(context->context), false));
+    //functions["test"] = context->owner->getOrInsertFunction("testing", FunctionType::get(PointerType::getVoidTy(context->context), false));
     functions["new_scope"] = context->owner->getOrInsertFunction("new_scope", FunctionType::get(dreamObjPtrTy,dreamObjPtrTy, false));
     functions["dict"] = context->owner->getOrInsertFunction("dict", FunctionType::get(dreamObjPtrTy, false));
     functions["add"] = context->owner->getOrInsertFunction("add_c", FunctionType::get(dreamObjPtrTy,{dreamObjPtrTy,dreamObjPtrTy}, false));
@@ -128,7 +61,7 @@ LLVMData * llvm_init(){
     InitializeNativeTarget();
     LLVMInitializeNativeAsmPrinter();
     
-    
+
     llvm::sys::DynamicLibrary::LoadLibraryPermanently("dream.so");
     llvm::sys::DynamicLibrary::LoadLibraryPermanently("dream.o");
 
@@ -324,7 +257,7 @@ Value * set_var_llvm(LLVMData* context,  Value * scope, const char * key, Value 
     return call_standard(context, "set_var", {scope, llvmStrConst(context, key), value});
 }
 
-Value* get_value(LLVMData* context, Type * type, Value * obj );
+LoadInst* get_value(LLVMData* context, Type * type, Value * obj );
 Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *> args){
     
     Value * callResult;
@@ -402,13 +335,7 @@ Value * str(LLVMData* context, const char * value/*, const char * name="str"*/){
 
 
 
-typedef struct FuncData{
-    Function *func;
-    BasicBlock *startingBlock;
-    Value * scope;
-    const char * name;
-    FuncData(Function *init_func):func(init_func){};
-} FuncData;
+
 
 LoadInst * func_init(LLVMData* context, Value * value){
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "func_stack", context->currentBlock);
@@ -443,18 +370,17 @@ Value * load_store(LLVMData* context, Value * value){
 }
 
 FuncData * func(LLVMData* context, Value* obj, const char * funcName, int arg_size, const char * arg_names[arg_size]){
-    //const char * fn = new const char("rr");
-    
-    
+
     vector<Type *> args = {dreamObjPtrTy};
     std::vector<Metadata*> meta_args;
     
     for(int i=0;i<arg_size;i++)args.push_back(dreamObjPtrTy);
-
+    
     //intitilize function data struct pointer and set starting block so we know what our preivous function is
     Function *new_func = Function::Create(FunctionType::get(dreamObjPtrTy, args, false), Function::ExternalLinkage, funcName, context->module);
     FuncData * func_data = new FuncData(new_func);
     func_data -> startingBlock = std::move((context->currentBlock));
+
     
     //saving the arg names into metada was unnecessary in hindsight, but it might come in handy later...
     for(int i=0;i<arg_size;i++)meta_args.push_back(MDString::get(new_func->getContext(), arg_names[i]));
@@ -463,17 +389,13 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, int arg_si
     //name scope arg to prevent seggy
     Argument *context_arg = &*new_func->arg_begin();
     context_arg->setName("scope");
-    
-    //call_standard(context, "print", {obj});
-    //set_var_llvm(context, obj, "foewpk", str(context, "fopkwe"));
-    
+
     
     //create and enter method block
     context -> currentBlock = BasicBlock::Create(context -> context, "EntryBlock", new_func);
     context->builder->get.SetInsertPoint(context->currentBlock);
     
     //save arguments into scope "obj"
-    
     int i = 0;
     for (Argument& arg : new_func->args()) {
         //skip first context argument because we want the value of the variables (for now...)
@@ -616,7 +538,7 @@ Value * numVal(LLVMData* context, Value * value){
 
 
 
-Value* get_value(LLVMData* context, Type * type, Value * obj ){
+LoadInst* get_value(LLVMData* context, Type * type, Value * obj ){
     std::vector<llvm::Value*> indices(2);
     indices[0] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
     indices[1] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 2, true));
@@ -627,7 +549,7 @@ Value* get_value(LLVMData* context, Type * type, Value * obj ){
     return value;
 }
 
-Value* get_pointer_value(LLVMData* context, Type * type, Value * obj ){
+LoadInst* get_pointer_value(LLVMData* context, Type * type, Value * obj ){
     std::vector<llvm::Value*> indices(2);
     indices[0] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
     indices[1] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 2, true));
@@ -674,6 +596,8 @@ Value * sub(LLVMData* context, Value *var1, Value *var2){
     //return context->builder->get.CreateAdd(value1, value2);
 }
 
+
+
 Value * equals_c(LLVMData* context, Value *var1, Value *var2){
     return  call_standard(context, "equals", {var1, var2});
 }
@@ -698,32 +622,19 @@ void makeme(dreamObj * scope){
     //print(1,get_var(scope, "x_ptr"));
 }
 
+
+
 int main(){
     //print(equals(dreamInt(1),dreamInt(7)));
-    dreamObj * scope = dreamStr("scope");
-    
- 
-  
-    //
-   // printf("str: %s\n",   *((const char **)obj->value) );
-    //return 0;
-    LLVMData * context = llvm_init();
-    //set_var_llvm(context, scope, "set_var_c", str(context,"dododo"));
-    /*
    
-    Value * scope = str(context,"scope");
-    set_var_llvm(context, scope, "x", str(context,"dododo"));
-    set_var_llvm(context, scope, "x_ptr", call(context, load(context, scope, "ptr"), 1, new Value *[]{
-        get_var_llvm(context, scope, "x")
-    }));
-    set_var_llvm(context, scope, "x_ptr", str(context,"1234567891234567"));
-    call_standard(context, "dict", {scope});*/
-    
-   // set_var_llvm(context, scope, "x", num(context, 4)); //x = 4
- //   set_var_llvm(context, scope, "ptr", get_var_llvm(context, scope, "x")); // ptr = x
-    //set_var_llvm(context, scope, "ptr", num(context, 69)); //ptr = 69
-   // set_var_llvm(context, scope, "y", num(context, 4));
-     //get_var_llvm(context, scope, "x");
+    dreamObj * f = dreamStr("few");
+    LLVMData * context = llvm_init();
+   
+   
+    IfData * data = init_if(context, equals_c(context, str(context, "hello"), str(context, "hello")));
+        call_standard(context, "print", {llvmInt(context, 1), str(context, "hooray")});
+    end_if(context, data);
+   
     
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
     llvm_run(context, false, false);

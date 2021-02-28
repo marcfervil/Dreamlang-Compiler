@@ -65,9 +65,9 @@ extern "C" {
 #include "string.h"
 #include "stdlib.h"
 #define HASHSIZE 101
-
-extern "C" {
 #include <string.h>
+extern "C" {
+
 typedef struct dreamObj{
     
     
@@ -153,7 +153,7 @@ typedef struct dreamObj{
 
     dreamObj * str_equals(dreamObj * me, dreamObj * other){
         const char * me_val = (const char *) me->value;
-        const char * other_val = (const char *) me->value;
+        const char * other_val = (const char *) other->value;
         
         return dreamBool(other->type==dreamStrType && strcmp(me_val, other_val)==0);
     }
@@ -616,12 +616,17 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
     dreamObj * equals(dreamObj * var1, dreamObj * var2){
         dreamObj * equ;
         if((equ = get_var(var1, "equals")) != NULL){
+            
             dreamObj * b = ((dreamObj* (*)(dreamObj *, dreamObj *)) equ->value)(var1, var2);
 
             return b;
         }
         printf("[Nightmare]: <Undefined Equals Operation>\n");
         return dreamBool(-1);
+    }
+    
+     void unexposed(){
+        
     }
 
 
