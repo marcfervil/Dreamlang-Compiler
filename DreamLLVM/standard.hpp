@@ -204,9 +204,9 @@ dreamObj * get_var(dreamObj * obj, const char *s);
     }
 
     const char * rep(dreamObj* obj, dreamObj* type){
-        
+        if (obj==NULL)return "NULL";
         if (type==NULL) type = obj->type;
-        if (obj == NULL || obj==nullDream) return "<Undefined>";
+        if (obj==nullDream) return "<Undefined>";
         
         void * value =obj->value;
         
@@ -388,26 +388,51 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         
         //printf("name: %s, pointer %d\n",name,obj->vars[hashval]->pointer);
        // if(obj->vars[hashval]->type==dreamIntType || obj->vars[hashval]->type==dreamBoolType){
-       
+        dreamObj * found = obj->vars[hashval];
        // char * val =(char *)value->value;
-        
-        if(obj->vars[hashval] ->type == dreamPointerType){
+        if(found->name != NULL && strcmp(found->name, name)!=0){
+            //printf("TODO: FIX HASH COLLISION POINTER BUG - %s COLLIDES WITH %s\n", name, obj->vars[hashval]->name);
+            //exit(0);
+            dreamObj * next = obj->vars[hashval]->next;
+            print(1, next);
+            
+            obj->vars[hashval]->next = copy(value);
+            obj->vars[hashval]->next ->name = strdup(name);
+            
+            obj->vars[hashval]->next ->next = next;
+            
+            if(obj->last_var != NULL){
+               // obj -> last_var -> next = obj -> vars[hashval] -> next;
+            }
+            //obj->last_var = next;
+            return NULL;
+            /*
+            for (found = found; found!=NULL; found = found->next){
+               // dreamObj * t = obj->vars[hash_obj(s)];
+                //if(np->name != NULL)printf("looking %s\n",np->name);
+                if (found->name == NULL && strcmp(s, np->name) == 0){
+                    //copy
+                    //if(np->pointer==1){
+                        //printf("got pointer named %s\n",s);
+                    //}
+                    return (np); // found
+                }
+            }*/
+        }
+        if(found->type == dreamPointerType){
             //printf("living the dream");
 
-            *(((void **)obj->vars[hashval]->value)) = copy_value(value->value,  value->type);
+            *(((void **)found->value)) = copy_value(value->value,  value->type);
             //ptr_obj = copy_value(value->value,  value->type);
             //=copy_value(value->value,  value->type);
         }else{
-            if(obj->vars[hashval]->name != NULL && strcmp(obj->vars[hashval]->name, name)!=0){
-                printf("TODO: FIX HASH COLLISION BUG - %s COLLIDES WITH %s", name, obj->vars[hashval]->name);
-                exit(0);
-            }
-            free(obj->vars[hashval]->value);
-            obj->vars[hashval]->value = copy_value(value->value,  value->type);
+           
+            free(found->value);
+            found->value = copy_value(value->value,  value->type);
 
-            obj->vars[hashval]->name = strdup(name);
+            found->name = strdup(name);
             
-            obj->vars[hashval]->type = value->type;
+            found->type = value->type;
         }
         
        // char * temp = (char*) realloc( obj->vars[hashval]->value, strlen(val + 1 ));

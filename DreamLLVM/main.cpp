@@ -630,9 +630,15 @@ int main(){
    
     LLVMData * context = llvm_init();
     Value * scope = str(context, "hello");
-   
-    set_var_llvm(context, scope, "xh", num(context, 3));
     
+    //set_var_llvm(context, scope, "xh", num(context, 3));
+   
+    set_var_llvm(context, scope, "dogs", str(context, "woof"));
+    //set_var_llvm(context, scope, "xh", num(context, 3));
+    set_var_llvm(context, scope, "xh", str(context, "SAYEEE"));
+ 
+    call(context, load(context, scope, "print"), 1, new Value *[]{ get_var_llvm(context, scope, "xh")});
+    call(context, load(context, scope, "dict"), 1, new Value *[]{scope});
     /*
     IfData * data = init_if(context, equals_c(context, str(context, "hello"), str(context, "hello")));
         call_standard(context, "print", {llvmInt(context, 1), str(context, "hooray")});
