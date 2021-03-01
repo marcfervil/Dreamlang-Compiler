@@ -43,7 +43,7 @@ void loadStandard(LLVMData* context){
     functions["set_var"] = context->owner->getOrInsertFunction("set_var", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
     functions["set_var_c"] = context->owner->getOrInsertFunction("set_var_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
     functions["get_var"] = context->owner->getOrInsertFunction("get_var", FunctionType::get(dreamObjPtrTy, strType, false ));
-    functions["equals"] = context->owner->getOrInsertFunction("equals", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));
+    functions["equals_c"] = context->owner->getOrInsertFunction("equals_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));
     functions["str"] = context->owner->getOrInsertFunction("dreamStr", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
     functions["int"] = context->owner->getOrInsertFunction("dreamInt", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
     functions["bool"] = context->owner->getOrInsertFunction("dreamBool", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
@@ -51,7 +51,7 @@ void loadStandard(LLVMData* context){
     //functions["test"] = context->owner->getOrInsertFunction("testing", FunctionType::get(PointerType::getVoidTy(context->context), false));
     functions["new_scope"] = context->owner->getOrInsertFunction("new_scope", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, intType}, false));
     functions["dict"] = context->owner->getOrInsertFunction("dict", FunctionType::get(dreamObjPtrTy, false));
-    functions["add"] = context->owner->getOrInsertFunction("add_c", FunctionType::get(dreamObjPtrTy,{dreamObjPtrTy,dreamObjPtrTy}, false));
+    functions["add_c"] = context->owner->getOrInsertFunction("add_c", FunctionType::get(dreamObjPtrTy,{dreamObjPtrTy,dreamObjPtrTy}, false));
 }
 
 
@@ -569,7 +569,7 @@ Value * add(LLVMData* context, Value *var1, Value *var2){
     Value* value1 = get_pointer_value(context, Type::getInt32Ty(context->context), var1);
     Value* value2 = get_pointer_value(context, Type::getInt32Ty(context->context), var2);
     return numVal(context, context->builder->get.CreateAdd(value1, value2));*/
-    Value * result = call_standard(context, "add", {var1, var2});
+    Value * result = call_standard(context, "add_c", {var1, var2});
     return result;
     //return context->builder->get.CreateAdd(value1, value2);
 }
@@ -598,8 +598,8 @@ Value * sub(LLVMData* context, Value *var1, Value *var2){
 
 
 
-Value * equals_c(LLVMData* context, Value *var1, Value *var2){
-    return  call_standard(context, "equals", {var1, var2});
+Value * equals(LLVMData* context, Value *var1, Value *var2){
+    return  call_standard(context, "equals_c", {var1, var2});
 }
 
 Value * retVal(LLVMData* context, Value * value ){
@@ -637,8 +637,8 @@ int main(){
     //set_var_llvm(context, scope, "xh", num(context, 3));
     set_var_llvm(context, scope, "xh", str(context, "SAYEEE"));
  
-    call(context, load(context, scope, "print"), 1, new Value *[]{ get_var_llvm(context, scope, "xh")});
-    call(context, load(context, scope, "dict"), 1, new Value *[]{scope});
+    call(context, load(context, scope, "print"), 1, new Value *[]{ load(context, scope, "equals")});
+    //call(context, load(context, scope, "dict"), 1, new Value *[]{scope});
     /*
     IfData * data = init_if(context, equals_c(context, str(context, "hello"), str(context, "hello")));
         call_standard(context, "print", {llvmInt(context, 1), str(context, "hooray")});

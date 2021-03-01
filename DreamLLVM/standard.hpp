@@ -234,12 +234,13 @@ dreamObj * get_var(dreamObj * obj, const char *s);
             //printf("%d")
             return "<Invalid Bool Data>";
         }else if(type == dreamFuncType){
-            const char * name = (const char *)obj->name;
+             char * name = ( char *)obj->name;
+            //printf("%s", name);
             int length = snprintf( NULL, 0, "<Function %s>", name);
             char* str_ref = (char *)malloc(length + 1);
             
             snprintf(str_ref, length + 1, "<Function %s>", name);
-            const char * str = strdup(str_ref);
+            char * str = strdup(str_ref);
             free(str_ref);
             return str;
         }else if(type == dreamPointerType){
@@ -401,10 +402,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             
             obj->vars[hashval]->next ->next = next;
             
-            if(obj->last_var != NULL){
-               // obj -> last_var -> next = obj -> vars[hashval] -> next;
-            }
-            //obj->last_var = next;
+           
             return NULL;
             /*
             for (found = found; found!=NULL; found = found->next){
@@ -473,7 +471,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
           //  free(obj->vars[hashval]);
             //printf("wooop %s\n",name);
             obj->vars[hashval] = copy(value);
-            obj->vars[hashval] ->pointer = 1;
+            obj->vars[hashval] -> pointer = 1;
           //  printf("chosen one %s\n",name);
         }else{
             obj->vars[hashval] = copy(value);
@@ -553,6 +551,8 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
              
               //strdup((char *)value);
              return result;
+         }else if(type == dreamFuncType){
+             return value;
          }
          return value;
     }
@@ -588,7 +588,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         //print(obj->type);
         //dreamObj * np = make_dream((void *)"ijdoq", dreamStrType);
         
-        if(obj==NULL || obj->type==dreamFuncType)return obj;
+        if(obj==NULL )return obj;
         //printf("copying %s\n",rep(obj));
         dreamObj *np = make_dream(copy_value(obj->value,  obj->type), obj->type);
         //np->type = dreamStrType;
@@ -641,7 +641,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
 
 
     
-    dreamObj * equals(dreamObj * var1, dreamObj * var2){
+    dreamObj * equals_c(dreamObj * var1, dreamObj * var2){
         dreamObj * equ;
         if((equ = get_var(var1, "equals")) != NULL){
             
