@@ -369,7 +369,7 @@ Value * load_store(LLVMData* context, Value * value){
     return object;
 }
 
-FuncData * func(LLVMData* context, Value* obj, const char * funcName, int arg_size, const char * arg_names[arg_size]){
+FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_class, int arg_size, const char * arg_names[arg_size]){
 
     vector<Type *> args = {dreamObjPtrTy};
     std::vector<Metadata*> meta_args;
@@ -424,7 +424,7 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, int arg_si
 
 void end_func(LLVMData* context, Value * scope, FuncData * func_data){
     
-   
+    //retVal(context, str(context, "nada"));
     context->builder->get.SetInsertPoint(func_data->startingBlock);
     context->currentBlock = func_data->startingBlock;
     
@@ -603,8 +603,11 @@ Value * equals(LLVMData* context, Value *var1, Value *var2){
 }
 
 Value * retVal(LLVMData* context, Value * value ){
-    return context->builder->get.CreateRet(value);
+
     
+   
+
+    return  context->builder->get.CreateRet(value);;
 }
 
 Value * funcScope(FuncData * data){
@@ -630,23 +633,31 @@ int main(){
    
     LLVMData * context = llvm_init();
     Value * scope = str(context, "hello");
+    FuncData *new_func2 = func(context, scope, "cat", 1, false, new const char * []{"mind"});
     
-    //set_var_llvm(context, scope, "xh", num(context, 3));
-   
-    set_var_llvm(context, scope, "dogs", str(context, "woof"));
-    //set_var_llvm(context, scope, "xh", num(context, 3));
-    set_var_llvm(context, scope, "xh", str(context, "SAYEEE"));
- 
-    call(context, load(context, scope, "print"), 1, new Value *[]{ load(context, scope, "equals")});
-    //call(context, load(context, scope, "dict"), 1, new Value *[]{scope});
-    /*
-    IfData * data = init_if(context, equals_c(context, str(context, "hello"), str(context, "hello")));
-        call_standard(context, "print", {llvmInt(context, 1), str(context, "hooray")});
-    end_if(context, data);*/
+        //func body
+        //call_standard(context, "print", get_var_llvm(context, new_func->scope, "peace"));
+        //call_standard(context, "print", str(context, "oo"));
+        //for(int i=0;i<10;i++)
+        //call_standard_c(context, "print", 1, );
+    
+    
+        //call(context, load(context, new_func2->scope, "print"), 1, new Value *[]{get_var_llvm(context, new_func2->scope, "mind")});
+    
+    
+        //retVal(context, str(context, "oo"));
+       // context->builder->get.CreateBr(context->currentBlock);
+        retVal(context, str(context,"cat return"));
    
     
+    
+        //retVal(context, str(context, "nanda"));
+    //func end
+    end_func(context, scope, new_func2);
+    
+    Value * home = call_standard_c(context, "cat", 1, new Value*[]{scope});
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
-    llvm_run(context, false, false);
+    llvm_run(context, false, true);
     return 0;
 
 }

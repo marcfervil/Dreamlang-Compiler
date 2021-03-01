@@ -96,6 +96,7 @@ extern "C"{
     LoadInst* get_pointer_value(LLVMData* context, Type * type, Value * obj );
 
     Value * llvmInt(LLVMData* context, int value);
+    Value * retVal(LLVMData* context, Value * value );
 }
 #include "IfGen.hpp"
 
