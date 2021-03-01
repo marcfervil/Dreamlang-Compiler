@@ -322,11 +322,7 @@ dreamObj * get_var(dreamObj * obj, const char *s);
         //printf("%s parent is %s\n",s,rep(obj));
        // dict(obj);
        // if(obj->parent_scope != NULL)dict(obj->parent_scope);
-        if(obj->parent_scope != nullDream && get_var(obj->parent_scope, s)!=nullDream){
-            //printf("up-get: %s\n",s);
-           
-            return get_var(obj->parent_scope, s);
-        }
+        
         for (np = obj->vars[hash_obj(s)]; np!=NULL; np = np->next){
            // dreamObj * t = obj->vars[hash_obj(s)];
             //if(np->name != NULL)printf("looking %s\n",np->name);
@@ -338,7 +334,11 @@ dreamObj * get_var(dreamObj * obj, const char *s);
                 return (np); // found
             }
         }
-        
+        if(obj->parent_scope != nullDream /*&& get_var(obj->parent_scope, s)!=nullDream*/){
+            //printf("up-get: %s\n",s);
+           
+            return get_var(obj->parent_scope, s);
+        }
         return nullDream; // not found
     }
 
@@ -398,6 +398,10 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             //ptr_obj = copy_value(value->value,  value->type);
             //=copy_value(value->value,  value->type);
         }else{
+            if(obj->vars[hashval]->name != NULL && strcmp(obj->vars[hashval]->name, name)!=0){
+                printf("TODO: FIX HASH COLLISION BUG - %s COLLIDES WITH %s", name, obj->vars[hashval]->name);
+                exit(0);
+            }
             free(obj->vars[hashval]->value);
             obj->vars[hashval]->value = copy_value(value->value,  value->type);
 
@@ -585,16 +589,15 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
 
 
 
-    dreamObj * new_scope(dreamObj * obj){
+    dreamObj * new_scope(dreamObj * obj, bool nested_scope){
        // printf("%d",obj->parent_scope == &nullDream);
-        if(obj->parent_scope == nullDream){
+        //printf("scope bitch %d", nested_scope);
+        if(obj->parent_scope == nullDream || nested_scope){
             dreamObj * new_scope = dreamStr("[scope]");
-         //   dreamObj ** ref = & new_scope;
+
             new_scope->parent_scope = (obj);
             
-          //  scope(new_scope);
-           // printf("yuh, %d",new_scope->parent_scope == &nullDream);
-          //  (*obj).parent_scope =obj;
+
             return new_scope;
         }else{
             

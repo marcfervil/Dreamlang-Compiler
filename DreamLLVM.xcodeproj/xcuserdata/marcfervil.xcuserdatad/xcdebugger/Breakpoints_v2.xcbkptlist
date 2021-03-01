@@ -46,8 +46,8 @@
             filePath = "DreamLLVM/standard.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "559"
-            endingLineNumber = "559"
+            startingLineNumber = "563"
+            endingLineNumber = "563"
             landmarkName = "copy(obj)"
             landmarkType = "9">
          </BreakpointContent>
@@ -62,9 +62,9 @@
             filePath = "DreamLLVM/standard.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "608"
-            endingLineNumber = "608"
-            landmarkName = "new_scope(obj)"
+            startingLineNumber = "611"
+            endingLineNumber = "611"
+            landmarkName = "new_scope(obj, nested_scope)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

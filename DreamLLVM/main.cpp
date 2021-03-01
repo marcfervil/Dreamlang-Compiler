@@ -49,7 +49,7 @@ void loadStandard(LLVMData* context){
     functions["bool"] = context->owner->getOrInsertFunction("dreamBool", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
     functions["func"] = context->owner->getOrInsertFunction("dreamFunc", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
     //functions["test"] = context->owner->getOrInsertFunction("testing", FunctionType::get(PointerType::getVoidTy(context->context), false));
-    functions["new_scope"] = context->owner->getOrInsertFunction("new_scope", FunctionType::get(dreamObjPtrTy,dreamObjPtrTy, false));
+    functions["new_scope"] = context->owner->getOrInsertFunction("new_scope", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, intType}, false));
     functions["dict"] = context->owner->getOrInsertFunction("dict", FunctionType::get(dreamObjPtrTy, false));
     functions["add"] = context->owner->getOrInsertFunction("add_c", FunctionType::get(dreamObjPtrTy,{dreamObjPtrTy,dreamObjPtrTy}, false));
 }
@@ -458,9 +458,9 @@ Value * load(LLVMData* context, Value* obj, const char * varName){
     return call_standard(context, "get_var", {obj, llvmStrConst(context, varName)} );
 }
 
-Value * init_scope(LLVMData* context, Value* scope){
-    
-    Value * res = call_standard(context, "new_scope", scope);
+Value * init_scope(LLVMData* context, Value* scope, bool nested_scope){
+  
+    Value * res = call_standard(context, "new_scope", {scope, llvmInt(context, nested_scope)});
     
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "scope_stack", context->currentBlock);
     
@@ -627,13 +627,16 @@ void makeme(dreamObj * scope){
 int main(){
     //print(equals(dreamInt(1),dreamInt(7)));
    
-    dreamObj * f = dreamStr("few");
+   
     LLVMData * context = llvm_init();
+    Value * scope = str(context, "hello");
    
-   
+    set_var_llvm(context, scope, "xh", num(context, 3));
+    
+    /*
     IfData * data = init_if(context, equals_c(context, str(context, "hello"), str(context, "hello")));
         call_standard(context, "print", {llvmInt(context, 1), str(context, "hooray")});
-    end_if(context, data);
+    end_if(context, data);*/
    
     
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
