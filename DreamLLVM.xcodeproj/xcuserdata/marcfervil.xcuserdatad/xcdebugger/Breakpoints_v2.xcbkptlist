@@ -30,8 +30,8 @@
             filePath = "DreamLLVM/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "403"
-            endingLineNumber = "403"
+            startingLineNumber = "404"
+            endingLineNumber = "404"
             landmarkName = "func(context, obj, funcName, is_class, arg_size, arg_names)"
             landmarkType = "9">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "DreamLLVM/standard.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "710"
-            endingLineNumber = "710"
+            startingLineNumber = "739"
+            endingLineNumber = "739"
             landmarkName = "new_scope(obj, nested_scope)"
             landmarkType = "9">
          </BreakpointContent>

@@ -56,6 +56,7 @@ void loadStandard(LLVMData* context){
     functions["shallow_copy"] = context->owner->getOrInsertFunction("shallow_copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["dict"] = context->owner->getOrInsertFunction("dict", FunctionType::get(dreamObjPtrTy, false));
     functions["add_c"] = context->owner->getOrInsertFunction("add_c", FunctionType::get(dreamObjPtrTy,{dreamObjPtrTy,dreamObjPtrTy}, false));
+    functions["set_parent"] = context->owner->getOrInsertFunction("set_parent", FunctionType::get(dreamObjPtrTy, dreamObjPtrTy, false));
 }
 
 
@@ -495,6 +496,20 @@ Value * init_scope(LLVMData* context, Value* scope, int nested_scope){
     
     new StoreInst(res, objStore, context->currentBlock);
     LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "new_scope", context->currentBlock);
+    //call_standard(context, "print", res);
+    //call_standard(context, "print", str(context,"lowkey"));
+    //call_standard(context, "print", load(context, res, "dog"));
+    return object;
+}
+
+Value * set_parent_c(LLVMData* context, Value* obj, Value* new_parent){
+  
+    Value * res = call_standard(context, "set_parent", {obj, new_parent});
+    
+    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "parent_stack", context->currentBlock);
+    
+    new StoreInst(res, objStore, context->currentBlock);
+    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "new_parentee", context->currentBlock);
     //call_standard(context, "print", res);
     //call_standard(context, "print", str(context,"lowkey"));
     //call_standard(context, "print", load(context, res, "dog"));

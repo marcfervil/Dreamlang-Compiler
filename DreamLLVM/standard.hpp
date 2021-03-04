@@ -444,13 +444,38 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
                     return (np); // found
                 }
             }*/
-        }
+        }/*
         if(found->type == dreamPointerType){
-            //printf("living the dream");
+       
 
             *(((void **)found->value)) = copy_value(value->value,  value->type);
-            //ptr_obj = copy_value(value->value,  value->type);
-            //=copy_value(value->value,  value->type);
+
+        }*/
+        if(value->name!=NULL && value->name[0]=='@'){
+            free(obj->vars[hashval]->value);
+            //dict(value );
+            
+            // obj->vars[hashval] = (value);
+            obj->vars[hashval]->value = value->value;
+            found->name = strdup(name);
+            
+            obj->vars[hashval]->type = value->type;
+           // printf("HERE WTD?????\n");
+            /*
+            free(found->value);
+            found->value = value->value;
+            found->name = value->name;
+            found->type = value->type;
+            for(int i=0;i<HASHSIZE;i++){
+                if(found->vars[i]!=NULL && found->vars[i]->type != dreamFuncType){
+                    //print(1,found->vars[i]);
+                    //printf("======\n");
+                    free(found->vars[i]);
+                    found->vars[i] = value->vars[i];
+                }
+                //found->vars[i] = shallow_copy(value->vars[i]);
+            }*/
+            //memcpy(obj->vars[hashval]->vars, value->vars, sizeof(obj->vars[hashval]->vars));
         }else{
            
             free(found->value);
@@ -685,11 +710,15 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         return np;
     }
 
-
+    dreamObj * set_parent(dreamObj * obj, dreamObj * new_parent){
+        obj->parent_scope = new_parent;
+        return obj;
+    }
 
     dreamObj * new_scope(dreamObj * obj, int nested_scope){
        // printf("%d",obj->parent_scope == &nullDream);
         //printf("scope bitch %d", nested_scope);
+        
         if((obj->parent_scope == nullDream || nested_scope)){
             //nested scope
             dreamObj * new_scope = dreamStr("[scope]");
