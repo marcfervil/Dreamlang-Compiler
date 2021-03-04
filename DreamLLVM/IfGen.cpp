@@ -16,7 +16,7 @@ extern "C"{
         Type * int32Type = Type::getInt32Ty(context->context);
         
         LoadInst *equ_result = get_pointer_value(context, int32Type, drm_bool);
-        
+            
         Value *if_comp = context->builder->get.CreateICmpEQ(equ_result, llvmInt(context, 1));
        
         //outs()<<(context->currentBlock->getParent()->getName());

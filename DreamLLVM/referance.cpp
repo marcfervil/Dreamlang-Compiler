@@ -168,15 +168,15 @@ dreamObj * dreamStr(const char * value){
         return hashval % HASHSIZE;
     }
 
-    dreamObj * get_var(dreamObj * obj, const char *s)
-    {
+    dreamObj * get_var(dreamObj * obj, const char *s){
+        if(obj == nullDream){
+            printf("Cannot get property of undefined!");
+            exit(0);
+        }
+       
         dreamObj *np;
       //  outs() << hash_obj(s) ;
         dreamObj * tt = obj->vars[hash_obj(s)];
-        
-     //   tt->name;
-        //if(!(tt->name)){
-        
         
         for (np = obj->vars[hash_obj(s)]; np!=NULL; np = np->next){
            // dreamObj * t = obj->vars[hash_obj(s)];
@@ -191,6 +191,10 @@ dreamObj * dreamStr(const char * value){
 
     struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value)
     {
+        if(obj == nullDream){
+            printf("Cannot set property on undefined!");
+            exit(0);
+        }
         dreamObj *np;
         unsigned hashval;
         if ((np = get_var(obj, name)) == NULL) { // not found

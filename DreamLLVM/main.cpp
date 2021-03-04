@@ -34,6 +34,7 @@ void loadStandard(LLVMData* context){
     Type * strType = PointerType::get(Type::getInt8Ty(context->context), 0);
     Type * intType = IntegerType::getInt32Ty(context->context);
     Type * voidTy =  PointerType::getVoidTy(context->context);
+    Type * voidPtrTy =  PointerType::get(PointerType::getVoidTy(context->context),0);
     
     functions["print"] = context->owner->getOrInsertFunction("print", FunctionType::get(voidTy,{intType,dreamObjPtrTy}, true));
     functions["pointer"] = context->owner->getOrInsertFunction("pointer", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
@@ -48,8 +49,11 @@ void loadStandard(LLVMData* context){
     functions["int"] = context->owner->getOrInsertFunction("dreamInt", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
     functions["bool"] = context->owner->getOrInsertFunction("dreamBool", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
     functions["func"] = context->owner->getOrInsertFunction("dreamFunc", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
+    functions["obj"] = context->owner->getOrInsertFunction("make_dream", FunctionType::get(dreamObjPtrTy, {voidPtrTy, voidPtrTy}, false));
     //functions["test"] = context->owner->getOrInsertFunction("testing", FunctionType::get(PointerType::getVoidTy(context->context), false));
     functions["new_scope"] = context->owner->getOrInsertFunction("new_scope", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, intType}, false));
+    functions["copy"] = context->owner->getOrInsertFunction("copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
+    functions["shallow_copy"] = context->owner->getOrInsertFunction("shallow_copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["dict"] = context->owner->getOrInsertFunction("dict", FunctionType::get(dreamObjPtrTy, false));
     functions["add_c"] = context->owner->getOrInsertFunction("add_c", FunctionType::get(dreamObjPtrTy,{dreamObjPtrTy,dreamObjPtrTy}, false));
 }
@@ -348,7 +352,18 @@ LoadInst * func_init(LLVMData* context, Value * value){
     return object;
 }
 
-Value * func_init2(LLVMData* context, Value * value){
+LoadInst * obj_init(LLVMData* context, Value * value){
+    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "obj_stack", context->currentBlock);
+    Value * callResult = context->builder->get.CreateCall(functions["obj"], {value,  Constant::getNullValue(dreamObjPtrTy)});
+    new StoreInst(callResult, objStore, context->currentBlock);
+    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "obj", context->currentBlock);
+    
+  
+  //  context->builder->get.CreateCall(functions["printf"], load2);
+    return object;
+}
+
+Value * func_init_value(LLVMData* context, Value * value){
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "func_stack", context->currentBlock);
     Value * callResult = context->builder->get.CreateCall(functions["func"], value);
     new StoreInst(callResult, objStore, context->currentBlock);
@@ -376,11 +391,13 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
     
     for(int i=0;i<arg_size;i++)args.push_back(dreamObjPtrTy);
     
+  
+    
     //intitilize function data struct pointer and set starting block so we know what our preivous function is
     Function *new_func = Function::Create(FunctionType::get(dreamObjPtrTy, args, false), Function::ExternalLinkage, funcName, context->module);
     FuncData * func_data = new FuncData(new_func);
     func_data -> startingBlock = std::move((context->currentBlock));
-
+    func_data -> is_class = is_class;
     
     //saving the arg names into metada was unnecessary in hindsight, but it might come in handy later...
     for(int i=0;i<arg_size;i++)meta_args.push_back(MDString::get(new_func->getContext(), arg_names[i]));
@@ -410,7 +427,7 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
         LoadInst * arg_ref = new LoadInst(dreamObjPtrTy, alloc, "varName", context->currentBlock);
         (&arg)->setName(arg_names[(i++)-1]);
        
-        //set_var_llvm(context, context_arg, arg_names[i-2], arg_ref);
+        //set_var_llvm(context, context_arg, a rg_names[i-2], arg_ref);
         set_var_llvm(context, context_arg, arg_names[i-2], arg_ref);
         
     }
@@ -427,11 +444,23 @@ void end_func(LLVMData* context, Value * scope, FuncData * func_data){
     //retVal(context, str(context, "nada"));
     context->builder->get.SetInsertPoint(func_data->startingBlock);
     context->currentBlock = func_data->startingBlock;
-    
-    set_var_llvm(context, scope, func_data->name, func_init2(context, func_data->func));
-    
-    //call_standard(context, "print", {llvmInt(context, 1),get_var_llvm(context, scope, func_data->name)});
-   // call_standard(context, "dict", {scope});
+    Value * funcPointer;
+    if(func_data->is_class){
+        //printf("classy");
+        funcPointer = obj_init(context, func_data->func);
+    }else{
+        //printf("funky");
+        funcPointer = func_init_value(context, func_data->func);
+    }
+    //printf("yuh");
+    std::string func_scope_name= "@";
+    func_scope_name += func_data->name;
+   
+ 
+    set_var_llvm(context, funcPointer, "@context", scope);
+    set_var_llvm(context, scope, func_data->name, funcPointer);
+    //set_var_llvm(context, funcPointer, "@context", scope);
+
 }
 
 Value * save(LLVMData* context, Value* obj, const char * varName, Value * value){
@@ -458,7 +487,7 @@ Value * load(LLVMData* context, Value* obj, const char * varName){
     return call_standard(context, "get_var", {obj, llvmStrConst(context, varName)} );
 }
 
-Value * init_scope(LLVMData* context, Value* scope, bool nested_scope){
+Value * init_scope(LLVMData* context, Value* scope, int nested_scope){
   
     Value * res = call_standard(context, "new_scope", {scope, llvmInt(context, nested_scope)});
     
@@ -632,32 +661,28 @@ int main(){
    
    
     LLVMData * context = llvm_init();
+    
     Value * scope = str(context, "hello");
-    FuncData *new_func2 = func(context, scope, "cat", 1, false, new const char * []{"mind"});
     
-        //func body
-        //call_standard(context, "print", get_var_llvm(context, new_func->scope, "peace"));
-        //call_standard(context, "print", str(context, "oo"));
-        //for(int i=0;i<10;i++)
-        //call_standard_c(context, "print", 1, );
+    FuncData *new_func2 = func(context, scope, "cat", 0, false, new const char * []{});
     
-    
-        //call(context, load(context, new_func2->scope, "print"), 1, new Value *[]{get_var_llvm(context, new_func2->scope, "mind")});
+        set_var_llvm(context, scope, "scope", scope);
+        FuncData *new_func3 = func(context, new_func2->scope, "dog", 0, false, new const char * []{});
+            retVal(context, str(context,"dog return"));
+        end_func(context, new_func2->scope, new_func3);
     
     
-        //retVal(context, str(context, "oo"));
-       // context->builder->get.CreateBr(context->currentBlock);
+        call(context, load(context, new_func2->scope, "dog"), 1, new Value*[]{init_scope(context, new_func2->scope,1)});
+    
+    
         retVal(context, str(context,"cat return"));
    
     
-    
-        //retVal(context, str(context, "nanda"));
-    //func end
     end_func(context, scope, new_func2);
     
-    Value * home = call_standard_c(context, "cat", 1, new Value*[]{scope});
+    Value * home = call_standard_c(context, "cat", 1, new Value*[]{init_scope(context, scope,1)});
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
-    llvm_run(context, false, true);
+    llvm_run(context, false, false);
     return 0;
 
 }

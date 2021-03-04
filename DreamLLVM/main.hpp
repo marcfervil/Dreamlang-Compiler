@@ -47,7 +47,7 @@
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Target/TargetOptions.h"
-
+#define HASHSIZE 101
 extern "C"{
 
 
@@ -60,6 +60,7 @@ extern "C"{
         BasicBlock *startingBlock;
         Value * scope;
         const char * name;
+        bool is_class;
         FuncData(Function *init_func):func(init_func){};
     } FuncData;
 
