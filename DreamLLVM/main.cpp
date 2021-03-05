@@ -364,6 +364,17 @@ LoadInst * obj_init(LLVMData* context, Value * value){
     return object;
 }
 
+LoadInst * null_obj_init(LLVMData* context){
+    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "obj_stack", context->currentBlock);
+    Value * callResult = context->builder->get.CreateCall(functions["obj"], {Constant::getNullValue(dreamObjPtrTy),  Constant::getNullValue(dreamObjPtrTy)});
+    new StoreInst(callResult, objStore, context->currentBlock);
+    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "obj", context->currentBlock);
+    
+  
+  //  context->builder->get.CreateCall(functions["printf"], load2);
+    return object;
+}
+
 Value * func_init_value(LLVMData* context, Value * value){
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "func_stack", context->currentBlock);
     Value * callResult = context->builder->get.CreateCall(functions["func"], value);
@@ -454,10 +465,7 @@ void end_func(LLVMData* context, Value * scope, FuncData * func_data){
         funcPointer = func_init_value(context, func_data->func);
     }
     //printf("yuh");
-    std::string func_scope_name= "@";
-    func_scope_name += func_data->name;
-   
- 
+
     set_var_llvm(context, funcPointer, "@context", scope);
     set_var_llvm(context, scope, func_data->name, funcPointer);
     //set_var_llvm(context, funcPointer, "@context", scope);
@@ -473,8 +481,6 @@ Value * load(LLVMData* context, Value* obj, const char * varName){
     if(isBuiltinFunc(varName)){
         FunctionCallee func = functions[varName];
         LoadInst * func_inst = func_init(context, func.getCallee());
-        
-       
         
         //set_var_llvm(context, func, "var_arg", bool_(context, functions[varName].getFunctionType()->isVarArg()));
         LLVMContext& func_context = func_inst->getContext();
