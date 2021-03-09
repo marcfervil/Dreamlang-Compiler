@@ -482,9 +482,9 @@ void end_func(LLVMData* context, Value * scope, FuncData * func_data){
         funcPointer = func_init_value(context, func_data->func);
     }
     //printf("yuh");
-
-    set_var_llvm(context, funcPointer, "@context", scope);
     set_var_llvm(context, scope, func_data->name, funcPointer);
+    set_var_llvm(context, funcPointer, "@context", scope);
+    
     //set_var_llvm(context, funcPointer, "@context", scope);
 
 }
@@ -685,6 +685,10 @@ Value * funcScope(FuncData * data){
 
 int main(){
   
+    dreamObj * x = dreamStr("hello");
+    set_var(x, "hi", dreamStr("hi"));
+    
+    return 0;
     LLVMData * context = llvm_init();
    // for(int i=0; i<100000;i++){
      //   Value * scope = str(context, "hello");
