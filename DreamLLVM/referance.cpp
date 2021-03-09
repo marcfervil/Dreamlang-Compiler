@@ -204,10 +204,10 @@ dreamObj * dreamStr(const char * value){
               return NULL;
             }
             hashval = hash_obj(name);
-            value -> next = obj->vars[hashval];
+            value -> next = *(obj->vars[hashval]);
             value ->name = (char *)name;
           //  printf("good check %d\n",hashval);
-            obj->vars[hashval] = value;
+            *(obj->vars[hashval]) = value;
         } else //already there
             free((void *) np->value); //free previous defn
         if ((np->value = value) == NULL){

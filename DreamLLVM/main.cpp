@@ -15,6 +15,7 @@ extern "C" {
 
 StructType * dreamObjTy;
 PointerType * dreamObjPtrTy;
+PointerType * dreamObjDoublePtrTy;
 PointerType * voidPointerTy;
 
 
@@ -82,6 +83,7 @@ LLVMData * llvm_init(){
     voidPointerTy = PointerType::get(PointerType::getVoidTy(new_context -> context), 0);
     dreamObjTy = StructType::create(new_context -> context, "dreamObj");
     dreamObjPtrTy = PointerType::get(dreamObjTy, 0);
+    dreamObjDoublePtrTy = PointerType::get(dreamObjPtrTy, 0);
     Type * int32Type = Type::getInt32Ty(new_context -> context);
     
    
@@ -89,14 +91,14 @@ LLVMData * llvm_init(){
     dreamObjTy->setBody({
         Type::getInt8PtrTy(new_context -> context) , //const char * name;
         
-        dreamObjPtrTy , // dreamObj *next;
+        dreamObjDoublePtrTy , // dreamObj ** next;
         voidPointerTy, //  void * value;
         dreamObjPtrTy,//dreamObj * type ;
-        dreamObjPtrTy,// *dreamObj *first_var;
-        dreamObjPtrTy,//dreamObj *last_var;
+        dreamObjDoublePtrTy,// dreamObj ** first_var;
+        dreamObjDoublePtrTy,//dreamObj ** last_var;
         dreamObjPtrTy, //  dreamObj * parent_scope;
         int32Type, // bool * pointer;
-        ArrayType::get(dreamObjPtrTy, HASHSIZE) // dreamObj * vars [HASHSIZE];
+        ArrayType::get(dreamObjDoublePtrTy, HASHSIZE) // dreamObj ** vars [HASHSIZE];
         
     });
     
@@ -396,6 +398,17 @@ Value * load_store(LLVMData* context, Value * value){
     return object;
 }
 
+Value * log_llvm(LLVMData * context, Value * value){
+    
+    return call_standard(context, "print", {llvmInt(context, 1), value});
+}
+
+
+Value * dict_llvm(LLVMData * context, Value * value){
+    
+    return call_standard(context, "dict", {value});
+}
+
 FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_class, int arg_size, const char * arg_names[arg_size]){
 
     vector<Type *> args = {dreamObjPtrTy};
@@ -426,6 +439,7 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
     
     //save arguments into scope "obj"
     int i = 0;
+    
     for (Argument& arg : new_func->args()) {
         //skip first context argument because we want the value of the variables (for now...)
         if(i==0){
@@ -439,6 +453,8 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
         LoadInst * arg_ref = new LoadInst(dreamObjPtrTy, alloc, "varName", context->currentBlock);
         (&arg)->setName(arg_names[(i++)-1]);
        
+        
+        
         //set_var_llvm(context, context_arg, a rg_names[i-2], arg_ref);
         set_var_llvm(context, context_arg, arg_names[i-2], arg_ref);
         
@@ -447,7 +463,8 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
     //store function name & scope so they can be used outside of this function
     func_data -> scope = load_store(context, context_arg);
     func_data -> name = (new std::string(funcName))->c_str();
-
+    //dict_llvm(context, context_arg);
+    //dict_llvm(context, get_var_llvm(context, context_arg, "parent"));
     return func_data;
 }
 
@@ -664,27 +681,17 @@ Value * funcScope(FuncData * data){
     return data -> scope;
 }
 
-void luv(LLVMData * context){
-    //test2b(context);
-   
-
-    //retVal(context, llvmInt(context, 59));
-}
-
-void makeme(dreamObj * scope){
-    //print(1,get_var(scope, "x_ptr"));
-}
-
 
 
 int main(){
-    //print(equals(dreamInt(1),dreamInt(7)));
-   
-   
+  
     LLVMData * context = llvm_init();
+   // for(int i=0; i<100000;i++){
+     //   Value * scope = str(context, "hello");
+       // log_llvm(context, scope);
+    //}
     
-    Value * scope = str(context, "hello");
-    
+    /*
     FuncData *new_func2 = func(context, scope, "cat", 0, false, new const char * []{});
     
         set_var_llvm(context, scope, "scope", scope);
@@ -701,7 +708,7 @@ int main(){
     
     end_func(context, scope, new_func2);
     
-    Value * home = call_standard_c(context, "cat", 1, new Value*[]{init_scope(context, scope,1)});
+    Value * home = call_standard_c(context, "cat", 1, new Value*[]{init_scope(context, scope,1)});*/
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
     llvm_run(context, false, false);
     return 0;
