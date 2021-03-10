@@ -54,10 +54,13 @@ void loadStandard(LLVMData* context){
     //functions["test"] = context->owner->getOrInsertFunction("testing", FunctionType::get(PointerType::getVoidTy(context->context), false));
     functions["new_scope"] = context->owner->getOrInsertFunction("new_scope", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, intType}, false));
     functions["copy"] = context->owner->getOrInsertFunction("copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
+    functions["deep_copy"] = context->owner->getOrInsertFunction("deep_copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["shallow_copy"] = context->owner->getOrInsertFunction("shallow_copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["dict"] = context->owner->getOrInsertFunction("dict", FunctionType::get(dreamObjPtrTy, false));
     functions["add_c"] = context->owner->getOrInsertFunction("add_c", FunctionType::get(dreamObjPtrTy,{dreamObjPtrTy,dreamObjPtrTy}, false));
     functions["set_parent"] = context->owner->getOrInsertFunction("set_parent", FunctionType::get(dreamObjPtrTy, dreamObjPtrTy, false));
+    functions["merge"] = context->owner->getOrInsertFunction("merge", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
+    functions["unmerge"] = context->owner->getOrInsertFunction("unmerge", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
 }
 
 
@@ -452,8 +455,9 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
         new StoreInst(&arg, alloc, context->currentBlock);
         LoadInst * arg_ref = new LoadInst(dreamObjPtrTy, alloc, "varName", context->currentBlock);
         (&arg)->setName(arg_names[(i++)-1]);
-       
         
+        //log_llvm(context, arg_ref);
+        //printf("setting params\n");
         
         //set_var_llvm(context, context_arg, a rg_names[i-2], arg_ref);
         set_var_llvm(context, context_arg, arg_names[i-2], arg_ref);
@@ -463,7 +467,9 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
     //store function name & scope so they can be used outside of this function
     func_data -> scope = load_store(context, context_arg);
     func_data -> name = (new std::string(funcName))->c_str();
-    //dict_llvm(context, context_arg);
+  
+    //if(is_class)log_llvm(context, get_var_llvm(context, context_arg, "x"));
+   // if(is_class)dict_llvm(context, context_arg);
     //dict_llvm(context, get_var_llvm(context, context_arg, "parent"));
     return func_data;
 }
