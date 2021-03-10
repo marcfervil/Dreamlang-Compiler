@@ -933,7 +933,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         dreamObj * var;
         for (var = deref_var(var2->first_var); var!=NULL; var = deref_var(var->next)){
 
-            set_var(var1, strdup(var->name), deep_copy(var));
+            set_var(var1, strdup(var->name), (var));
            // printf("merged %s\n", var->name);
         }
     }
