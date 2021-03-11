@@ -297,7 +297,14 @@ typedef struct dreamObj{
             return str;
         
         }else if(type == dreamObjType){
-            return("<Object>");
+            dreamObj* rep_func;
+            if((rep_func = get_var(obj, "rep"))!=nullDream){
+                dreamObj * rep_call = ((dreamObj* (*)(dreamObj *)) rep_func->value)(obj);
+                
+                return ( char *)rep_call->value;
+            }else{
+                return("<Object>");
+            }
         }else{
             return("<Invalid Type>");
         }

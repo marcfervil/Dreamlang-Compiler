@@ -46,9 +46,9 @@
             filePath = "DreamLLVM/standard.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "940"
-            endingLineNumber = "940"
-            landmarkName = "set_var_soft(obj, name, value)"
+            startingLineNumber = "947"
+            endingLineNumber = "947"
+            landmarkName = "new_scope(obj, nested_scope)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -94,9 +94,9 @@
             filePath = "DreamLLVM/standard.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "815"
-            endingLineNumber = "815"
-            landmarkName = "set_var_soft(obj, name, value)"
+            startingLineNumber = "822"
+            endingLineNumber = "822"
+            landmarkName = "copy(obj)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -110,9 +110,9 @@
             filePath = "DreamLLVM/standard.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "816"
-            endingLineNumber = "816"
-            landmarkName = "set_var_soft(obj, name, value)"
+            startingLineNumber = "823"
+            endingLineNumber = "823"
+            landmarkName = "copy(obj)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -126,8 +126,8 @@
             filePath = "DreamLLVM/standard.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "705"
-            endingLineNumber = "705"
+            startingLineNumber = "712"
+            endingLineNumber = "712"
             landmarkName = "set_var_soft(obj, name, value)"
             landmarkType = "9">
          </BreakpointContent>
@@ -142,8 +142,8 @@
             filePath = "DreamLLVM/standard.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "714"
-            endingLineNumber = "714"
+            startingLineNumber = "721"
+            endingLineNumber = "721"
             landmarkName = "set_var_soft(obj, name, value)"
             landmarkType = "9">
          </BreakpointContent>
@@ -158,8 +158,8 @@
             filePath = "DreamLLVM/standard.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "713"
-            endingLineNumber = "713"
+            startingLineNumber = "720"
+            endingLineNumber = "720"
             landmarkName = "set_var_soft(obj, name, value)"
             landmarkType = "9">
          </BreakpointContent>
@@ -174,8 +174,8 @@
             filePath = "DreamLLVM/standard.hpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "702"
-            endingLineNumber = "702"
+            startingLineNumber = "709"
+            endingLineNumber = "709"
             landmarkName = "set_var_soft(obj, name, value)"
             landmarkType = "9">
          </BreakpointContent>
