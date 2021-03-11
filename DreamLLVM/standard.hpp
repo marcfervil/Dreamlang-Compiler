@@ -792,6 +792,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
     
     dreamObj* copy(dreamObj * obj){
         //printf("COPYING OBJ OF TYPE %s\n", rep(obj->type));
+        if(obj->type == dreamFuncType)return shallow_copy(obj);
         if(obj==NULL || obj==nullDream || obj->type == dreamObjType ||obj->type == dreamFuncType)return obj;
         
         
