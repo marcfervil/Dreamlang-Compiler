@@ -248,6 +248,7 @@ typedef struct dreamObj{
 
     const char * rep(dreamObj* obj){
         if (obj==nullDream) return "<Undefined>";
+       // if (obj->type==nullDream) return "<Undefined>";
         if (obj->type==NULL) return "<NULL type>";
         //if (obj==NULL)return "<NULL>";
         dreamObj * type = obj->type;
@@ -489,25 +490,28 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
           //  printf("found not null %s ?\n",rep(found));
         }
         if(found->name != NULL && strcmp(found->name, name)!=0){
-           
-            printf("TODO: FIX HASH COLLISION POINTER BUG - %s COLLIDES WITH %s\n", name, (*(obj->vars[hashval]))->name);
+            //dict(obj);
+           // printf("TODO: FIX HASH COLLISION POINTER BUG - %s COLLIDES WITH %s on %s\n", name, (*(obj->vars[hashval]))->name, obj->name);
             //exit(0);
             
             
             // THIS WAS WORKING FIX IT
             dreamObj ** next = (*(obj->vars[hashval]))->next;
+           // printf("1\n");
             //print(1,next);
             *((*(obj->vars[hashval])))->next = copy(value);
+          //  printf("2\n");
            ( (*((*(obj->vars[hashval])))->next) ) ->name = strdup(name);
-            
+           // printf("3\n");
           //
             
-           (*(*(*(obj->vars[hashval]))->next)->next)->next = next;
+            ((*(*(obj->vars[hashval]))->next)->next)= next;
+           // printf("4\n");
             if(obj->vars[hashval]==obj->last_var){
                 obj->last_var =(*(obj->vars[hashval]))->next ;
             }
             
-            
+           // printf("didntseg");
             //cat
             //  tabby
 
@@ -540,7 +544,12 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
          
       //  }
        // if(value->name!=NULL && value->name[0]=='@'){
-        if(value->type == dreamObjType){
+        if(found == nullDream){
+            printf("nullre");
+            dreamObj * new_value =copy(value);
+            new_value ->name = strdup(name);
+            *(obj->vars[hashval]) = new_value;
+        }else if(value->type == dreamObjType){
           //  printf("\nstarting free1");
            // printf("TODO: Proper Object reassignment\n");
            // free((*(obj->vars[hashval]))->value);
@@ -577,7 +586,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             //memcpy((*(obj->vars[hashval]))->vars, value->vars, sizeof((*(obj->vars[hashval]))->vars));
             //printf("here\n");
             
-           // printf("HERE WTF?????\n");
+           //
             /*
             free(found->value);
             found->value = value->value;
@@ -593,10 +602,12 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
                 //found->vars[i] = shallow_copy(value->vars[i]);
             }*/
            
+        
         }else{
            
            // print(1, found);
-            if(!(found->type==dreamObjType || found->type==nullDream )){
+           // printf("is null: %d\n",found==nullDream);
+            if(found!=nullDream && found->type!=dreamObjType && found->type!=dreamFuncType){
                 free(found->value);
             }
             found->value = copy_value(value->value,  value->type);
@@ -954,6 +965,15 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         
     }
     
+    void * ctype(dreamObj * obj){
+//if(obj )
+        return obj->value;
+    }
+
+    void display(const char * str, int* val){
+        printf("Wow, you displayed: %s(%d)\n", str, *val);
+    }
+
     void merge(dreamObj * var1, dreamObj * var2){
         dreamObj * var;
         for (var = deref_var(var2->first_var); var!=NULL; var = deref_var(var->next)){

@@ -60,7 +60,8 @@ void loadStandard(LLVMData* context){
     functions["add_c"] = context->owner->getOrInsertFunction("add_c", FunctionType::get(dreamObjPtrTy,{dreamObjPtrTy,dreamObjPtrTy}, false));
     functions["set_parent"] = context->owner->getOrInsertFunction("set_parent", FunctionType::get(dreamObjPtrTy, dreamObjPtrTy, false));
     functions["merge"] = context->owner->getOrInsertFunction("merge", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
-    functions["unmerge"] = context->owner->getOrInsertFunction("unmerge", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
+    functions["ctype"] = context->owner->getOrInsertFunction("ctype", FunctionType::get(strType,  dreamObjPtrTy, false));
+    functions["display"] = context->owner->getOrInsertFunction("display", FunctionType::get(voidTy, false));
 }
 
 
