@@ -384,42 +384,18 @@ typedef struct dreamObj{
         }
         if(strcmp(s, "parent") == 0)return obj->parent_scope;
         dreamObj * np;
-        //printf("%s parent is %s\n",s,rep(obj));
-       // dict(obj);
-       // if(obj->parent_scope != NULL)dict(obj->parent_scope);
-        /*
-        for(int i=0;i<HASHSIZE; i++){
-            if(obj->vars[i]!=NULL){
-                print(1, obj->vars[i]);
-            }
-        }*/
-       // dict(obj);
-    //    dict(obj);
-        
-      //  printf("cafe\n");
-        //printf("%s VS %s\n",np->name, s);
        
         for (np = deref_var(obj->vars[hash_obj(s)]); np!=NULL; np = deref_var(np->next)){
-           // dreamObj * t = obj->vars[hash_obj(s)];
-            //if(np->name != NULL)printf("looking %s\n",np->name);
-            
-         //   print(1, np);
-               // rep( np);
-            //print(1, np->type);
-            //printf("%s\n",rep(np));
-           //     printf("%s\n",np->name);
-            
+       
+           // printf("searching: %s\n",s);
             if (np->name != NULL && strcmp(s, np->name) == 0){
-                //copy
-                //if(np->pointer==1){
-                    //printf("got pointer named %s\n",s);
-                //}
+             
                
                 return np; // found
             }
         }
         if(obj->parent_scope != nullDream && strcmp(s,"scope")!=0 && s[0]!='@'){
-           // printf("up-get: %s\n",s);
+            //printf("up-get: %s\n",s);
            
             return get_var(obj->parent_scope, s);
         }
@@ -496,25 +472,27 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
           //  printf("%d\n", (*g)==NULL);
           //  printf("found not null %s ?\n",rep(found));
         }
+      //  if(strcmp(name, "other")==0)dict(obj);
         if(found->name != NULL && strcmp(found->name, name)!=0){
-            //dict(obj);
+            
            // printf("TODO: FIX HASH COLLISION POINTER BUG - %s COLLIDES WITH %s on %s\n", name, (*(obj->vars[hashval]))->name, obj->name);
             //exit(0);
             
             
             // THIS WAS WORKING FIX IT
-            dreamObj ** next = (*(obj->vars[hashval]))->next;
+            dreamObj * next = *((*(obj->vars[hashval]))->next);
            // printf("1\n");
             //print(1,next);
-            *((*(obj->vars[hashval])))->next = copy(value);
-          //  printf("2\n");
-           ( (*((*(obj->vars[hashval])))->next) ) ->name = strdup(name);
-           // printf("3\n");
-          //
             
-            ((*(*(obj->vars[hashval]))->next)->next)= next;
+            dreamObj * new_obj = (value->type != dreamObjType) ? copy(value) : shallow_copy(value);
+         
+            new_obj -> name = strdup(name);
+            *((*(obj->vars[hashval])))->next = new_obj;
+          
+            
+            *((*(*(obj->vars[hashval]))->next)->next)= next;
            // printf("4\n");
-            if(obj->vars[hashval]==obj->last_var){
+            if((obj->vars[hashval])==(obj->last_var)){
                 obj->last_var =(*(obj->vars[hashval]))->next ;
             }
             
@@ -565,10 +543,10 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             
             //LALALA
             
-            (*(obj->vars[hashval]))->value = value->value;
-            (*(obj->vars[hashval])) ->name = strdup(name);
+            (*(obj->vars[hashval])) -> value = value->value;
+            (*(obj->vars[hashval])) -> name = strdup(name);
             
-            (*(obj->vars[hashval]))->type = value->type;
+            (*(obj->vars[hashval])) -> type = value->type;
             //(*(obj->vars[hashval]))->first_var = value->first_var;
             
             for(int i=0; i<HASHSIZE; i++){
@@ -622,7 +600,21 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             found->name = strdup(name);
             (*(obj->vars[hashval]))->type = value->type;
             
-          
+            for(int i=0; i<HASHSIZE; i++){
+               // if()
+               // set_var(np, strdup(var->name), (var));
+                (*(obj->vars[hashval]))->vars[i] = value->vars[i];
+                
+                //value->vars[i];
+                //pointer_init();
+                //(obj->vars[i]);
+             
+            }
+            
+            
+            for (dreamObj* var = deref_var(value->first_var); var!=NULL; var = deref_var(var->next)){
+               set_var((*(obj->vars[hashval])), strdup(var->name), (var));
+            }
            
         }
         
@@ -1004,6 +996,8 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         
         dreamObj * equ;
         if((equ = get_var(var1, "add")) != NULL){
+           // dict(var1);
+            //dict(var2);
             dreamObj * result = ((dreamObj* (*)(dreamObj *, dreamObj *)) equ->value)(var1, var2);
             
             return result;

@@ -180,7 +180,7 @@ dreamObj * dreamStr(const char * value){
         
         for (np = obj->vars[hash_obj(s)]; np!=NULL; np = np->next){
            // dreamObj * t = obj->vars[hash_obj(s)];
-            
+           
             if (np->name != NULL && strcmp(s, np->name) == 0){
                 return np; // found
             }
