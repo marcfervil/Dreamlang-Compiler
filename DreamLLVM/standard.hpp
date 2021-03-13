@@ -383,6 +383,7 @@ typedef struct dreamObj{
             exit(0);
         }
         if(strcmp(s, "parent") == 0)return obj->parent_scope;
+        if(strcmp(s, "type") == 0)return obj->type;
         dreamObj * np;
        
         for (np = deref_var(obj->vars[hash_obj(s)]); np!=NULL; np = deref_var(np->next)){
@@ -394,7 +395,7 @@ typedef struct dreamObj{
                 return np; // found
             }
         }
-        if(obj->parent_scope != nullDream && strcmp(s,"scope")!=0 && s[0]!='@'){
+        if(obj->parent_scope != nullDream && strcmp(s,"scope")!=0 && s[0]!='@' && strcmp(s, "this")!=0 ){
             //printf("up-get: %s\n",s);
            
             return get_var(obj->parent_scope, s);
@@ -488,7 +489,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
          
             new_obj -> name = strdup(name);
             *((*(obj->vars[hashval])))->next = new_obj;
-          
+            
             
             *((*(*(obj->vars[hashval]))->next)->next)= next;
            // printf("4\n");
@@ -547,12 +548,12 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             (*(obj->vars[hashval])) -> name = strdup(name);
             
             (*(obj->vars[hashval])) -> type = value->type;
-            //(*(obj->vars[hashval]))->first_var = value->first_var;
+            (*(obj->vars[hashval]))->first_var = value->first_var;
             
             for(int i=0; i<HASHSIZE; i++){
                // if()
                // set_var(np, strdup(var->name), (var));
-                (*(obj->vars[hashval]))->vars[i] = value->vars[i];
+                (*(obj->vars[hashval]))->vars[i] = (value->vars[i]);
                 
                 //value->vars[i];
                 //pointer_init();
@@ -560,11 +561,12 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
              
             }
             
-            
+            /*
             for (dreamObj* var = deref_var(value->first_var); var!=NULL; var = deref_var(var->next)){
+                if(var->name != NULL && strcmp(var->name, "this")==0)continue;
                set_var((*(obj->vars[hashval])), strdup(var->name), (var));
             }
-            
+            */
           //  (*(obj->vars[hashval])) = shallow_copy(value);
           //  (*(obj->vars[hashval])) ->name = name;
             
@@ -603,7 +605,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             for(int i=0; i<HASHSIZE; i++){
                // if()
                // set_var(np, strdup(var->name), (var));
-                (*(obj->vars[hashval]))->vars[i] = value->vars[i];
+                (*(obj->vars[hashval]))->vars[i] = (value->vars[i]);
                 
                 //value->vars[i];
                 //pointer_init();
@@ -611,11 +613,12 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
              
             }
             
-            
+            /*
             for (dreamObj* var = deref_var(value->first_var); var!=NULL; var = deref_var(var->next)){
+              
                set_var((*(obj->vars[hashval])), strdup(var->name), (var));
             }
-           
+           */
         }
         
        // char * temp = (char*) realloc( (*(obj->vars[hashval]))->value, strlen(val + 1 ));
@@ -653,7 +656,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         }*/
         if(strcmp(name,"scope")==0 ){
             (*(obj->vars[hashval])) = value;
-        }else if(name[0]=='@' || value->type==dreamObjType){
+        }else if(name[0]=='@' || strcmp(name, "this")==0 || value->type==dreamObjType){
            // printf("deep_dish");
             dreamObj * new_value = shallow_copy(value);
             new_value ->name = strdup(name);
@@ -696,14 +699,15 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
     }
     
     if(deref_var(obj->first_var) == NULL){
-       
-        obj->first_var = obj->vars[hashval] ;
+        
+        *(obj->first_var) = *(obj->vars[hashval]) ;
+ 
       //  printf("Assigned frist var on %s to %s\n", rep(obj), rep(*(obj->first_var)));
     }
     if(deref_var(obj->last_var) != NULL){
-        ( *(obj->last_var ))-> next =  obj->vars[hashval] ;
+        *(( *(obj->last_var ))-> next) =  *(obj->vars[hashval]) ;
     }
-    obj->last_var =  obj->vars[hashval] ;
+    *(obj->last_var) =  *(obj->vars[hashval] );
     
  
         //obj->last_var ->next = nullDream;
@@ -727,7 +731,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         }
         
         
-        if(strcmp(name, "scope")!=0 && name[0]!='@' && obj->parent_scope != nullDream && get_var(obj->parent_scope, name)!=nullDream){
+        if(strcmp(name, "this")!=0 && name[0]!='@' && obj->parent_scope != nullDream && get_var(obj->parent_scope, name)!=nullDream){
                // printf("up-set: (%s: %s)\n", name, rep(value));
             //print(value);
          //   dict(obj->parent_scope);
@@ -826,7 +830,11 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
        // printf("shallowm");
       //  dict(obj);
         if(obj==NULL || obj==nullDream)return obj;
-
+        if(obj->name !=NULL && !(strcmp(obj->name,"this")==0 || obj->name[0]=='@')){
+            //printf("THEM: \n");
+            //dict(obj);
+        }
+        
        dreamObj *np = make_dream(obj->value, obj->type);
        // dreamObj** new_type = &(obj->type);
        // np->type = (dreamObj *)new_type;
@@ -848,7 +856,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             set_var(np, (var->name), (var) );
         }*/
        
-       
+        
         
         for(int i=0; i<HASHSIZE; i++){
            // if()
@@ -857,7 +865,10 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             //(obj->vars[i]);
          
         }
-        
+        if(obj->name !=NULL && !(strcmp(obj->name,"this")==0 || obj->name[0]=='@')){
+            //printf("ME: \n");
+            //dict(obj);
+        }
         /*
         dreamObj *var;
         for (var = deref_var(obj->first_var); var!=NULL; var = deref_var(var->next)){
@@ -884,8 +895,9 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         //return obj;
         
         if(obj==NULL || obj==nullDream)return obj;
-
-        dreamObj *np = make_dream(obj->value, obj->type);
+        //print(1, obj->type);
+        //printf("%s\n",obj->name);
+        dreamObj *np = make_dream(copy_value(obj->value,  obj->type), obj->type);
         if(obj->name!=NULL){
             np->name =strdup( obj->name);
         }
@@ -893,17 +905,22 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         dreamObj *var;
         
        // np->vars = obj->vars;
-        np->parent_scope = obj->parent_scope;
+       // np->parent_scope = deep_copy(obj->parent_scope);
         //memcpy(np->vars, obj->vars, sizeof(obj->vars));
         
         
         for (var = deref_var(obj->first_var); var!=NULL; var = deref_var(var->next)){
             //printf("name: %s\n", var->name);
-            if(var->name!=NULL && (var->name[0]=='@'))continue;
+            
+            if(var->name!=NULL && (var->name[0]=='@' || strcmp(var->name, "this")==0)){
+                set_var(np, strdup(var->name), (var));
+                continue;
+            }
+                
             //char * new_name=strdup(var->name);
             //new_name[0] = 'e';
             set_var(np, strdup(var->name), deep_copy(var));
-            
+            //printf("");
         }
         
       //  set_var(np, "shallow", dreamBool(1));
@@ -945,17 +962,17 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
 
     
     dreamObj * equals_c(dreamObj * var1, dreamObj * var2){
-        if(var1 == nullDream) {
-           
-            return dreamBool(var1==nullDream && var2==nullDream);
-        }
+        if(var1 == nullDream)return dreamBool(var1==nullDream && var2==nullDream);
+        
         dreamObj * equ;
-        if((equ = get_var(var1, "equals")) != NULL){
+        if((equ = get_var(var1, "equals")) != nullDream){
             
             dreamObj * b = ((dreamObj* (*)(dreamObj *, dreamObj *)) equ->value)(var1, var2);
 
             return b;
         }
+        //TODO - some sort of equals inheritance for objects.  Deffering because I dont want to allocate more memory.
+        else if(var1->type==dreamObjType) return dreamBool(var1 == var2);
         printf("[Nightmare]: <Undefined Equals Operation>\n");
         return dreamBool(-1);
     }
