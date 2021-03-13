@@ -384,6 +384,7 @@ typedef struct dreamObj{
         }
         if(strcmp(s, "parent") == 0)return obj->parent_scope;
         if(strcmp(s, "type") == 0)return obj->type;
+        if(strcmp(s, "self") == 0)return obj;
         dreamObj * np;
        
         for (np = deref_var(obj->vars[hash_obj(s)]); np!=NULL; np = deref_var(np->next)){
@@ -395,7 +396,7 @@ typedef struct dreamObj{
                 return np; // found
             }
         }
-        if(obj->parent_scope != nullDream && strcmp(s,"scope")!=0 && s[0]!='@' && strcmp(s, "this")!=0 ){
+        if(obj->parent_scope != nullDream && strcmp(s,"scope")!=0 && s[0]!='@' ){
             //printf("up-get: %s\n",s);
            
             return get_var(obj->parent_scope, s);
@@ -601,7 +602,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
 
             found->name = strdup(name);
             (*(obj->vars[hashval]))->type = value->type;
-            
+            (*(obj->vars[hashval]))->first_var = value->first_var;
             for(int i=0; i<HASHSIZE; i++){
                // if()
                // set_var(np, strdup(var->name), (var));
@@ -905,7 +906,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         dreamObj *var;
         
        // np->vars = obj->vars;
-       // np->parent_scope = deep_copy(obj->parent_scope);
+   //  np->parent_scope = deep_copy(obj->parent_scope);
         //memcpy(np->vars, obj->vars, sizeof(obj->vars));
         
         
@@ -913,7 +914,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             //printf("name: %s\n", var->name);
             
             if(var->name!=NULL && (var->name[0]=='@' || strcmp(var->name, "this")==0)){
-                set_var(np, strdup(var->name), (var));
+                set_var(np, strdup(var->name), copy(var));
                 continue;
             }
                 
