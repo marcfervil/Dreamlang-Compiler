@@ -6,7 +6,7 @@
 //
 
 #include "main.hpp"
-#include "standard.hpp"
+//#include "standard.hpp"
 
 
 
@@ -72,8 +72,10 @@ LLVMData * llvm_init(){
     LLVMInitializeNativeAsmPrinter();
     
 
+   llvm::sys::DynamicLibrary::LoadLibraryPermanently("dream.a");
     llvm::sys::DynamicLibrary::LoadLibraryPermanently("dream.so");
-    llvm::sys::DynamicLibrary::LoadLibraryPermanently("dream.o");
+   // llvm::sys::DynamicLibrary::LoadLibraryPermanently("lib/dream.a");
+   // llvm::sys::DynamicLibrary::LoadLibraryPermanently("hopes.o");
 
     //initialize context struct
     LLVMData * new_context = new LLVMData();
@@ -116,6 +118,13 @@ LLVMData * llvm_init(){
     
     //load standard functions
     loadStandard(new_context);
+  //
+    
+    
+    
+  //  loadStandard(new_context);
+   // llvm_link(new_context, "hopes.o");
+    
     return new_context;
 }
 
@@ -125,27 +134,31 @@ void llvm_link(LLVMData * context, string fileName ){
      
      //llvm::sys::DynamicLibrary::LoadLibraryPermanently("./lib/"+fileName);
      
-     std::string objectFileName("./lib/"+fileName);
+     std::string objectFileName(fileName);
+        
 
      ErrorOr<std::unique_ptr<MemoryBuffer>> buffer =
        MemoryBuffer::getFile(objectFileName.c_str());
 
      if (!buffer) {
        // handle error
+         printf("Couldnt find file ??");
      }
-
+   
      Expected<std::unique_ptr<llvm::object::ObjectFile>> objectOrError = llvm::object::ObjectFile::createObjectFile(buffer.get()->getMemBufferRef());
      //OfbectcreateObjectFile(buffer.get()->getMemBufferRef());
-
+   
      if (!objectOrError) {
        // handle error
+         printf("????");
      }
-
+    
      std::unique_ptr<llvm::object::ObjectFile> objectFile(std::move(objectOrError.get()));
 
      auto owningObject = llvm::object::OwningBinary<llvm::object::ObjectFile>(std::move(objectFile),std::move(buffer.get()));
 
      context->engine->addObjectFile(std::move(owningObject));
+    //lcontext->engine->
 }
 
 int build(LLVMData * context){
@@ -174,8 +187,7 @@ int build(LLVMData * context){
 
       TargetOptions opt;
       auto RM = Optional<Reloc::Model>();
-      auto TheTargetMachine =
-          Target->createTargetMachine(TargetTriple, CPU, Features, opt, RM);
+      auto TheTargetMachine = Target->createTargetMachine(TargetTriple, CPU, Features, opt, RM);
 
     context->module->setDataLayout(TheTargetMachine->createDataLayout());
 
@@ -206,6 +218,7 @@ int build(LLVMData * context){
 
 //run our llvm code
 void llvm_run(LLVMData * context, bool link_obj=true, bool print_module = false, bool build_obj = false){
+    
     context -> engine = EngineBuilder(std::move(context->owner)).create();
     
     if(link_obj){
@@ -217,6 +230,8 @@ void llvm_run(LLVMData * context, bool link_obj=true, bool print_module = false,
             context->engine->addGlobalMapping(f, functions[funcName].getCallee());
         }
     }
+    
+    
     
     if(print_module){
         outs() << "We just constructed this LLVM module:\n\n" << *context->module;
@@ -692,15 +707,17 @@ Value * funcScope(FuncData * data){
 
 int main(){
   
-    dreamObj * x = dreamStr("hello");
-    set_var(x, "hi", dreamStr("hi"));
-    
-    return 0;
+
     LLVMData * context = llvm_init();
    // for(int i=0; i<100000;i++){
      //   Value * scope = str(context, "hello");
-       // log_llvm(context, scope);
+        // log_llvm(context, scope);
     //}
+    Value * scope = str(context, "doggie");
+    //loadStandard(context);
+    
+ //   Value * callResult = context->builder->get.CreateCall(functions["str"], context->builder->get.CreateGlobalStringPtr(StringRef("ewfew")));
+  //  log_llvm(context, scope);
     
     /*
     FuncData *new_func2 = func(context, scope, "cat", 0, false, new const char * []{});
@@ -721,7 +738,8 @@ int main(){
     
     Value * home = call_standard_c(context, "cat", 1, new Value*[]{init_scope(context, scope,1)});*/
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
-    llvm_run(context, false, false);
+    llvm_run(context, true, false);
+    
     return 0;
 
 }

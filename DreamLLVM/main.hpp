@@ -98,6 +98,7 @@ extern "C"{
 
     Value * llvmInt(LLVMData* context, int value);
     Value * retVal(LLVMData* context, Value * value );
+    void llvm_link(LLVMData * context, string fileName );
 }
 #include "IfGen.hpp"
 

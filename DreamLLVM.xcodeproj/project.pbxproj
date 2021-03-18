@@ -55,6 +55,7 @@
 		947A65A925DE1D770093D821 /* DreamLib.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DreamLib.hpp; sourceTree = "<group>"; };
 		947A65AB25DE1D770093D821 /* DreamLibPriv.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DreamLibPriv.hpp; sourceTree = "<group>"; };
 		947A65AD25DE1D770093D821 /* DreamLib.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DreamLib.cpp; sourceTree = "<group>"; };
+		947DCE51260000B4004A793B /* pylinklib.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pylinklib.c; sourceTree = "<group>"; };
 		948AB2F425DB5DA3009FCA3B /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		948AB2F525DB5DA3009FCA3B /* main.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = main.hpp; sourceTree = "<group>"; };
 		948AB2F725DB7935009FCA3B /* standard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = standard.cpp; sourceTree = "<group>"; };
@@ -116,6 +117,7 @@
 				944C9FDA25EB69DB0012B74B /* IfGen.hpp */,
 				944C9FDE25EB8C5B0012B74B /* pylink.cpp */,
 				944C9FDF25EB8C5B0012B74B /* pylink.c */,
+				947DCE51260000B4004A793B /* pylinklib.c */,
 			);
 			path = DreamLLVM;
 			sourceTree = "<group>";
@@ -284,6 +286,10 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					pylinklib.c,
+					pylink.c,
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -363,6 +369,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					pylinklib.c,
+					pylink.c,
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
