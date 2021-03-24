@@ -101,5 +101,6 @@ extern "C"{
     void llvm_link(LLVMData * context, string fileName );
 }
 #include "IfGen.hpp"
+#include "Natives.hpp"
 
 #endif /* main_hpp */

@@ -6,7 +6,7 @@
 //
 
 #include "main.hpp"
-//#include "standard.hpp"
+#include "standard.hpp"
 
 
 
@@ -26,16 +26,19 @@ PointerType * voidPointerTy;
 
 map<string, FunctionCallee> functions;
 
-
+Type * strType;
+Type * intType;
+Type * voidTy ;
+Type * voidPtrTy;
 
 
 //expose standard.cpp functions to LLVM
 void loadStandard(LLVMData* context){
     
-    Type * strType = PointerType::get(Type::getInt8Ty(context->context), 0);
-    Type * intType = IntegerType::getInt32Ty(context->context);
-    Type * voidTy =  PointerType::getVoidTy(context->context);
-    Type * voidPtrTy =  PointerType::get(PointerType::getVoidTy(context->context),0);
+    strType = PointerType::get(Type::getInt8Ty(context->context), 0);
+    intType = IntegerType::getInt32Ty(context->context);
+    voidTy =  PointerType::getVoidTy(context->context);
+    voidPtrTy =  PointerType::get(PointerType::getVoidTy(context->context),0);
     
     functions["print"] = context->owner->getOrInsertFunction("print", FunctionType::get(voidTy,{intType,dreamObjPtrTy}, true));
     functions["pointer"] = context->owner->getOrInsertFunction("pointer", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
@@ -62,6 +65,10 @@ void loadStandard(LLVMData* context){
     functions["merge"] = context->owner->getOrInsertFunction("merge", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
     functions["ctype"] = context->owner->getOrInsertFunction("ctype", FunctionType::get(strType,  dreamObjPtrTy, false));
     functions["display"] = context->owner->getOrInsertFunction("display", FunctionType::get(voidTy, false));
+    
+    functions["native_int"] = context->owner->getOrInsertFunction("native_int", FunctionType::get(voidTy, {intType},false));
+    functions["native_test"] = context->owner->getOrInsertFunction("native_test", FunctionType::get(voidTy, {intType}, false));
+    functions["check"] = context->owner->getOrInsertFunction("check", FunctionType::get(voidTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
 }
 
 
@@ -72,8 +79,10 @@ LLVMData * llvm_init(){
     LLVMInitializeNativeAsmPrinter();
     
 
-   llvm::sys::DynamicLibrary::LoadLibraryPermanently("dream.a");
-    llvm::sys::DynamicLibrary::LoadLibraryPermanently("dream.so");
+   // llvm::sys::DynamicLibrary::LoadLibraryPermanently("lib/dream.a");
+    //llvm::sys::DynamicLibrary::LoadLibraryPermanently("lib/hopes.o");
+  //  llvm::sys::DynamicLibrary::LoadLibraryPermanently("dream.so");
+    //llvm::sys::DynamicLibrary::LoadLibraryPermanently("lib/hopes.o");
    // llvm::sys::DynamicLibrary::LoadLibraryPermanently("lib/dream.a");
    // llvm::sys::DynamicLibrary::LoadLibraryPermanently("hopes.o");
 
@@ -248,9 +257,11 @@ void llvm_run(LLVMData * context, bool link_obj=true, bool print_module = false,
     llvm_shutdown();
     
 }
+
 Value * llvmStrConst(LLVMData* context, const char * value){
     return context->builder->get.CreateGlobalStringPtr(StringRef(value));
 }
+
 Value * num(LLVMData* context, int value){
     Value* builtInt = context->builder->get.getInt32(value);
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "int_stack", context->currentBlock);
@@ -288,6 +299,7 @@ Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *
     
     Value * callResult;
     if (isBuiltinFunc(funcName)){
+        
         callResult = context->builder->get.CreateCall(functions[funcName], args);
     }else{
         //Value * var = call_standard(context, "get_var", {scope, llvmStrConst(context, "few")});
@@ -319,7 +331,8 @@ Value * llvmInt(LLVMData* context, int value){
 }
 
 Value * llvmStr(LLVMData* context, const char * value){
-    return context->builder->get.CreateGlobalStringPtr(StringRef(value));
+    Value * v = context->builder->get.CreateGlobalStringPtr(StringRef(value));
+    return v;
 }
 
 Value * call(LLVMData* context, Value * var,  int size, Value * c_args[size]){
@@ -517,7 +530,11 @@ Value * save(LLVMData* context, Value* obj, const char * varName, Value * value)
 
 
 Value * load(LLVMData* context, Value* obj, const char * varName){
+    //log_llvm(context, llvmStr(context, "dd"));
+    
     if(isBuiltinFunc(varName)){
+     //   log_llvm(context, str(context, "woow"));
+        //printf("got builtin %s\n", varName);
         FunctionCallee func = functions[varName];
         LoadInst * func_inst = func_init(context, func.getCallee());
         
@@ -526,10 +543,10 @@ Value * load(LLVMData* context, Value* obj, const char * varName){
         MDNode* metadata = MDNode::get(func_context, MDString::get(func_context, to_string(func.getFunctionType()->isVarArg())));
         
         func_inst->setMetadata("var_args",  metadata);
-        //
+        
         return func_inst;
     }
-        
+    
     return call_standard(context, "get_var", {obj, llvmStrConst(context, varName)} );
 }
 
@@ -706,14 +723,15 @@ Value * funcScope(FuncData * data){
 
 
 int main(){
-  
-
+   
+   // return 0;
     LLVMData * context = llvm_init();
    // for(int i=0; i<100000;i++){
      //   Value * scope = str(context, "hello");
         // log_llvm(context, scope);
     //}
     Value * scope = str(context, "doggie");
+    log_llvm(context, scope);
     //loadStandard(context);
     
  //   Value * callResult = context->builder->get.CreateCall(functions["str"], context->builder->get.CreateGlobalStringPtr(StringRef("ewfew")));
@@ -738,6 +756,7 @@ int main(){
     
     Value * home = call_standard_c(context, "cat", 1, new Value*[]{init_scope(context, scope,1)});*/
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
+    //context->builder->get.CreateRet(native_add(context, llvmInt(context, 4),  llvmInt(context, 43)));
     llvm_run(context, true, false);
     
     return 0;

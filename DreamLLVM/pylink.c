@@ -8,4 +8,5 @@
 
 #include "main.cpp"
 #include "IfGen.cpp"
+#include "Natives.cpp"
 #include <stdio.h>

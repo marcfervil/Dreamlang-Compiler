@@ -17,6 +17,7 @@
 		947A65AE25DE1D770093D821 /* DreamLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 947A65AD25DE1D770093D821 /* DreamLib.cpp */; };
 		948AB2F625DB5DA3009FCA3B /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 948AB2F425DB5DA3009FCA3B /* main.cpp */; };
 		948AB2F925DB7935009FCA3B /* standard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 948AB2F725DB7935009FCA3B /* standard.cpp */; };
+		94BC36082606CB1700E16882 /* Natives.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94BC36062606CB1700E16882 /* Natives.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -61,6 +62,8 @@
 		948AB2F725DB7935009FCA3B /* standard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = standard.cpp; sourceTree = "<group>"; };
 		948AB2F825DB7935009FCA3B /* standard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = standard.hpp; sourceTree = "<group>"; };
 		94B551D125E3E0ED00F1DCB8 /* pass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pass.h; sourceTree = "<group>"; };
+		94BC36062606CB1700E16882 /* Natives.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Natives.cpp; sourceTree = "<group>"; };
+		94BC36072606CB1700E16882 /* Natives.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Natives.hpp; sourceTree = "<group>"; };
 		94FD512925E73393003689BE /* example */ = {isa = PBXFileReference; lastKnownFileType = text; path = example; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -118,6 +121,8 @@
 				944C9FDE25EB8C5B0012B74B /* pylink.cpp */,
 				944C9FDF25EB8C5B0012B74B /* pylink.c */,
 				947DCE51260000B4004A793B /* pylinklib.c */,
+				94BC36062606CB1700E16882 /* Natives.cpp */,
+				94BC36072606CB1700E16882 /* Natives.hpp */,
 			);
 			path = DreamLLVM;
 			sourceTree = "<group>";
@@ -232,6 +237,7 @@
 			files = (
 				948AB2F625DB5DA3009FCA3B /* main.cpp in Sources */,
 				946864DE25D0DFB20090421F /* referance.cpp in Sources */,
+				94BC36082606CB1700E16882 /* Natives.cpp in Sources */,
 				944C9FE025EB8C5B0012B74B /* pylink.cpp in Sources */,
 				948AB2F925DB7935009FCA3B /* standard.cpp in Sources */,
 				944C9FDB25EB69DB0012B74B /* IfGen.cpp in Sources */,

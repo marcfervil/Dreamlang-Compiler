@@ -85,7 +85,9 @@ typedef struct dreamObj{
     int pointer;
     
     dreamObj ** vars [HASHSIZE];
-    //
+    
+    
+    
     // etc..
 } dreamObj;
 
@@ -96,6 +98,7 @@ typedef struct dreamObj{
         printf("\x1B[31m[Nightmare]: ");
         printf("%s", message);
         printf("\n\033[0m");
+
         exit(1);
     }
 
@@ -247,6 +250,7 @@ typedef struct dreamObj{
     }
 
     const char * rep(dreamObj* obj){
+       // printf("here");
         if (obj==nullDream) return "<Undefined>";
        // if (obj->type==nullDream) return "<Undefined>";
         if (obj->type==NULL) return "<NULL type>";
@@ -313,7 +317,7 @@ typedef struct dreamObj{
     void print(int num_args, ...){
         va_list valist;
         va_start(valist, num_args);
-
+        
         printf("[Dream]: ");
         for (int i = 0; i < num_args; i++) {
             const char* str = rep(va_arg(valist, dreamObj *));
@@ -412,6 +416,17 @@ dreamObj* ptr(dreamObj* value){
     //set_var(ptr, "equals", dreamFunc((void *) str_equals));
     return value;
     
+}
+
+void native_int(int native){
+    printf("Native int value: %d\n", native);
+    //printf("Native: %d\n", native);
+}
+
+void native_test(int native1, int native2){
+    printf("Native value: (%d + %d) = %d\n", native1, native2, native1+native2);
+    //printf("Native: %d\n", native);
+
 }
 
 dreamObj* pointer(dreamObj* value){
@@ -1000,6 +1015,18 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         printf("[Nightmare]: <Undefined Equals Operation>\n");
         return dreamBool(-1);
     }
+            
+    void check(dreamObj * message, dreamObj * var1, dreamObj * var2){
+        if(*((int *)(equals_c(var1, var2)->value)) == 0){
+            const char * warning = "Assertion Error: ";
+            const char * warning_message =  (char *)message->value;
+     
+            char message[ strlen(warning)+strlen(warning_message)+1];
+            strcpy(message, warning);
+            strcat(message, warning_message);
+        }
+        
+    }
     
      void unexposed(){
         
@@ -1010,7 +1037,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         return obj->value;
     }
 
-    void display(const char * str, int* val){
+    void display2(const char * str, int* val){
         printf("Wow, you displayed: %s(%d)\n", str, *val);
     }
 
