@@ -189,7 +189,7 @@ typedef struct dreamObj{
 
 
     dreamObj * num_equals(dreamObj * me, dreamObj * other){
-        return dreamBool((other->type==dreamIntType && (*(int*) me->value)==(*(int*) other->value)));
+        return dreamBool(((other->type==dreamIntType ||other->type==dreamBoolType)  && (*(int*) me->value)==(*(int*) other->value)));
     }
 
     dreamObj * num_add(dreamObj * me, dreamObj * other){
@@ -1065,14 +1065,9 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             
     void check(dreamObj * message, dreamObj * var1, dreamObj * var2){
         if(*((int *)(equals_c(var1, var2)->value)) == 0){
-            const char * warning = "Assertion Error: ";
-            const char * warning_message =  (char *)message->value;
-     
-            char message[ strlen(warning)+strlen(warning_message)+1];
-            strcpy(message, warning);
-            strcat(message, warning_message);
+            const char * warning_message = (char *)message->value;
+            nightmare("Assertion Error: %s", warning_message);
         }
-        
     }
     
      void unexposed(){
