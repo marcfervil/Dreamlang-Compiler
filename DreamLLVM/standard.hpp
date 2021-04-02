@@ -50,6 +50,9 @@ extern "C" {
 
 #include <stdio.h>
 
+#include <stdlib.h>
+#include <stdarg.h>
+
 #include <algorithm>
 #include <cassert>
 
@@ -90,15 +93,24 @@ typedef struct dreamObj{
     
     // etc..
 } dreamObj;
-
+    
+    int line = 1;
 
     dreamObj * make_dream(void * value, dreamObj * type = nullptr);
 
-    void nightmare(const char * message){
+    void nightmare(const char * message, ...){
+        va_list arglist;
         printf("\x1B[31m[Nightmare]: ");
-        printf("%s", message);
+        //printf("%s", message);
+        va_start( arglist, message );
+        vprintf( message, arglist );
+        va_end( arglist );
+        printf(" on line %d\n",line);
+        
+        
+        
         printf("\n\033[0m");
-
+        
         exit(1);
     }
 
@@ -113,11 +125,13 @@ typedef struct dreamObj{
     dreamObj * dreamFunc(void * value);
     dreamObj * dreamBool(int value);
     dreamObj * copy(dreamObj * obj);
-    dreamObj * shallow_copy(dreamObj * obj);
+    dreamObj * shallow_copy(dreamObj * obj, bool parent=true);
     dreamObj * deep_copy(dreamObj * obj);
     dreamObj * dreamInt(int value);
     dreamObj * dreamStr(const char * value);
     dreamObj * deref_var(dreamObj ** obj);
+    dreamObj* find_var(dreamObj * obj, const char *s);
+
     const char * rep(dreamObj* obj);
     void print(int num_args, ...);
 
@@ -302,7 +316,7 @@ typedef struct dreamObj{
         
         }else if(type == dreamObjType){
             dreamObj* rep_func;
-            if((rep_func = get_var(obj, "rep"))!=nullDream){
+            if((rep_func = find_var(obj, "rep"))!=nullDream){
                 dreamObj * rep_call = ((dreamObj* (*)(dreamObj *)) rep_func->value)(obj);
                 
                 return ( char *)rep_call->value;
@@ -378,16 +392,16 @@ typedef struct dreamObj{
         return (obj==NULL) ? NULL : *obj;
     }
 
-    dreamObj * get_var(dreamObj * obj, const char *s){
-        //printf("get var %s\n",s);
-        //print(1,  obj->vars[0]);
-        //dict(obj);
+    dreamObj* find_var(dreamObj * obj, const char *s){
         if(obj == nullDream || obj==temp){
-            printf("[Nightmare]: Cannot get property %s from undefined!\n",s);
+            //printf("[Nightmare]: Cannot get property %s from undefined!\n",s);
+            nightmare("Cannot get property %s from undefined", s);
             exit(0);
         }
         if(strcmp(s, "parent") == 0)return obj->parent_scope;
         if(strcmp(s, "type") == 0)return obj->type;
+        if(strcmp(s, "name") == 0)return (obj->name != NULL) ? dreamStr(obj->name) : nullDream;
+        if(strcmp(s, "line") == 0)return dreamInt(line);
         if(strcmp(s, "self") == 0)return obj;
         dreamObj * np;
        
@@ -395,16 +409,29 @@ typedef struct dreamObj{
        
            // printf("searching: %s\n",s);
             if (np->name != NULL && strcmp(s, np->name) == 0){
-             
-               
+                /*
+                if(np->type == dreamObjType){
+                    dreamObj * cp =  shallow_copy(np, true);
+                    //cp->parent_scope = nullDream;
+                    return cp;
+                }
+               */
                 return np; // found
             }
         }
         if(obj->parent_scope != nullDream && strcmp(s,"scope")!=0 && s[0]!='@' ){
             //printf("up-get: %s\n",s);
            
-            return get_var(obj->parent_scope, s);
+            return find_var(obj->parent_scope, s);
         }
+        //nightmare("Variable '%s' is not defined", s);
+        return nullDream;
+    }
+    
+    dreamObj * get_var(dreamObj * obj, const char *name){
+        dreamObj * found_obj;
+        if((found_obj = find_var(obj, name))!=nullDream)return found_obj;
+        nightmare("Variable '%s' is not defined", name);
         return nullDream; // not found
     }
 
@@ -503,6 +530,8 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             
             dreamObj * new_obj = (value->type != dreamObjType) ? copy(value) : shallow_copy(value);
          
+            
+            
             new_obj -> name = strdup(name);
             *((*(obj->vars[hashval])))->next = new_obj;
             
@@ -674,7 +703,10 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             (*(obj->vars[hashval])) = value;
         }else if(name[0]=='@' || strcmp(name, "this")==0 || value->type==dreamObjType){
            // printf("deep_dish");
+            
             dreamObj * new_value = shallow_copy(value);
+            //apples
+            
             new_value ->name = strdup(name);
             (*(obj->vars[hashval])) = new_value;
             
@@ -747,7 +779,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         }
         
         
-        if(strcmp(name, "this")!=0 && name[0]!='@' && obj->parent_scope != nullDream && get_var(obj->parent_scope, name)!=nullDream){
+        if(strcmp(name, "this")!=0 && name[0]!='@' && obj->parent_scope != nullDream && find_var(obj->parent_scope, name)!=nullDream){
                // printf("up-set: (%s: %s)\n", name, rep(value));
             //print(value);
          //   dict(obj->parent_scope);
@@ -862,7 +894,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         return np;
     }
 
-    dreamObj * shallow_copy(dreamObj * obj){
+    dreamObj * shallow_copy(dreamObj * obj, bool parent ){
         //return obj;
        // printf("shallowm");
       //  dict(obj);
@@ -879,7 +911,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
       //  (np->value) = &obj->value;
       
 
-        np->parent_scope = obj->parent_scope;
+        if(parent)np->parent_scope = obj->parent_scope;
         np->first_var = obj->first_var;
         np->last_var = obj->last_var;
         np->next = obj->next;
@@ -998,7 +1030,22 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         return NULL;
     }
 
+    dreamObj * contains_c(dreamObj * var1, dreamObj * var2){
+        //printf("here!\n");
+       // if(var1 == nullDream)return dreamBool(var1==nullDream && var2==nullDream);
+        
+        dreamObj * cont;
+        if((cont = find_var(var1, "contains")) != nullDream){
+            
+            dreamObj * b = ((dreamObj* (*)(dreamObj *, dreamObj *)) cont->value)(var1, var2);
 
+            return b;
+        }
+        //TODO - some sort of equals inheritance for objects.  Deffering because I dont want to allocate more memory.
+        else if(var1->type==dreamStrType) return dreamBool(find_var(var2, (const char *)var1->value)!=nullDream);
+        nightmare("Undefined contains operation (or something like that, TODO: better error msg)");
+        return dreamBool(-1);
+    }
     
     dreamObj * equals_c(dreamObj * var1, dreamObj * var2){
         if(var1 == nullDream)return dreamBool(var1==nullDream && var2==nullDream);

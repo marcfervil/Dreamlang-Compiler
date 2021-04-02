@@ -49,6 +49,7 @@ void loadStandard(LLVMData* context){
     functions["set_var_c"] = context->owner->getOrInsertFunction("set_var_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
     functions["get_var"] = context->owner->getOrInsertFunction("get_var", FunctionType::get(dreamObjPtrTy, strType, false ));
     functions["equals_c"] = context->owner->getOrInsertFunction("equals_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));
+    functions["contains_c"] = context->owner->getOrInsertFunction("contains_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));
     functions["str"] = context->owner->getOrInsertFunction("dreamStr", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
     functions["int"] = context->owner->getOrInsertFunction("dreamInt", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
     functions["bool"] = context->owner->getOrInsertFunction("dreamBool", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
@@ -287,6 +288,7 @@ bool isBuiltinFunc(const char * key){
 }
 
 Value * get_var_llvm(LLVMData* context,  Value * scope, const char * key){
+    //printf("getting var %s\n",key);
     return call_standard(context, "get_var", {scope, llvmStrConst(context, key)});
 }
 
@@ -509,17 +511,18 @@ void end_func(LLVMData* context, Value * scope, FuncData * func_data){
     context->builder->get.SetInsertPoint(func_data->startingBlock);
     context->currentBlock = func_data->startingBlock;
     Value * funcPointer;
-    if(func_data->is_class){
-        //printf("classy");
-        funcPointer = obj_init(context, func_data->func);
-    }else{
-        //printf("funky");
-        funcPointer = func_init_value(context, func_data->func);
-    }
+   
+    funcPointer = (func_data->is_class) ?  obj_init(context, func_data->func) : func_init_value(context, func_data->func);
+ 
     //printf("yuh");
     set_var_llvm(context, scope, func_data->name, funcPointer);
     set_var_llvm(context, funcPointer, "@context", scope);
     
+    if(func_data->is_class){
+     //   Value * set_parent_c(LLVMData* context, Value* obj, Value* new_parent){
+       // set_parent_c(context, get_var_llvm(context, funcPointer, "@context"), get_var_llvm(context, scope, "null"));
+    }
+                                                                                                
     //set_var_llvm(context, funcPointer, "@context", scope);
 
 }
@@ -546,7 +549,7 @@ Value * load(LLVMData* context, Value* obj, const char * varName){
         
         return func_inst;
     }
-    
+    //printf("loading var %s\n",varName);
     return call_standard(context, "get_var", {obj, llvmStrConst(context, varName)} );
 }
 
@@ -562,6 +565,15 @@ Value * init_scope(LLVMData* context, Value* scope, int nested_scope){
     //call_standard(context, "print", str(context,"lowkey"));
     //call_standard(context, "print", load(context, res, "dog"));
     return object;
+}
+
+void set_line(LLVMData* context, int line){
+    
+    new StoreInst(llvmInt(context, line), context->owner->getOrInsertGlobal("line", intType), context->currentBlock);
+    
+   // LoadInst * object = new LoadInst(intType, context->owner->getOrInsertGlobal("line", intType), "line_num", context->currentBlock);
+   // call_standard(context, "printf", {llvmStr(context, "%d"), object});
+    //new StoreInst(context->owner->getOrInsertGlobal("line", intType), llvmInt(context, line), context->currentBlock);
 }
 
 Value * set_parent_c(LLVMData* context, Value* obj, Value* new_parent){
@@ -708,6 +720,10 @@ Value * equals(LLVMData* context, Value *var1, Value *var2){
     return  call_standard(context, "equals_c", {var1, var2});
 }
 
+Value * contains(LLVMData* context, Value *var1, Value *var2){
+    return  call_standard(context, "contains_c", {var1, var2});
+}
+
 Value * retVal(LLVMData* context, Value * value ){
 
     
@@ -730,10 +746,10 @@ int main(){
      //   Value * scope = str(context, "hello");
         // log_llvm(context, scope);
     //}
-    Value * scope = str(context, "doggie");
-    log_llvm(context, scope);
+   // Value * scope = str(context, "doggie");
+    //log_llvm(context, scope);
     //loadStandard(context);
-    
+   // set_line(context, 69);
  //   Value * callResult = context->builder->get.CreateCall(functions["str"], context->builder->get.CreateGlobalStringPtr(StringRef("ewfew")));
   //  log_llvm(context, scope);
     
