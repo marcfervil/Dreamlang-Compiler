@@ -1051,7 +1051,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         if(var1 == nullDream)return dreamBool(var1==nullDream && var2==nullDream);
         
         dreamObj * equ;
-        if((equ = get_var(var1, "equals")) != nullDream){
+        if((equ = find_var(var1, "equals")) != nullDream){
             
             dreamObj * b = ((dreamObj* (*)(dreamObj *, dreamObj *)) equ->value)(var1, var2);
 
