@@ -532,7 +532,7 @@ Value * save(LLVMData* context, Value* obj, const char * varName, Value * value)
 }
 
 
-Value * load(LLVMData* context, Value* obj, const char * varName){
+Value * load(LLVMData* context, Value* obj, const char * varName, bool from_parent ){
     //log_llvm(context, llvmStr(context, "dd"));
     
     if(isBuiltinFunc(varName)){
@@ -549,8 +549,10 @@ Value * load(LLVMData* context, Value* obj, const char * varName){
         
         return func_inst;
     }
-    //printf("loading var %s\n",varName);
-    return call_standard(context, "get_var", {obj, llvmStrConst(context, varName)} );
+    //printf("loading var %s : %d\n",varName,from_parent);
+    //return call_standard(context, "get_var",  {obj, llvmStrConst(context, varName)} ) ;
+     
+    return (from_parent) ? call_standard(context, "get_var",  {obj, llvmStrConst(context, varName)} ) : call_standard(context, "get_var",  {obj, llvmStrConst(context, varName), llvmInt(context, from_parent)} );
 }
 
 Value * init_scope(LLVMData* context, Value* scope, int nested_scope){

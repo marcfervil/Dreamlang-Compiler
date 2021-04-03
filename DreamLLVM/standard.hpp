@@ -95,6 +95,7 @@ typedef struct dreamObj{
 } dreamObj;
     
     int line = 1;
+    bool undefined_allowed = false;
 
     dreamObj * make_dream(void * value, dreamObj * type = nullptr);
 
@@ -130,7 +131,8 @@ typedef struct dreamObj{
     dreamObj * dreamInt(int value);
     dreamObj * dreamStr(const char * value);
     dreamObj * deref_var(dreamObj ** obj);
-    dreamObj* find_var(dreamObj * obj, const char *s);
+    dreamObj* find_var(dreamObj * obj, const char *s, int from_parent = true);
+    dreamObj * get_var(dreamObj * obj, const char *s, int from_parent = true);
 
     const char * rep(dreamObj* obj);
     void print(int num_args, ...);
@@ -254,7 +256,7 @@ typedef struct dreamObj{
 
     
 
-    dreamObj * get_var(dreamObj * obj, const char *s);
+    
     
     dreamObj * dreamFunc(void * value){
 
@@ -392,7 +394,7 @@ typedef struct dreamObj{
         return (obj==NULL) ? NULL : *obj;
     }
 
-    dreamObj* find_var(dreamObj * obj, const char *s){
+    dreamObj* find_var(dreamObj * obj, const char *s, int from_parent){
         if(obj == nullDream || obj==temp){
             //printf("[Nightmare]: Cannot get property %s from undefined!\n",s);
             nightmare("Cannot get property %s from undefined", s);
@@ -400,7 +402,7 @@ typedef struct dreamObj{
         }
         if(strcmp(s, "parent") == 0)return obj->parent_scope;
         if(strcmp(s, "type") == 0)return obj->type;
-        if(strcmp(s, "name") == 0)return (obj->name != NULL) ? dreamStr(obj->name) : nullDream;
+        if(strcmp(s, "$name") == 0)return (obj->name != NULL) ? dreamStr(obj->name) : nullDream;
         if(strcmp(s, "line") == 0)return dreamInt(line);
         if(strcmp(s, "self") == 0)return obj;
         dreamObj * np;
@@ -409,29 +411,33 @@ typedef struct dreamObj{
        
            // printf("searching: %s\n",s);
             if (np->name != NULL && strcmp(s, np->name) == 0){
+                
                 /*
                 if(np->type == dreamObjType){
-                    dreamObj * cp =  shallow_copy(np, true);
-                    //cp->parent_scope = nullDream;
+                    dreamObj * cp =  shallow_copy(np, false);
+                   cp->parent_scope = nullDream;
                     return cp;
-                }
-               */
+                }*/
+               
                 return np; // found
             }
         }
-        if(obj->parent_scope != nullDream && strcmp(s,"scope")!=0 && s[0]!='@' ){
+        
+        if(from_parent!=-1 && obj->parent_scope != nullDream && strcmp(s,"scope")!=0 && s[0]!='@' ){
             //printf("up-get: %s\n",s);
-           
-            return find_var(obj->parent_scope, s);
+            if(from_parent)
+                return find_var(obj->parent_scope, s);
+            else
+                return find_var(obj->parent_scope, s, -1);
         }
-        //nightmare("Variable '%s' is not defined", s);
+
         return nullDream;
     }
     
-    dreamObj * get_var(dreamObj * obj, const char *name){
+    dreamObj * get_var(dreamObj * obj, const char *name, int from_parent){
         dreamObj * found_obj;
-        if((found_obj = find_var(obj, name))!=nullDream)return found_obj;
-        nightmare("Variable '%s' is not defined", name);
+        if((found_obj = find_var(obj, name, from_parent))!=nullDream)return found_obj;
+        if(!undefined_allowed)nightmare("Variable '%s' is not defined", name);
         return nullDream; // not found
     }
 
