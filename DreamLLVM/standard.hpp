@@ -235,7 +235,7 @@ typedef struct dreamObj{
         return obj;
     }
 
-    
+
 
     dreamObj * dreamInt(int value){
         int *num = (int *)malloc(sizeof *num);
@@ -330,6 +330,30 @@ typedef struct dreamObj{
         }
     }
 
+
+    
+    void printx(int num_args, const char* format, ...){
+        va_list valist;
+        va_start(valist, format);
+        
+        printf("[Dream]: ");
+        for (int i = 0; i < num_args; i++) {
+            const char* ending = (i==num_args-1) ? "\n" : " ";
+            if(format[i]=='x'){
+                printf("%s", (char *)rep(va_arg(valist, dreamObj *)));
+            }else if(format[i]=='s'){
+                printf("%s", (char *)va_arg(valist, char *));
+            }else if(format[i]=='d'){
+                printf("%d", (int)va_arg(valist, int ));
+            }
+            printf("%s", ending);
+        }
+
+       
+       va_end(valist);
+    }
+
+
     void print(int num_args, ...){
         va_list valist;
         va_start(valist, num_args);
@@ -346,6 +370,25 @@ typedef struct dreamObj{
        va_end(valist);
     }
 
+/*
+    void print(int num_args, ...){
+        va_list valist;
+        va_start(valist, num_args);
+        
+        printf("[Dream]: ");
+        for (int i = 0; i < num_args; i++) {
+            const char* str = var_type(va_arg(<#ap#>, <#type#>))
+            //printx(var_type(va_arg(valist, dreamObj *)));
+            
+            const char* ending = " ";
+            if(i==num_args-1) ending = "\n";
+            printf("%s%s", str, ending);
+        }
+
+       
+       va_end(valist);
+    }*/
+    
 
     void print2(dreamObj *fmt, ...)
     {

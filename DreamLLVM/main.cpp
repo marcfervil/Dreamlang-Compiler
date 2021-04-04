@@ -41,6 +41,7 @@ void loadStandard(LLVMData* context){
     voidPtrTy =  PointerType::get(PointerType::getVoidTy(context->context),0);
     
     functions["print"] = context->owner->getOrInsertFunction("print", FunctionType::get(voidTy,{intType,dreamObjPtrTy}, true));
+    functions["printx"] = context->owner->getOrInsertFunction("printx", FunctionType::get(voidTy,{intType,strType,dreamObjPtrTy}, true));
     functions["pointer"] = context->owner->getOrInsertFunction("pointer", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["ptr"] = context->owner->getOrInsertFunction("ptr", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["printf"] = context->owner->getOrInsertFunction("printf", FunctionType::get(intType, strType, true));
@@ -681,6 +682,7 @@ LoadInst* get_value(LLVMData* context, Type * type, Value * obj ){
 LoadInst* get_pointer_value(LLVMData* context, Type * type, Value * obj ){
     std::vector<llvm::Value*> indices(2);
     indices[0] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
+    //2 is passed in because the value struct member is the 3rd member
     indices[1] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 2, true));
     Value *valuePointer = context->builder->get.CreateGEP(obj, indices,  "memberptr");
 
@@ -748,23 +750,13 @@ Value * funcScope(FuncData * data){
 }
 
 
-
 int main(){
-   
-   // return 0;
-    LLVMData * context = llvm_init();
-   // for(int i=0; i<100000;i++){
-     //   Value * scope = str(context, "hello");
-        // log_llvm(context, scope);
-    //}
-   // Value * scope = str(context, "doggie");
-    //log_llvm(context, scope);
-    //loadStandard(context);
-   // set_line(context, 69);
- //   Value * callResult = context->builder->get.CreateCall(functions["str"], context->builder->get.CreateGlobalStringPtr(StringRef("ewfew")));
-  //  log_llvm(context, scope);
+    dreamObj * heyo = dreamStr("hey");
     
-    /*
+   // printx(4,"sdx","new format",2001,heyo);
+   // return 0;
+    /*LLVMData * context = llvm_init();
+    
     FuncData *new_func2 = func(context, scope, "cat", 0, false, new const char * []{});
     
         set_var_llvm(context, scope, "scope", scope);
@@ -781,10 +773,10 @@ int main(){
     
     end_func(context, scope, new_func2);
     
-    Value * home = call_standard_c(context, "cat", 1, new Value*[]{init_scope(context, scope,1)});*/
+    Value * home = call_standard_c(context, "cat", 1, new Value*[]{init_scope(context, scope,1)});
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
-    //context->builder->get.CreateRet(native_add(context, llvmInt(context, 4),  llvmInt(context, 43)));
-    llvm_run(context, true, false);
+
+    llvm_run(context, true, false);*/
     
     return 0;
 
