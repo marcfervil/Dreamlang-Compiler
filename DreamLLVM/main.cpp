@@ -272,6 +272,15 @@ Value * num(LLVMData* context, int value){
     return object;
 }
 
+Value * num_llvm(LLVMData* context, Value* value){
+    Value* builtInt = value;
+    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "int_stack", context->currentBlock);
+    Value * callResult = context->builder->get.CreateCall(functions["int"], builtInt);
+    new StoreInst(callResult, objStore, context->currentBlock);
+    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "int", context->currentBlock);
+    return object;
+}
+
 Value * bool_(LLVMData* context, bool value){
     Value* builtInt = context->builder->get.getInt32(value);
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "int_stack", context->currentBlock);
