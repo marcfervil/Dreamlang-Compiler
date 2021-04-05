@@ -140,11 +140,12 @@ LLVMData * llvm_init(){
 }
 
 
-void llvm_link(LLVMData * context, string fileName ){
+void llvm_link(LLVMData * context, const char * fileName ){
     // context->engine->add
      
-     //llvm::sys::DynamicLibrary::LoadLibraryPermanently("./lib/"+fileName);
+     llvm::sys::DynamicLibrary::LoadLibraryPermanently(fileName);
      
+    /*
      std::string objectFileName(fileName);
         
 
@@ -168,7 +169,7 @@ void llvm_link(LLVMData * context, string fileName ){
 
      auto owningObject = llvm::object::OwningBinary<llvm::object::ObjectFile>(std::move(objectFile),std::move(buffer.get()));
 
-     context->engine->addObjectFile(std::move(owningObject));
+     context->engine->addObjectFile(std::move(owningObject));*/
     //lcontext->engine->
 }
 
@@ -228,7 +229,7 @@ int build(LLVMData * context){
 }
 
 //run our llvm code
-void llvm_run(LLVMData * context, bool link_obj=true, bool print_module = false, bool build_obj = false){
+void llvm_run(LLVMData * context, bool link_obj=true, bool print_module = false){
     
     context -> engine = EngineBuilder(std::move(context->owner)).create();
     
@@ -254,7 +255,7 @@ void llvm_run(LLVMData * context, bool link_obj=true, bool print_module = false,
     printf("\n");
     
     outs() << "Result: " << gv.IntVal << "\n";
-    if(build_obj)build(context);
+    
     delete context -> engine;
     llvm_shutdown();
     
@@ -751,12 +752,14 @@ Value * funcScope(FuncData * data){
 
 
 int main(){
-    dreamObj * heyo = dreamStr("hey");
+    //dreamObj * heyo = dreamStr("hey");
     
    // printx(4,"sdx","new format",2001,heyo);
    // return 0;
-    /*LLVMData * context = llvm_init();
-    
+    LLVMData * context = llvm_init();
+    Value * scope = str(context, "wokd");
+    log_llvm(context, scope);
+    /*
     FuncData *new_func2 = func(context, scope, "cat", 0, false, new const char * []{});
     
         set_var_llvm(context, scope, "scope", scope);
@@ -765,7 +768,7 @@ int main(){
         end_func(context, new_func2->scope, new_func3);
     
     
-        call(context, load(context, new_func2->scope, "dog"), 1, new Value*[]{init_scope(context, new_func2->scope,1)});
+       // call(context, load(context, new_func2->scope, "dog"), 1, new Value*[]{init_scope(context, new_func2->scope,1)});
     
     
         retVal(context, str(context,"cat return"));
@@ -775,8 +778,9 @@ int main(){
     
     Value * home = call_standard_c(context, "cat", 1, new Value*[]{init_scope(context, scope,1)});
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
-
-    llvm_run(context, true, false);*/
+*/
+    context->builder->get.CreateRet(context->builder->get.getInt32(0));
+    llvm_run(context, true, false);
     
     return 0;
 
