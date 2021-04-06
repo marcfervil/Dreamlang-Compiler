@@ -59,11 +59,11 @@ void loadStandard(LLVMData* context){
     functions["set_var"] = context->owner->getOrInsertFunction("set_var", FunctionType::get(dreamObjPtrTy, {
         dreamObjPtrTy, strType, dreamObjPtrTy}, false ));
     functions["set_var_c"] = context->owner->getOrInsertFunction("set_var_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
-    functions["get_var"] = context->owner->getOrInsertFunction("get_var", FunctionType::get(dreamObjPtrTy, strType, false ));
+    functions["get_var"] = context->owner->getOrInsertFunction("get_var", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType},true ));
     functions["equals_c"] = context->owner->getOrInsertFunction("equals_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));
     functions["contains_c"] = context->owner->getOrInsertFunction("contains_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));
     functions["str"] = context->owner->getOrInsertFunction("dreamStr", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
-    functions["int"] = context->owner->getOrInsertFunction("dreamInt", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
+    functions["int"] = context->owner->getOrInsertFunction("dreamInt", FunctionType::get(dreamObjPtrTy, Type::getInt32Ty(context->context), 0));
     functions["bool"] = context->owner->getOrInsertFunction("dreamBool", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
     functions["func"] = context->owner->getOrInsertFunction("dreamFunc", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
     functions["obj"] = context->owner->getOrInsertFunction("make_dream", FunctionType::get(dreamObjPtrTy, {voidPtrTy, voidPtrTy}, false));
@@ -276,13 +276,13 @@ int build(LLVMData * context){
     
    // outs()
     
-    /*
+    
     std::error_code EC2;
     raw_fd_ostream dest2("lib/llvm_output.ll", EC2, sys::fs::OF_None);
     
     //llvm_inspect(context, "./lib/hopes_lib.so");
     dest2 <<*context->module;
-    dest2.close();*/
+    dest2.close();
     return 0;
 }
 
@@ -365,9 +365,9 @@ Value * set_var_llvm(LLVMData* context,  Value * scope, const char * key, Value 
     return call_standard(context, "set_var", {scope, llvmStrConst(context, key), value});
 }
 
-LoadInst* get_value(LLVMData* context, Type * type, Value * obj );
+Value* get_value(LLVMData* context, Type * type, Value * obj );
 Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *> args){
-    
+    //printf("calling standard %s\n",funcName);
     Value * callResult;
     if (isBuiltinFunc(funcName)){
         
@@ -379,7 +379,7 @@ Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *
         
         Value * var = get_var_llvm(context, args[0], funcName);
         //TODO: IF THE PROGRAM RANDOMLY SEGFAULTS IT WAS PROBABLY CAUSED BY THIS LINE (I didn't pass in the correct number of args, but it doesn't seem to matter...)
-        FunctionType * func_ty = FunctionType::get(dreamObjPtrTy, { }, false);
+        FunctionType * func_ty = FunctionType::get(dreamObjPtrTy, { }, true);
         Type * func_ptr_ty = PointerType::get(func_ty, 0);
         Value * func_ptr = get_value(context, func_ptr_ty, var);
         
@@ -410,12 +410,35 @@ Value * call(LLVMData* context, Value * var,  int size, Value * c_args[size]){
     vector<Value *> args;
     for(int i=0;i<size;i++)args.push_back(c_args[i]);
     
-    FunctionType * func_ty = FunctionType::get(dreamObjPtrTy, { }, false);
+    FunctionType * func_ty = FunctionType::get(dreamObjPtrTy, true);
     Type * func_ptr_ty = PointerType::get(func_ty, 0);
-    Value * func_ptr = get_value(context, func_ptr_ty, var);
+    
+    
+    std::vector<llvm::Value*> indices(2);
+    indices[0] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
+    indices[1] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 2, true));
+    //var->mutateType(dreamObjPtrTy);
+    
+    
+   // Value *valuePointer = context->builder->get.CreateGEP(dreamObjTy ,var, indices,  "GEP_STORE");
+
+    Value *func_ptr = get_value(context, func_ptr_ty, var);
+    
+    
+    
+    
+    
+    //printf("cast party\n");
+   //LoadInst *value = new LoadInst(func_ptr_ty,  valuePointer, "value_temp", context->currentBlock);
+
+    
+    //Value * casted_func = context->builder->get.CreatePointerCast(func_ptr, func_ptr_ty);
+    
+    
     
     
     Instruction * var_inst = dyn_cast<Instruction>(var);
+    
     
     if(var_inst->hasMetadata()){
       
@@ -426,6 +449,7 @@ Value * call(LLVMData* context, Value * var,  int size, Value * c_args[size]){
     
     
     return context->builder->get.CreateCall(func_ty, func_ptr, args);
+    
    // return v;
 }
 
@@ -739,17 +763,28 @@ Value * numVal(LLVMData* context, Value * value){
     return object;
 }
 
+ 
 
-
-LoadInst* get_value(LLVMData* context, Type * type, Value * obj ){
+Value* get_value(LLVMData* context, Type * type, Value * obj ){
     std::vector<llvm::Value*> indices(2);
     indices[0] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
     indices[1] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 2, true));
-    Value *valuePointer = context->builder->get.CreateGEP(obj, indices,  "memberptr");
-    LoadInst *value = new LoadInst(type, valuePointer, "temp", context->currentBlock);
+    Value *valuePointer = context->builder->get.CreateGEP( obj, indices,  "memberptr");
+    
+    //context->builder->get.GEP
+    Value * load_val = new LoadInst(voidPtrTy,  valuePointer, "value_temp", context->currentBlock);
+  
+    Value * casted_value = context->builder->get.CreatePointerCast(load_val, type);
+    
+  //  valuePointer->mutateType(type);
+    //load
+    //%dreamObj* (...)*,
+    //%dreamObj* (...)*
+    
+   // LoadInst *value = new LoadInst(casted_value->getType(),  casted_value, "value_temp", context->currentBlock);
     
 
-    return value;
+    return casted_value;
 }
 
 LoadInst* get_pointer_value(LLVMData* context, Type * type, Value * obj ){
