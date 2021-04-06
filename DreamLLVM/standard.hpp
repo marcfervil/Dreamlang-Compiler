@@ -95,7 +95,7 @@ typedef struct dreamObj{
 } dreamObj;
     
     int line = 1;
-    bool undefined_allowed = false;
+    bool undefined_allowed = true;
 
     dreamObj * make_dream(void * value, dreamObj * type = nullptr);
 
@@ -235,7 +235,9 @@ typedef struct dreamObj{
         return obj;
     }
 
-
+    dreamObj * dreamObject(){
+        return make_dream(NULL, dreamObjType);
+    }
 
     dreamObj * dreamInt(int value){
         int *num = (int *)malloc(sizeof *num);
@@ -330,6 +332,9 @@ typedef struct dreamObj{
         }
     }
 
+    void lalala123(){
+        
+    }
 
     
     void printx(int num_args, const char* format, ...){

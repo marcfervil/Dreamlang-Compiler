@@ -8,7 +8,8 @@
 #include "main.hpp"
 #include "standard.hpp"
 
-
+#include <iostream>
+#include <fstream>
 
 extern "C" {
 
@@ -35,18 +36,28 @@ Type * voidPtrTy;
 //expose standard.cpp functions to LLVM
 void loadStandard(LLVMData* context){
     
+    /*
     strType = PointerType::get(Type::getInt8Ty(context->context), 0);
     intType = IntegerType::getInt32Ty(context->context);
     voidTy =  PointerType::getVoidTy(context->context);
-    voidPtrTy =  PointerType::get(PointerType::getVoidTy(context->context),0);
+    voidPtrTy = Type::getInt8PtrTy(context -> context);*/
+    
+    
+    //PointerType::get(Type::getInt8Ty(context->context), 0);
+    
+    //PointerType::get(Type::getInt8Ty(context->context), 0);
+    
+    //strType;
+    //PointerType::get(PointerType::getVoidTy(context->context),0);
     
     functions["print"] = context->owner->getOrInsertFunction("print", FunctionType::get(voidTy,{intType,dreamObjPtrTy}, true));
     functions["printx"] = context->owner->getOrInsertFunction("printx", FunctionType::get(voidTy,{intType,strType,dreamObjPtrTy}, true));
     functions["pointer"] = context->owner->getOrInsertFunction("pointer", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["ptr"] = context->owner->getOrInsertFunction("ptr", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["printf"] = context->owner->getOrInsertFunction("printf", FunctionType::get(intType, strType, true));
-    functions["object"] = context->owner->getOrInsertFunction("make_dream", FunctionType::get(dreamObjPtrTy, voidPointerTy, false ));
-    functions["set_var"] = context->owner->getOrInsertFunction("set_var", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
+    functions["object"] = context->owner->getOrInsertFunction("dreamObject", FunctionType::get(dreamObjPtrTy, false ));
+    functions["set_var"] = context->owner->getOrInsertFunction("set_var", FunctionType::get(dreamObjPtrTy, {
+        dreamObjPtrTy, strType, dreamObjPtrTy}, false ));
     functions["set_var_c"] = context->owner->getOrInsertFunction("set_var_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
     functions["get_var"] = context->owner->getOrInsertFunction("get_var", FunctionType::get(dreamObjPtrTy, strType, false ));
     functions["equals_c"] = context->owner->getOrInsertFunction("equals_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));
@@ -103,13 +114,23 @@ LLVMData * llvm_init(){
     dreamObjDoublePtrTy = PointerType::get(dreamObjPtrTy, 0);
     Type * int32Type = Type::getInt32Ty(new_context -> context);
     
-   
+    //Type::getInt8PtrTy(new_context -> context)
+    strType = PointerType::get(Type::getInt8Ty(new_context->context), 0);
+    intType = IntegerType::getInt32Ty(new_context->context);
+    voidTy =  PointerType::getVoidTy(new_context->context);
+    voidPtrTy = strType;
+    //PointerType::get(PointerType::getVoidTy(new_context->context),0);
+    
+    //Type::getInt8PtrTy(new_context -> context);
     
     dreamObjTy->setBody({
         Type::getInt8PtrTy(new_context -> context) , //const char * name;
         
         dreamObjDoublePtrTy , // dreamObj ** next;
-        voidPointerTy, //  void * value;
+        
+        voidPtrTy, //  void * value;
+       // voidPointerTy,
+        //Type::getInt8PtrTy(new_context -> context),
         dreamObjPtrTy,//dreamObj * type ;
         dreamObjDoublePtrTy,// dreamObj ** first_var;
         dreamObjDoublePtrTy,//dreamObj ** last_var;
@@ -140,47 +161,69 @@ LLVMData * llvm_init(){
 }
 
 
+void llvm_inspect(LLVMData * context, const char * fileName ){
+   
+    std::string objectFileName(fileName);
+       
+
+    ErrorOr<std::unique_ptr<MemoryBuffer>> buffer =
+      MemoryBuffer::getFile(objectFileName.c_str());
+
+    if (!buffer) {
+      // handle error
+        printf("Couldnt find file ??");
+    }
+  
+    Expected<std::unique_ptr<llvm::object::ObjectFile>> objectOrError = llvm::object::ObjectFile::createObjectFile(buffer.get()->getMemBufferRef());
+    //OfbectcreateObjectFile(buffer.get()->getMemBufferRef());
+  
+    if (!objectOrError) {
+      // handle error
+        printf("????");
+    }
+   
+    std::unique_ptr<llvm::object::ObjectFile> objectFile(std::move(objectOrError.get()));
+
+    auto owningObject = llvm::object::OwningBinary<llvm::object::ObjectFile>(std::move(objectFile),std::move(buffer.get()));
+     
+    context->engine->addObjectFile(std::move(owningObject));
+}
+
 void llvm_link(LLVMData * context, const char * fileName ){
     // context->engine->add
      
-     llvm::sys::DynamicLibrary::LoadLibraryPermanently(fileName);
+    llvm::sys::DynamicLibrary::LoadLibraryPermanently(fileName);
      
-    /*
-     std::string objectFileName(fileName);
-        
-
-     ErrorOr<std::unique_ptr<MemoryBuffer>> buffer =
-       MemoryBuffer::getFile(objectFileName.c_str());
-
-     if (!buffer) {
-       // handle error
-         printf("Couldnt find file ??");
-     }
-   
-     Expected<std::unique_ptr<llvm::object::ObjectFile>> objectOrError = llvm::object::ObjectFile::createObjectFile(buffer.get()->getMemBufferRef());
-     //OfbectcreateObjectFile(buffer.get()->getMemBufferRef());
-   
-     if (!objectOrError) {
-       // handle error
-         printf("????");
-     }
+  
     
-     std::unique_ptr<llvm::object::ObjectFile> objectFile(std::move(objectOrError.get()));
-
-     auto owningObject = llvm::object::OwningBinary<llvm::object::ObjectFile>(std::move(objectFile),std::move(buffer.get()));
-
-     context->engine->addObjectFile(std::move(owningObject));*/
     //lcontext->engine->
 }
 
 int build(LLVMData * context){
+    
+  //  printf("HERE???");
+    
     InitializeAllTargetInfos();
       InitializeAllTargets();
       InitializeAllTargetMCs();
       InitializeAllAsmParsers();
       InitializeAllAsmPrinters();
 
-      auto TargetTriple = sys::getDefaultTargetTriple();
+    
+  //  outs() << "CPU" << sys::getHostCPUName() << "\n";
+    
+    string TargetTriple =sys::getDefaultTargetTriple();
+    //"aarch64-linux-android21";
+    //sys::getDefaultTargetTriple();
+    //"aarch64-linux-android21";
+    //"armv7-none-linux-androideabi";
+    //sys::getDefaultTargetTriple();
+   
+   // outs() << TargetTriple << "\n";
+   // target
+  //  sys::
+    //armv7-none-linux-androideabi
+    
       context->module->setTargetTriple(TargetTriple);
 
       std::string Error;
@@ -190,17 +233,22 @@ int build(LLVMData * context){
       // This generally occurs if we've forgotten to initialise the
       // TargetRegistry or we have a bogus target triple.
       if (!Target) {
-        errs() << Error;
+        errs() << "Couldnt hit target " << Error;
         return 1;
       }
 
     auto CPU  = sys::getHostCPUName();
+    //"x86";
+    //sys::getHostCPUName();
+    
       auto Features = "";
 
       TargetOptions opt;
       auto RM = Optional<Reloc::Model>();
       auto TheTargetMachine = Target->createTargetMachine(TargetTriple, CPU, Features, opt, RM);
-
+    
+    
+    //
     context->module->setDataLayout(TheTargetMachine->createDataLayout());
 
       auto Filename = "lib/dream_output.o";
@@ -225,6 +273,16 @@ int build(LLVMData * context){
 
       outs() << "Wrote " << Filename << "\n";
 
+    
+   // outs()
+    
+    /*
+    std::error_code EC2;
+    raw_fd_ostream dest2("lib/llvm_output.ll", EC2, sys::fs::OF_None);
+    
+    //llvm_inspect(context, "./lib/hopes_lib.so");
+    dest2 <<*context->module;
+    dest2.close();*/
     return 0;
 }
 
@@ -232,7 +290,7 @@ int build(LLVMData * context){
 void llvm_run(LLVMData * context, bool link_obj=true, bool print_module = false){
     
     context -> engine = EngineBuilder(std::move(context->owner)).create();
-    
+    //llvm_link(context, "hopes_lib.so");
     if(link_obj){
         //for some reason library functions need to be exposed like this
         for (auto const& x : functions)
@@ -390,8 +448,13 @@ Value * str(LLVMData* context, const char * value/*, const char * name="str"*/){
 
 
 LoadInst * func_init(LLVMData* context, Value * value){
+    //printf("THIS IS CAST\n");
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "func_stack", context->currentBlock);
-    Value * callResult = context->builder->get.CreateCall(functions["func"], value);
+    
+    Value * casted_func = context->builder->get.CreatePointerCast(value, voidPtrTy);
+    
+    Value * callResult = context->builder->get.CreateCall(functions["func"], casted_func);
+    //printf("casted");
     new StoreInst(callResult, objStore, context->currentBlock);
     LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "func", context->currentBlock);
     
@@ -402,7 +465,10 @@ LoadInst * func_init(LLVMData* context, Value * value){
 
 LoadInst * obj_init(LLVMData* context, Value * value){
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "obj_stack", context->currentBlock);
-    Value * callResult = context->builder->get.CreateCall(functions["obj"], {value,  Constant::getNullValue(dreamObjPtrTy)});
+    
+    
+    
+    Value * callResult = context->builder->get.CreateCall(functions["object"]);
     new StoreInst(callResult, objStore, context->currentBlock);
     LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "obj", context->currentBlock);
     
@@ -412,8 +478,9 @@ LoadInst * obj_init(LLVMData* context, Value * value){
 }
 
 LoadInst * null_obj_init(LLVMData* context){
+    
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "obj_stack", context->currentBlock);
-    Value * callResult = context->builder->get.CreateCall(functions["obj"], {Constant::getNullValue(dreamObjPtrTy),  Constant::getNullValue(dreamObjPtrTy)});
+    Value * callResult = context->builder->get.CreateCall(functions["object"]);
     new StoreInst(callResult, objStore, context->currentBlock);
     LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "obj", context->currentBlock);
     
@@ -424,7 +491,12 @@ LoadInst * null_obj_init(LLVMData* context){
 
 Value * func_init_value(LLVMData* context, Value * value){
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "func_stack", context->currentBlock);
-    Value * callResult = context->builder->get.CreateCall(functions["func"], value);
+    
+    Value * casted_func = context->builder->get.CreatePointerCast(value, voidPtrTy);
+    
+   // Value * callResult = context->builder->get.CreateCall(functions["func"], casted_func);
+    
+    Value * callResult = context->builder->get.CreateCall(functions["func"], casted_func);
     new StoreInst(callResult, objStore, context->currentBlock);
     LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "func", context->currentBlock);
     
@@ -757,31 +829,30 @@ int main(){
    // printx(4,"sdx","new format",2001,heyo);
    // return 0;
     LLVMData * context = llvm_init();
-    Value * scope = str(context, "wokd");
-    log_llvm(context, scope);
-    /*
+   Value * scope = str(context, "wokd");
+    
+    //log_llvm(context, scope);
+    
+  //  llvm_inspect(context, "hopes_lib.so");
+    //hopes_lib.so
+    
     FuncData *new_func2 = func(context, scope, "cat", 0, false, new const char * []{});
     
-        set_var_llvm(context, scope, "scope", scope);
-        FuncData *new_func3 = func(context, new_func2->scope, "dog", 0, false, new const char * []{});
-            retVal(context, str(context,"dog return"));
-        end_func(context, new_func2->scope, new_func3);
-    
-    
-       // call(context, load(context, new_func2->scope, "dog"), 1, new Value*[]{init_scope(context, new_func2->scope,1)});
-    
+   
     
         retVal(context, str(context,"cat return"));
    
     
     end_func(context, scope, new_func2);
     
-    Value * home = call_standard_c(context, "cat", 1, new Value*[]{init_scope(context, scope,1)});
-    context->builder->get.CreateRet(context->builder->get.getInt32(0));
-*/
+    //Value * home = call_standard_c(context, "cat", 1, new Value*[]{init_scope(context, scope,1)});
+   
+    
+    // context->builder->get.CreateRet(context->builder->get.getInt32(0));
+
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
     llvm_run(context, true, false);
-    
+    //build(context);
     return 0;
 
 }
