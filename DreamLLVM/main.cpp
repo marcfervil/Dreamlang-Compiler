@@ -51,6 +51,7 @@ void loadStandard(LLVMData* context){
     //PointerType::get(PointerType::getVoidTy(context->context),0);
     
     functions["print"] = context->owner->getOrInsertFunction("print", FunctionType::get(voidTy,{intType,dreamObjPtrTy}, true));
+    functions["dream_log"] = context->owner->getOrInsertFunction("dream_log", FunctionType::get(voidTy, dreamObjPtrTy, false));
     functions["printx"] = context->owner->getOrInsertFunction("printx", FunctionType::get(voidTy,{intType,strType,dreamObjPtrTy}, true));
     functions["pointer"] = context->owner->getOrInsertFunction("pointer", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["ptr"] = context->owner->getOrInsertFunction("ptr", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
@@ -185,7 +186,12 @@ void llvm_inspect(LLVMData * context, const char * fileName ){
     std::unique_ptr<llvm::object::ObjectFile> objectFile(std::move(objectOrError.get()));
 
     auto owningObject = llvm::object::OwningBinary<llvm::object::ObjectFile>(std::move(objectFile),std::move(buffer.get()));
-     
+    if( context->engine == NULL){
+        printf("null engine\n");
+        context -> engine = EngineBuilder(std::move(context->owner)).create();
+        
+        //return;
+    }
     context->engine->addObjectFile(std::move(owningObject));
 }
 
@@ -278,7 +284,7 @@ int build(LLVMData * context){
     
     
     std::error_code EC2;
-    raw_fd_ostream dest2("lib/llvm_output.ll", EC2, sys::fs::OF_None);
+    raw_fd_ostream dest2("output/program_output.ll", EC2, sys::fs::OF_None);
     
     //llvm_inspect(context, "./lib/hopes_lib.so");
     dest2 <<*context->module;

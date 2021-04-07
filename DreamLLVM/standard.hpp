@@ -115,7 +115,11 @@ typedef struct dreamObj{
         exit(1);
     }
 
-
+    
+    const char * dream_lib_exists(){
+       
+        return "I found it!!";
+    }
 
 
     void nullCall(){
