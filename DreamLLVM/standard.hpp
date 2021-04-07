@@ -324,7 +324,7 @@ typedef struct dreamObj{
         
         }else if(type == dreamObjType){
             dreamObj* rep_func;
-            if((rep_func = find_var(obj, "rep"))!=nullDream){
+            if((rep_func = find_var(obj, "repr"))!=nullDream){
                 dreamObj * rep_call = ((dreamObj* (*)(dreamObj *)) rep_func->value)(obj);
                 
                 return ( char *)rep_call->value;
