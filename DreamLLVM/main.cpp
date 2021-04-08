@@ -52,7 +52,7 @@ void loadStandard(LLVMData* context){
     
     functions["print"] = context->owner->getOrInsertFunction("print", FunctionType::get(voidTy,{intType,dreamObjPtrTy}, true));
     functions["dream_log"] = context->owner->getOrInsertFunction("dream_log", FunctionType::get(voidTy, dreamObjPtrTy, false));
-    functions["printx"] = context->owner->getOrInsertFunction("printx", FunctionType::get(voidTy,{intType,strType,dreamObjPtrTy}, true));
+    //functions["printx"] = context->owner->getOrInsertFunction("printx", FunctionType::get(voidTy,{intType,strType,dreamObjPtrTy}, true));
     functions["pointer"] = context->owner->getOrInsertFunction("pointer", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["ptr"] = context->owner->getOrInsertFunction("ptr", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["printf"] = context->owner->getOrInsertFunction("printf", FunctionType::get(intType, strType, true));
@@ -67,7 +67,7 @@ void loadStandard(LLVMData* context){
     functions["int"] = context->owner->getOrInsertFunction("dreamInt", FunctionType::get(dreamObjPtrTy, Type::getInt32Ty(context->context), 0));
     functions["bool"] = context->owner->getOrInsertFunction("dreamBool", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
     functions["func"] = context->owner->getOrInsertFunction("dreamFunc", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
-    functions["obj"] = context->owner->getOrInsertFunction("make_dream", FunctionType::get(dreamObjPtrTy, {voidPtrTy, dreamObjPtrTy}, false));
+    functions["obj"] = context->owner->getOrInsertFunction("make_dream", FunctionType::get(dreamObjPtrTy, {voidPtrTy}, true));
     //functions["test"] = context->owner->getOrInsertFunction("testing", FunctionType::get(PointerType::getVoidTy(context->context), false));
     functions["new_scope"] = context->owner->getOrInsertFunction("new_scope", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, intType}, false));
     functions["copy"] = context->owner->getOrInsertFunction("copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
@@ -76,7 +76,7 @@ void loadStandard(LLVMData* context){
     functions["dict"] = context->owner->getOrInsertFunction("dict", FunctionType::get(dreamObjPtrTy, false));
     functions["add_c"] = context->owner->getOrInsertFunction("add_c", FunctionType::get(dreamObjPtrTy,{dreamObjPtrTy,dreamObjPtrTy}, false));
     functions["set_parent"] = context->owner->getOrInsertFunction("set_parent", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
-    functions["merge"] = context->owner->getOrInsertFunction("merge", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
+    functions["merge"] = context->owner->getOrInsertFunction("merge", FunctionType::get(voidTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
     functions["ctype"] = context->owner->getOrInsertFunction("ctype", FunctionType::get(strType,  dreamObjPtrTy, false));
     functions["display"] = context->owner->getOrInsertFunction("display", FunctionType::get(voidTy, false));
     
@@ -497,12 +497,16 @@ LoadInst * obj_init(LLVMData* context, Value * value){
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "obj_stack", context->currentBlock);
     
 
-    Value * obj_type = context->owner->getOrInsertGlobal("dreamObjType", intType);
+    //Value * obj_type = context->owner->getOrInsertGlobal("dreamObjType", dreamObjPtrTy);
+    
+    //Value * obj_type2 = context->owner->getOrInsertGlobal("dreamStrType", dreamObjPtrTy);
     
     Value * casted_func = context->builder->get.CreatePointerCast(value, voidPtrTy);
-    Value * casted_type = context->builder->get.CreatePointerCast(obj_type, dreamObjPtrTy);
-    
-    Value * callResult = context->builder->get.CreateCall(functions["obj"], {casted_func, casted_type});
+  //  Value * casted_type = context->builder->get.CreatePointerCast(obj_type, dreamObjPtrTy);
+   // log_llvm(context, obj_type);
+   // log_llvm(context, obj_type2);
+    Value * callResult = context->builder->get.CreateCall(functions["obj"], {casted_func, ConstantPointerNull::get(PointerType::get(dreamObjPtrTy, 0))});
+  //  log_llvm(context, callResult);
     new StoreInst(callResult, objStore, context->currentBlock);
     LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "obj", context->currentBlock);
     
@@ -652,6 +656,7 @@ Value * save(LLVMData* context, Value* obj, const char * varName, Value * value)
 Value * load(LLVMData* context, Value* obj, const char * varName, bool from_parent ){
     //log_llvm(context, llvmStr(context, "dd"));
     
+    //TODO: figure out a way to call builtin func so its not wildly inefficient
     if(isBuiltinFunc(varName)){
      //   log_llvm(context, str(context, "woow"));
         //printf("got builtin %s\n", varName);
@@ -661,7 +666,7 @@ Value * load(LLVMData* context, Value* obj, const char * varName, bool from_pare
         //set_var_llvm(context, func, "var_arg", bool_(context, functions[varName].getFunctionType()->isVarArg()));
         LLVMContext& func_context = func_inst->getContext();
         MDNode* metadata = MDNode::get(func_context, MDString::get(func_context, to_string(func.getFunctionType()->isVarArg())));
-        
+        //printf("slipping in var for %s (%d)\n",varName, func.getFunctionType()->isVarArg());
         func_inst->setMetadata("var_args",  metadata);
         
         return func_inst;
@@ -804,9 +809,13 @@ LoadInst* get_pointer_value(LLVMData* context, Type * type, Value * obj ){
     indices[1] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 2, true));
     Value *valuePointer = context->builder->get.CreateGEP(obj, indices,  "memberptr");
 
-    LoadInst *value = new LoadInst(PointerType::get(type, 0), valuePointer, "temp", context->currentBlock);
+    Value * load_val = new LoadInst(voidPtrTy,  valuePointer, "value_temp", context->currentBlock);
+    //printf("here\n");
+    Value * casted_value = context->builder->get.CreatePointerCast(load_val, PointerType::get(type, 0));
+    
+   // LoadInst *value = new LoadInst(PointerType::get(type, 0), casted_value, "temp", context->currentBlock);
 
-    return new LoadInst(type, value, "temp", context->currentBlock);
+    return new LoadInst(type, casted_value, "temp", context->currentBlock);
 }
 
 

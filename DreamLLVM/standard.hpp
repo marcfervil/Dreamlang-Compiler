@@ -95,11 +95,26 @@ typedef struct dreamObj{
 } dreamObj;
     
     int line = 1;
-    bool undefined_allowed = true;
+    bool undefined_allowed = false;
 
     dreamObj * make_dream(void * value, dreamObj * type = nullptr);
 
+    void android_log(const char * str) {
+        
+    }
+
+
+    void log_error(const char * error){
+        printf("\x1B[31m[Nightmare]: %s \n\033[0m",error);
+        exit(1);
+    }
+
+
+    //TODO: Fix aggregious buffer overflow vulnerabiltity / bug
     void nightmare(const char * message, ...){
+        //exit(1);
+        
+        /*
         va_list arglist;
         printf("\x1B[31m[Nightmare]: ");
         //printf("%s", message);
@@ -108,11 +123,55 @@ typedef struct dreamObj{
         va_end( arglist );
         printf(" on line %d\n",line);
         
+        printf("\n\033[0m");*/
+        
+        /*
+         
+         int * num = (int *)value;
+         int length = snprintf( NULL, 0, "%d", *num);
+         char* str_ref = (char *)malloc(length + 1);
+         snprintf(str_ref, length + 1, "%d", *num);
+         
+         const char * str = strdup(str_ref);
+         free(str_ref);
+         return str;
+         */
+        
+        /*
+        va_list arglist;
+        const char * str = "\x1B[31m[Nightmare]: %s on line %s \n\033[0m";
+        printf("%s",str);
+        va_start( arglist, message );
+        int length = vsnprintf( NULL, 0, str, arglist);
+        va_end( arglist );*/
         
         
-        printf("\n\033[0m");
+       // printf("length: %d", length);
         
-        exit(1);
+        va_list arglist2;
+        va_start( arglist2, message );
+        char* str_ref1;
+        vasprintf(&str_ref1, message, arglist2);
+        va_end( arglist2 );
+        
+        
+        //char* line_str;
+        //asprintf (&strr, "%i", 12313);
+        
+        char * str ;
+        asprintf (&str, "%s on line %i", str_ref1, line);
+        log_error(str);
+        
+        //char* str_ref = (char *)malloc(200);
+        //snprintf(str_ref, 200 + 1, str, str_ref1, line);
+        
+        //const char * error_str = strdup(str_ref);
+      //  log_error(str_ref);
+      //  free(str_ref);
+        
+        
+        
+        //android_log("Nightmare", )
     }
 
     
@@ -120,11 +179,16 @@ typedef struct dreamObj{
        
         return "I found it!!";
     }
+    
+    void dream_log(dreamObj * str){
+     
+    
+    }
 
-
+   
     void nullCall(){
         nightmare("Cannot call undefined!");
-        exit(0);
+       // exit(0);
     }
     
     dreamObj * dreamFunc(void * value);
@@ -160,7 +224,10 @@ typedef struct dreamObj{
     }
 
     dreamObj * make_dream(void * value, dreamObj * type){
-        if (type == nullptr)type = dreamObjType;
+        if (type == nullptr){
+         //   printf("null init\n");
+            type = dreamObjType;
+        }
         dreamObj *new_obj = (dreamObj *) malloc(sizeof(struct dreamObj));
         
         
@@ -207,7 +274,7 @@ typedef struct dreamObj{
         const char * me_val = (const char *) me->value;
         const char * other_val = (const char *) other->value;
         char* result;
-        result = ( char*) calloc(strlen(me_val)+strlen(other_val)+1, sizeof(char));
+        result = ( char*) malloc((strlen(me_val)+strlen(other_val)+1 ) * sizeof(char));
         strcpy(result, me_val);
         strcat(result, other_val);
         return dreamStr(( char * )result);
@@ -240,6 +307,9 @@ typedef struct dreamObj{
     }
 
     dreamObj * dreamObject(){
+      //  int y = 69;
+      //  nightmare("hey look at this number: %d", y);
+        //printf("fiewjfoiew");
         return make_dream(NULL, dreamObjType);
     }
 
@@ -265,7 +335,7 @@ typedef struct dreamObj{
     
     
     dreamObj * dreamFunc(void * value){
-
+        
         dreamObj * obj = make_dream((void *)value, dreamFuncType);
         
         return obj;
@@ -297,12 +367,11 @@ typedef struct dreamObj{
             return (( char *)value);
         }else if(type == dreamIntType){
             int * num = (int *)value;
-            int length = snprintf( NULL, 0, "%d", *num);
-            char* str_ref = (char *)malloc(length + 1);
-            snprintf(str_ref, length + 1, "%d", *num);
             
-            const char * str = strdup(str_ref);
-            free(str_ref);
+            
+            char * str;
+            asprintf(&str, "%i", *num);
+            
             return str;
         }else if(type == dreamBoolType){
             int * num = ((int *)value);
@@ -314,12 +383,9 @@ typedef struct dreamObj{
         }else if(type == dreamFuncType){
              char * name = ( char *)obj->name;
             //printf("%s", name);
-            int length = snprintf( NULL, 0, "<Function %s>", name);
-            char* str_ref = (char *)malloc(length + 1);
-            
-            snprintf(str_ref, length + 1, "<Function %s>", name);
-            char * str = strdup(str_ref);
-            free(str_ref);
+            char * str;
+            asprintf(&str, "<Function %s>", name);
+           // free(str_ref);
             return str;
         
         }else if(type == dreamObjType){
@@ -446,11 +512,14 @@ typedef struct dreamObj{
         return (obj==NULL) ? NULL : *obj;
     }
 
+   
+
     dreamObj* find_var(dreamObj * obj, const char *s, int from_parent){
         if(obj == nullDream || obj==temp){
             //printf("[Nightmare]: Cannot get property %s from undefined!\n",s);
             nightmare("Cannot get property %s from undefined", s);
-            exit(0);
+            //exit(1);
+            //dream_log(dreamStr("ddd"));
         }
         if(strcmp(s, "parent") == 0)return obj->parent_scope;
         if(strcmp(s, "type") == 0)return obj->type;
@@ -489,7 +558,14 @@ typedef struct dreamObj{
     dreamObj * get_var(dreamObj * obj, const char *name, int from_parent){
         dreamObj * found_obj;
         if((found_obj = find_var(obj, name, from_parent))!=nullDream)return found_obj;
-        if(!undefined_allowed)nightmare("Variable '%s' is not defined", name);
+        if(!undefined_allowed){
+            
+            char * str;
+            asprintf(&str, "Variable '%s' is not defined", name);
+            
+            //log_error(str);
+            nightmare(str);
+        }
         return nullDream; // not found
     }
 
@@ -831,9 +907,9 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
       
         
         if(obj == nullDream){
-            printf("\x1B[31m[Nightmare]: Cannot set property %s on undefined! \n\033[0m", name);
+            nightmare("Cannot set property %s on undefined!", name);
             
-            exit(0);
+            
         }
         
         
