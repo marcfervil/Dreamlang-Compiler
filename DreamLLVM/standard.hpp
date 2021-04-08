@@ -464,6 +464,9 @@ typedef struct dreamObj{
        va_end(valist);
     }*/
     
+void makeText(dreamObj * str){
+    
+}
 
     void print2(dreamObj *fmt, ...)
     {
@@ -517,7 +520,9 @@ typedef struct dreamObj{
     dreamObj* find_var(dreamObj * obj, const char *s, int from_parent){
         if(obj == nullDream || obj==temp){
             //printf("[Nightmare]: Cannot get property %s from undefined!\n",s);
-            nightmare("Cannot get property %s from undefined", s);
+            char * str;
+            asprintf(&str, "Cannot get property %s from undefined", s);
+            nightmare(str);
             //exit(1);
             //dream_log(dreamStr("ddd"));
         }
@@ -556,11 +561,25 @@ typedef struct dreamObj{
     }
     
     dreamObj * get_var(dreamObj * obj, const char *name, int from_parent){
+        if(strcmp(name, "null")==0){
+            //undefined_allowed = !undefined_allowed;
+            return nullDream;
+        }
+        
+        /*
+        
+        if(strcmp(name, "wow_obj")==0){
+           // dict(obj);
+            android_log(rep(find_var(obj, "first_name"  )));
+        }*/
+        
         dreamObj * found_obj;
         if((found_obj = find_var(obj, name, from_parent))!=nullDream)return found_obj;
         if(!undefined_allowed){
             
             char * str;
+           // android_log(name);
+           // dict(obj);
             asprintf(&str, "Variable '%s' is not defined", name);
             
             //log_error(str);
@@ -912,6 +931,10 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
             
         }
         
+        if(strcmp(name, "undef")==0){
+            undefined_allowed = *(int *)(value -> value);
+            
+        }
         
         if(strcmp(name, "this")!=0 && name[0]!='@' && obj->parent_scope != nullDream && find_var(obj->parent_scope, name)!=nullDream){
                // printf("up-set: (%s: %s)\n", name, rep(value));

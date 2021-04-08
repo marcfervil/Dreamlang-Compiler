@@ -64,8 +64,8 @@ void loadStandard(LLVMData* context){
     functions["equals_c"] = context->owner->getOrInsertFunction("equals_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));
     functions["contains_c"] = context->owner->getOrInsertFunction("contains_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));
     functions["str"] = context->owner->getOrInsertFunction("dreamStr", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
-    functions["int"] = context->owner->getOrInsertFunction("dreamInt", FunctionType::get(dreamObjPtrTy, Type::getInt32Ty(context->context), 0));
-    functions["bool"] = context->owner->getOrInsertFunction("dreamBool", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt32Ty(context->context), 0), false));
+    functions["int"] = context->owner->getOrInsertFunction("dreamInt", FunctionType::get(dreamObjPtrTy, Type::getInt32Ty(context->context), false));
+    functions["bool"] = context->owner->getOrInsertFunction("dreamBool", FunctionType::get(dreamObjPtrTy, Type::getInt32Ty(context->context), false));
     functions["func"] = context->owner->getOrInsertFunction("dreamFunc", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
     functions["obj"] = context->owner->getOrInsertFunction("make_dream", FunctionType::get(dreamObjPtrTy, {voidPtrTy}, true));
     //functions["test"] = context->owner->getOrInsertFunction("testing", FunctionType::get(PointerType::getVoidTy(context->context), false));
@@ -74,6 +74,7 @@ void loadStandard(LLVMData* context){
     functions["deep_copy"] = context->owner->getOrInsertFunction("deep_copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["shallow_copy"] = context->owner->getOrInsertFunction("shallow_copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["dict"] = context->owner->getOrInsertFunction("dict", FunctionType::get(dreamObjPtrTy, false));
+    functions["makeText"] = context->owner->getOrInsertFunction("makeText", FunctionType::get(voidTy, dreamObjPtrTy, false));
     functions["add_c"] = context->owner->getOrInsertFunction("add_c", FunctionType::get(dreamObjPtrTy,{dreamObjPtrTy,dreamObjPtrTy}, false));
     functions["set_parent"] = context->owner->getOrInsertFunction("set_parent", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
     functions["merge"] = context->owner->getOrInsertFunction("merge", FunctionType::get(voidTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
@@ -218,7 +219,12 @@ int build(LLVMData * context){
     
   //  outs() << "CPU" << sys::getHostCPUName() << "\n";
     
-    string TargetTriple =sys::getDefaultTargetTriple();
+    string TargetTriple ="x86_64-apple-macosx11.0.0";
+    //sys::getDefaultTargetTriple();
+    
+    //"x86_64-apple-macosx11.0.0";
+    
+    //sys::getDefaultTargetTriple();
     //"aarch64-linux-android21";
     //sys::getDefaultTargetTriple();
     //"aarch64-linux-android21";

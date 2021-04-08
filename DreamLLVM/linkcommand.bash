@@ -28,10 +28,12 @@ cp hopes.o "/Users/marcfervil/Library/Developer/Xcode/DerivedData/DreamLLVM-adal
 
 cp hopes_lib.so "/Users/marcfervil/Documents/Programming/Dreamlang/lib/hopes_lib.so"
 
+g++ -o hopes_lib.ll -c pylinklib.c -emit-llvm -m32
 cp hopes_lib.ll "/Users/marcfervil/Documents/Programming/Dreamlang/lib/hopes_lib.ll"
 #cp dream.a "/Users/marcfervil/Documents/Programming/Dreamlang/libdream.a"
+#-mtriple=armv7-none-linux-androideabi
 
-g++ -o hopes_lib.ll -c pylinklib.c -emit-llvm
+
 
 #clang++ -I/usr/local/Cellar/llvm/11.0.1/include -F/usr/local/Cellar/llvm/11.0.1/lib lib/main.cpp lib/dream_output.o -o lib/program -o main
 #clang++ main.cpp output.o -o main
