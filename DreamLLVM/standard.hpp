@@ -214,6 +214,7 @@ typedef struct dreamObj{
     dreamObj * dreamObjType = make_dream((void *)"<Obj Type>",dreamType);
     dreamObj * dreamStrType = make_dream((void *)"<Str Type>",dreamType);
     dreamObj * dreamIntType = make_dream((void *)"<Int Type>",dreamType);
+    dreamObj * dreamListType = make_dream((void *)"<List Type>",dreamType);
     dreamObj * dreamBoolType = make_dream((void *)"<Bool Type>",dreamType);
     dreamObj * dreamFuncType = make_dream((void *)"<Func Type>",dreamType);
     dreamObj * dreamPointerType = make_dream((void *)"<Pointer Type>",dreamType);
@@ -586,7 +587,7 @@ void makeText(dreamObj * str){
            // dict(obj);
             asprintf(&str, "Variable '%s' is not defined", name);
             
-            //log_error(str);
+            //log_error(str); 
             nightmare(str);
         }
         return nullDream; // not found

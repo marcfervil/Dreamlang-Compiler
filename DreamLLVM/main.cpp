@@ -468,7 +468,7 @@ Value * call(LLVMData* context, Value * var,  int size, Value * c_args[size]){
 
 
 
-Value * str(LLVMData* context, const char * value/*, const char * name="str"*/){
+    Value * str(LLVMData* context, const char * value/*, const char * name="str"*/){
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "str_stack", context->currentBlock);
     Value * callResult = context->builder->get.CreateCall(functions["str"], context->builder->get.CreateGlobalStringPtr(StringRef(value)));
     new StoreInst(callResult, objStore, context->currentBlock);

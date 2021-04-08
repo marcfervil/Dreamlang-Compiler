@@ -10,6 +10,12 @@
 
 #include <stdio.h>
 
+extern "C"{
+
+dreamObj * list_get(dreamObj * self, dreamObj * index);
+
+}
+
 #include "list.cpp"
 
 #endif /* list_hpp */
