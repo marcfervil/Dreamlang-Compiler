@@ -1276,4 +1276,6 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
 
 }
 
+#include "list.cpp"
+
 

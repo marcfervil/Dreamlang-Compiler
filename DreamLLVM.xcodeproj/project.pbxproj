@@ -12,6 +12,7 @@
 		946864DE25D0DFB20090421F /* referance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946864DD25D0DFB20090421F /* referance.cpp */; };
 		9468650825D1F8340090421F /* libLLVM.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9468650725D1F8340090421F /* libLLVM.dylib */; };
 		9468650925D1F8340090421F /* libLLVM.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 9468650725D1F8340090421F /* libLLVM.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		946CEF59261F4D0B00584FD1 /* list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946CEF57261F4D0B00584FD1 /* list.cpp */; };
 		947A65AA25DE1D770093D821 /* DreamLib.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 947A65A925DE1D770093D821 /* DreamLib.hpp */; };
 		947A65AC25DE1D770093D821 /* DreamLibPriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 947A65AB25DE1D770093D821 /* DreamLibPriv.hpp */; };
 		947A65AE25DE1D770093D821 /* DreamLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 947A65AD25DE1D770093D821 /* DreamLib.cpp */; };
@@ -52,6 +53,8 @@
 		946864DD25D0DFB20090421F /* referance.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = referance.cpp; sourceTree = "<group>"; };
 		946864EC25D1C93B0090421F /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
 		9468650725D1F8340090421F /* libLLVM.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libLLVM.dylib; path = ../../../../../usr/local/Cellar/llvm/11.0.1/lib/libLLVM.dylib; sourceTree = "<group>"; };
+		946CEF57261F4D0B00584FD1 /* list.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = list.cpp; sourceTree = "<group>"; };
+		946CEF58261F4D0B00584FD1 /* list.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = list.hpp; sourceTree = "<group>"; };
 		947A65A725DE1D770093D821 /* libDreamLib.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libDreamLib.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		947A65A925DE1D770093D821 /* DreamLib.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DreamLib.hpp; sourceTree = "<group>"; };
 		947A65AB25DE1D770093D821 /* DreamLibPriv.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DreamLibPriv.hpp; sourceTree = "<group>"; };
@@ -123,6 +126,8 @@
 				947DCE51260000B4004A793B /* pylinklib.c */,
 				94BC36062606CB1700E16882 /* Natives.cpp */,
 				94BC36072606CB1700E16882 /* Natives.hpp */,
+				946CEF57261F4D0B00584FD1 /* list.cpp */,
+				946CEF58261F4D0B00584FD1 /* list.hpp */,
 			);
 			path = DreamLLVM;
 			sourceTree = "<group>";
@@ -238,6 +243,7 @@
 				948AB2F625DB5DA3009FCA3B /* main.cpp in Sources */,
 				946864DE25D0DFB20090421F /* referance.cpp in Sources */,
 				94BC36082606CB1700E16882 /* Natives.cpp in Sources */,
+				946CEF59261F4D0B00584FD1 /* list.cpp in Sources */,
 				944C9FE025EB8C5B0012B74B /* pylink.cpp in Sources */,
 				948AB2F925DB7935009FCA3B /* standard.cpp in Sources */,
 				944C9FDB25EB69DB0012B74B /* IfGen.cpp in Sources */,
