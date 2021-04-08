@@ -21,22 +21,21 @@ extern "C"{
 
         for (int i = 0; i < num_args; i++) {
             dreamObj * arg = va_arg(valist, dreamObj *);
-            //printf("%s", rep(arg));
             list[i] = copy(arg);
         }
         va_end(valist);
         dreamObj * obj = make_dream((void *) list, dreamObjType);
-        
-       // set_var(obj, "luv", dreamStr("dopksodp"));
-        
-        //print(1, ((dreamObj**) obj->value)[0]);
-        //list_get(obj, dreamInt(1));
+   
+        set_var(obj, "len", dreamInt(num_args));
         
         
-        dreamObj* func = dreamFunc((void *) list_get);
-        set_var(func, "@context", obj);
+        dreamObj* get_func = dreamFunc((void *) list_get);
+        set_var(get_func, "@context", obj);
+        set_var(obj, "get", get_func);
         
-        set_var(obj, "get", func);
+        dreamObj* repr_func = dreamFunc((void *) list_rep);
+        set_var(obj, "repr", repr_func);
+         
         
         return obj;
     }
@@ -48,5 +47,22 @@ extern "C"{
         return  ((dreamObj**) self->value)[*(int *)(index->value)];
 
     }
-    
+
+    //TODO: idk, this just feels wrong
+    dreamObj * list_rep(dreamObj * self){
+        int len = * ((int *)(get_var(self, "len") -> value));
+        char * str = (char *)"[";
+        for(int i=0; i < len; i++){
+            dreamObj * obj = ((dreamObj**) self->value)[i];
+            char * repr = (char *)rep(obj);
+            if(obj->type == dreamStrType)repr = cat("'", "'", repr);
+            
+            
+            str = cat(str, repr);
+            if(i!=len-1) str = cat(str, ", ");
+        }
+        str = cat(str, "]");
+        return dreamStr(str);
+    }
+        
 }

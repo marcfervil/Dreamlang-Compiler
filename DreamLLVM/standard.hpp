@@ -346,6 +346,15 @@ typedef struct dreamObj{
         return obj;
     }
 
+    char * cat(const char * left, const char * right, const char * sep=NULL){
+        char * str;
+        if(sep == NULL)
+            asprintf(&str, "%s%s", left, right);
+        else
+            asprintf(&str, "%s%s%s", left, sep, right);
+        return str;
+    }
+
     const char * rep(dreamObj* obj){
        // printf("here");
         if (obj==nullDream) return "<Undefined>";

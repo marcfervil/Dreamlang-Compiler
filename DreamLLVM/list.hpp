@@ -13,7 +13,7 @@
 extern "C"{
 
 dreamObj * list_get(dreamObj * self, dreamObj * index);
-
+dreamObj * list_rep(dreamObj * self);
 }
 
 #include "list.cpp"
