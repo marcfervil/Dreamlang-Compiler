@@ -5,7 +5,11 @@
 //  Created by Marc Fervil on 4/8/21.
 //
 
-#include "list.hpp"
+
+#ifndef standard_hpp
+#define HASHSIZE 1022
+#include "standard.hpp"
+#endif
 
 extern "C"{
 

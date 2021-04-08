@@ -12,7 +12,6 @@
 		946864DE25D0DFB20090421F /* referance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946864DD25D0DFB20090421F /* referance.cpp */; };
 		9468650825D1F8340090421F /* libLLVM.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9468650725D1F8340090421F /* libLLVM.dylib */; };
 		9468650925D1F8340090421F /* libLLVM.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 9468650725D1F8340090421F /* libLLVM.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		946CEF59261F4D0B00584FD1 /* list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946CEF57261F4D0B00584FD1 /* list.cpp */; };
 		947A65AA25DE1D770093D821 /* DreamLib.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 947A65A925DE1D770093D821 /* DreamLib.hpp */; };
 		947A65AC25DE1D770093D821 /* DreamLibPriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 947A65AB25DE1D770093D821 /* DreamLibPriv.hpp */; };
 		947A65AE25DE1D770093D821 /* DreamLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 947A65AD25DE1D770093D821 /* DreamLib.cpp */; };
@@ -243,7 +242,6 @@
 				948AB2F625DB5DA3009FCA3B /* main.cpp in Sources */,
 				946864DE25D0DFB20090421F /* referance.cpp in Sources */,
 				94BC36082606CB1700E16882 /* Natives.cpp in Sources */,
-				946CEF59261F4D0B00584FD1 /* list.cpp in Sources */,
 				944C9FE025EB8C5B0012B74B /* pylink.cpp in Sources */,
 				948AB2F925DB7935009FCA3B /* standard.cpp in Sources */,
 				944C9FDB25EB69DB0012B74B /* IfGen.cpp in Sources */,

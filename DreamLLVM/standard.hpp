@@ -69,6 +69,10 @@ extern "C" {
 #include "stdlib.h"
 
 #include <string.h>
+
+#ifndef standard_hpp
+#define standard_hpp
+
 extern "C" {
 
 typedef struct dreamObj{
@@ -1276,6 +1280,6 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
 
 }
 
-#include "list.cpp"
+#include "list.hpp"
 
-
+#endif /* Natives_hpp */
