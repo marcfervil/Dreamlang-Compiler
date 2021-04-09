@@ -57,7 +57,6 @@ extern "C"{
             char * repr = (char *)rep(obj);
             if(obj->type == dreamStrType)repr = cat("'", "'", repr);
             
-            
             str = cat(str, repr);
             if(i!=len-1) str = cat(str, ", ");
         }
@@ -65,4 +64,40 @@ extern "C"{
         return dreamStr(str);
     }
         
+
+
+    //code for count iterator
+
+    dreamObj * count(dreamObj * num){
+
+        dreamObj * iter = dreamObject();
+        set_var(iter, "max", num);
+        
+        
+        set_var(iter, "index", dreamInt(0));
+        
+        dreamObj* next_func = dreamFunc((void *) iter_next);
+        set_var(next_func, "@context", iter);
+        set_var(iter, "next", next_func);
+        
+        return iter;
+    }
+
+
+    dreamObj * iter_next(dreamObj * scope){
+        
+        dreamObj* self =  scope->parent_scope;
+        dreamObj * index = get_var(self, "index");
+        dreamObj * max = get_var(self, "max");
+        int val = (*(int *)(index->value));
+        (*(int *)index->value) = val + 1;
+        
+        if(val>=(*(int *)(max->value)))return nullDream;
+        
+        return dreamInt(val+1);
+
+    }
+
+    
+
 }
