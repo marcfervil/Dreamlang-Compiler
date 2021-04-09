@@ -35,7 +35,7 @@ extern "C"{
     }
 
     void end_if(LLVMData * context, IfData * if_data){
-        context->builder->get.CreateBr(if_data->ifcont);
+        //context->builder->get.CreateBr(if_data->ifcont);
         context->currentBlock->getParent()->getBasicBlockList().push_back(if_data->ifcont);
         context->currentBlock = if_data->ifcont;
         context->builder->get.SetInsertPoint(context->currentBlock);
