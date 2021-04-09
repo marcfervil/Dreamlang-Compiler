@@ -107,7 +107,10 @@ extern "C"{
     PointerType * dreamObjDoublePtrTy;
     PointerType * voidPointerTy;
 
-Value * null_dream_val;
+    Value * null_dream_val;
+    Value * call(LLVMData* context, Value * var,  int size=0, Value * c_args[size]={});
+    Value* get_value(LLVMData* context, Type * type, Value * obj );
+Value * str(LLVMData* context, const char * value/*, const char * name="str"*/);
 
 }
 

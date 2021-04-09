@@ -42,34 +42,19 @@ extern "C"{
     }
 
     
-    ForData * init_for(LLVMData * context, const char * var_name, Value * cond){
+    ForData * init_for(LLVMData * context, const char * var_name, Value * iter_func, Value * iter_func_call_scope){
 
-        ForData * for_data = new ForData();
-       
-        //Type * int32Type = Type::getInt32Ty(context->context);
-        
-       // LoadInst *equ_result = get_pointer_value(context, int32Type, cond);
-            
-       
         Value * null_dream_val = new LoadInst(dreamObjPtrTy, context->owner->getOrInsertGlobal("nullDream", dreamObjPtrTy), "null_dream", context->currentBlock);
-        //log_llvm(context, null_dream_val);
-        //CreateICmpEQ
-        //equ_result
+        ForData * for_data = new ForData();
         
-        /*
-        cond->getType()->print(outs());
-        printf("\n");
-        null_dream_val->getType()->print(outs());
-        printf("\n");*/
         
-       // printf("yuh %s", cond->getType()->strin);
+        Value * iter_next_call = call(context, iter_func, 1, new Value*[]{iter_func_call_scope});
         
-        Value *for_comp = context->builder->get.CreateICmpNE(cond, null_dream_val);
+        
+        
+        Value *for_comp = context->builder->get.CreateICmpNE(iter_next_call, null_dream_val);
        
         
-        
-        //outs()<<(context->currentBlock->getParent()->getName());
-       
         for_data->then = BasicBlock::Create(context->context, "then", context->currentBlock->getParent());
         for_data->forcont = BasicBlock::Create(context->context, "forcont");
         
@@ -87,7 +72,7 @@ extern "C"{
         //context->builder->get.CreateBr(if_data->ifcont);
         
         
-        
+        if(!has_return)context->builder->get.CreateBr(for_data->forcont);
         context->currentBlock->getParent()->getBasicBlockList().push_back(for_data->forcont);
         context->currentBlock = for_data->forcont;
         context->builder->get.SetInsertPoint(context->currentBlock);

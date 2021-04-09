@@ -35,7 +35,7 @@ extern "C"{
     IfData * init_if(LLVMData * context, Value * drm_bool);
     void end_if(LLVMData * context, IfData * if_data, bool has_return);
 
-    ForData * init_for(LLVMData * context, const char * var_name, Value * cond);
+    ForData * init_for(LLVMData * context, const char * var_name, Value * iter_func, Value * iter_func_call_scope);
     void end_for(LLVMData * context, forData * for_data, bool has_return);
 }
 
