@@ -24,9 +24,20 @@ extern "C"{
         
     } IfData;
 
+
+    typedef struct ForData{
+        
+        BasicBlock *then;
+        BasicBlock* forcont;
+        
+    } forData;
+
     IfData * init_if(LLVMData * context, Value * drm_bool);
-    void end_if(LLVMData * context, IfData * if_data);
+    void end_if(LLVMData * context, IfData * if_data, bool has_return);
+
+    ForData * init_for(LLVMData * context, const char * var_name, Value * cond);
+    void end_for(LLVMData * context, forData * for_data, bool has_return);
 }
 
-//#include "IfGen.cpp"
+#include "IfGen.cpp"
 #endif /* IfGen_hpp */

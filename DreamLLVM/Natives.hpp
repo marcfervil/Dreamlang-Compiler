@@ -17,5 +17,5 @@ extern "C"{
 }   
 
 #include <stdio.h>
-
+#include "Natives.cpp"
 #endif /* Natives_hpp */

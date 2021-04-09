@@ -96,12 +96,21 @@ extern "C"{
     Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *> args);
 
     LoadInst* get_pointer_value(LLVMData* context, Type * type, Value * obj );
-Value * log_llvm(LLVMData * context, Value * value);
+    Value * log_llvm(LLVMData * context, Value * value);
     Value * llvmInt(LLVMData* context, int value);
     Value * retVal(LLVMData* context, Value * value );
     void llvm_link(LLVMData * context, const char * fileName );
     Value * set_parent_c(LLVMData* context, Value* obj, Value* new_parent);
+
+    StructType * dreamObjTy;
+    PointerType * dreamObjPtrTy;
+    PointerType * dreamObjDoublePtrTy;
+    PointerType * voidPointerTy;
+
+Value * null_dream_val;
+
 }
+
 #include "IfGen.hpp"
 #include "Natives.hpp"
 

@@ -14,10 +14,6 @@
 extern "C" {
 
 
-StructType * dreamObjTy;
-PointerType * dreamObjPtrTy;
-PointerType * dreamObjDoublePtrTy;
-PointerType * voidPointerTy;
 
 
 
@@ -49,7 +45,7 @@ void loadStandard(LLVMData* context){
     
     //strType;
     //PointerType::get(PointerType::getVoidTy(context->context),0);
-    
+    null_dream_val = new LoadInst(dreamObjPtrTy, context->owner->getOrInsertGlobal("nullDream", dreamObjPtrTy), "null_dream", context->currentBlock);
     functions["print"] = context->owner->getOrInsertFunction("print", FunctionType::get(voidTy,{intType,dreamObjPtrTy}, true));
     functions["dream_log"] = context->owner->getOrInsertFunction("dream_log", FunctionType::get(voidTy, dreamObjPtrTy, false));
     functions["list"] = context->owner->getOrInsertFunction("dreamList", FunctionType::get(dreamObjPtrTy, intType, true));
@@ -162,6 +158,11 @@ LLVMData * llvm_init(){
    // llvm_link(new_context, "hopes.o");
     
     return new_context;
+}
+
+Value * get_null_val(){
+    
+    return null_dream_val;
 }
 
 
@@ -891,13 +892,16 @@ int main(){
    // printx(4,"sdx","new format",2001,heyo);
    // return 0;
     LLVMData * context = llvm_init();
-   Value * scope = str(context, "wokd");
+  // Value * scope = str(context, "wokd");
     
+    
+    log_llvm(context, null_dream_val);
     //log_llvm(context, scope);
     
   //  llvm_inspect(context, "hopes_lib.so");
     //hopes_lib.so
     
+    /*
     FuncData *new_func2 = func(context, scope, "cat", 0, false, new const char * []{});
     
    
@@ -905,7 +909,13 @@ int main(){
         retVal(context, str(context,"cat return"));
    
     
-    end_func(context, scope, new_func2);
+    end_func(context, scope, new_func2);*/
+    
+    
+   // end_for(context, init_for(context, "a", scope));
+    
+    
+    
     
     //Value * home = call_standard_c(context, "cat", 1, new Value*[]{init_scope(context, scope,1)});
    
