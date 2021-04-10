@@ -94,7 +94,7 @@ extern "C"{
         
         if(val>=(*(int *)(max->value)))return nullDream;
         
-        return dreamInt(val+1);
+        return dreamInt(val);
 
     }
 

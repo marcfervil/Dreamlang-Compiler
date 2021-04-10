@@ -42,24 +42,39 @@ extern "C"{
     }
 
     
-    ForData * init_for(LLVMData * context, const char * var_name, Value * iter_func, Value * iter_func_call_scope){
+    ForData * init_for(LLVMData * context, const char * var_name, Value * scope, Value * iter_func, Value * iter_func_call_scope){
 
-        Value * null_dream_val = new LoadInst(dreamObjPtrTy, context->owner->getOrInsertGlobal("nullDream", dreamObjPtrTy), "null_dream", context->currentBlock);
+        
         ForData * for_data = new ForData();
+        for_data -> iter_func = iter_func;
+        for_data -> iter_func_call_scope = iter_func_call_scope;
+        for_data -> var_name = (char *)var_name;
+        for_data -> scope = scope;
+        
+        Value * null_dream_val = new LoadInst(dreamObjPtrTy, context->owner->getOrInsertGlobal("nullDream", dreamObjPtrTy), "null_dream", context->currentBlock);
         
         
-        Value * iter_next_call = call(context, iter_func, 1, new Value*[]{iter_func_call_scope});
+        for_data->last_iter_call = call(context, iter_func, 1, new Value*[]{iter_func_call_scope});
+        Value *for_comp = context->builder->get.CreateICmpNE(for_data->last_iter_call, null_dream_val);
+        
+        for_data->start = BasicBlock::Create(context->context, "for_start");
+        
+        set_var_llvm(context,  for_data->scope, for_data->var_name, for_data->last_iter_call);
+        
+        
+        context->builder->get.CreateBr(for_data->start);
+        context->currentBlock->getParent()->getBasicBlockList().push_back(for_data->start);
+        context->currentBlock = for_data->start;
+        context->builder->get.SetInsertPoint(context->currentBlock);
         
         
         
-        Value *for_comp = context->builder->get.CreateICmpNE(iter_next_call, null_dream_val);
-       
+        for_data->then = BasicBlock::Create(context->context, "then" );
+        for_data->forcont = BasicBlock::Create(context->context, "forcont" );
         
-        for_data->then = BasicBlock::Create(context->context, "then", context->currentBlock->getParent());
-        for_data->forcont = BasicBlock::Create(context->context, "forcont");
-        
+      
         context->builder->get.CreateCondBr(for_comp, for_data->then, for_data->forcont);
-        
+        context->currentBlock->getParent()->getBasicBlockList().push_back(for_data->then);
         context->currentBlock = for_data->then;
         context->builder->get.SetInsertPoint(context->currentBlock);
         
@@ -67,12 +82,25 @@ extern "C"{
         
         return for_data;
     }
-
+//
     void end_for(LLVMData * context, ForData * for_data, bool has_return){
         //context->builder->get.CreateBr(if_data->ifcont);
         
+        if (!has_return) {
+            for_data->last_iter_call = call(context, for_data->iter_func, 1, new Value*[]{for_data->iter_func_call_scope});
+            set_var_llvm(context,  for_data->scope, for_data->var_name, for_data->last_iter_call);
+            Value * null_dream_val = new LoadInst(dreamObjPtrTy, context->owner->getOrInsertGlobal("nullDream", dreamObjPtrTy), "null_dream", context->currentBlock);
+            Value *for_comp = context->builder->get.CreateICmpNE(for_data->last_iter_call, null_dream_val);
+            
+           
+            
+            context->builder->get.CreateCondBr(for_comp, for_data->start, for_data->forcont);
+        }
         
-        if(!has_return)context->builder->get.CreateBr(for_data->forcont);
+        if(!has_return){
+            
+            //      context->builder->get.CreateBr(for_data->forcont);
+        }
         context->currentBlock->getParent()->getBasicBlockList().push_back(for_data->forcont);
         context->currentBlock = for_data->forcont;
         context->builder->get.SetInsertPoint(context->currentBlock);

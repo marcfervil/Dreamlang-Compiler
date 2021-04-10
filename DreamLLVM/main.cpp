@@ -160,9 +160,9 @@ LLVMData * llvm_init(){
     return new_context;
 }
 
-Value * get_null_val(){
+Value * get_null_val(LLVMData * context){
     
-    return null_dream_val;
+    return new LoadInst(dreamObjPtrTy, context->owner->getOrInsertGlobal("nullDream", dreamObjPtrTy), "null_dream", context->currentBlock);
 }
 
 
@@ -211,7 +211,7 @@ void llvm_link(LLVMData * context, const char * fileName ){
 
 int build(LLVMData * context){
     
-  //  printf("HERE???");
+   
     
     InitializeAllTargetInfos();
       InitializeAllTargets();
@@ -264,6 +264,7 @@ int build(LLVMData * context){
     
     
     //
+  
     context->module->setDataLayout(TheTargetMachine->createDataLayout());
 
       auto Filename = "lib/dream_output.o";
@@ -282,8 +283,9 @@ int build(LLVMData * context){
         errs() << "TheTargetMachine can't emit a file of this type";
         return 1;
       }
-
+    
       pass.run(*context->module);
+
       dest.flush();
 
       outs() << "Wrote " << Filename << "\n";
@@ -892,10 +894,10 @@ int main(){
    // printx(4,"sdx","new format",2001,heyo);
    // return 0;
     LLVMData * context = llvm_init();
-  // Value * scope = str(context, "wokd");
+   Value * scope = str(context, "wokd");
     
     
-    log_llvm(context, null_dream_val);
+   // log_llvm(context, null_dream_val);
     //log_llvm(context, scope);
     
   //  llvm_inspect(context, "hopes_lib.so");
@@ -912,7 +914,7 @@ int main(){
     end_func(context, scope, new_func2);*/
     
     
-   // end_for(context, init_for(context, "a", scope));
+    //end_for(context, init_for(context, "a", scope, scope), false);
     
     
     
