@@ -12,7 +12,15 @@
 #endif
 
 extern "C"{
+    
+    void add_native_func(dreamObj * obj, const char * name, void * func){
+        
+        dreamObj* obj_func = dreamFunc(func);
+        set_var(obj_func, "@context", obj);
+        set_var(obj, name, obj_func);
+    }
 
+    
     dreamObj * dreamList(int num_args, ...){
    
         va_list valist;
@@ -21,31 +29,30 @@ extern "C"{
 
         for (int i = 0; i < num_args; i++) {
             dreamObj * arg = va_arg(valist, dreamObj *);
-            list[i] = deep_copy(arg);
+            list[i] = smart_copy(arg);
             
         }
         va_end(valist);
-        dreamObj*** list_ptr = (dreamObj ***) malloc(sizeof(struct dreamObj *));
+        dreamObj*** list_ptr = (dreamObj ***) malloc(sizeof(struct dreamObj **));
         *list_ptr = list;
         dreamObj * obj = make_dream((void *) list_ptr, dreamObjType);
         obj->is_list = true ;
         set_var(obj, "len", dreamInt(num_args));
         
-        
-        dreamObj* get_func = dreamFunc((void *) list_get);
-        set_var(get_func, "@context", obj);
-        set_var(obj, "get", get_func);
-        
-        dreamObj* push_func = dreamFunc((void *) list_push);
-        set_var(push_func, "@context", obj);
-        set_var(obj, "push", push_func);
-        
-        dreamObj* repr_func = dreamFunc((void *) list_rep);
-        set_var(obj, "repr", repr_func);
+        /*
          
+         **/
+        
+        add_native_func(obj, "get", (void *) list_get);
+        add_native_func(obj, "set", (void *) list_set);
+        add_native_func(obj, "push", (void *) list_push);
+        add_native_func(obj, "repr", (void *) list_rep);
+       
+        
         
         return obj;
     }
+
 
 
     dreamObj * list_get(dreamObj * scope, dreamObj * index){
@@ -54,6 +61,14 @@ extern "C"{
         //print(1, ((dreamObj**) self->value)[*(int *)(index->value)]);
         return  ((*(dreamObj***) self->value))[*(int *)(index->value)];
 
+    }
+
+    dreamObj * list_set(dreamObj * scope, dreamObj * index, dreamObj * value){
+        if(index->type != dreamIntType)nightmare("List index must be int");
+        dreamObj* self = scope->parent_scope;
+        //print(1, ((dreamObj**) self->value)[*(int *)(index->value)]);
+        ((*(dreamObj***) self->value))[*(int *)(index->value)] = smart_copy(value);
+        return value;
     }
 
 
@@ -80,10 +95,10 @@ extern "C"{
        // free(self->value);
        
         *((dreamObj ***)self->value) = temp_list;
-        (*((dreamObj ***)self->value))[len] = (new_item->type == dreamObjType)? shallow_copy(new_item) : deep_copy(new_item);
+        (*((dreamObj ***)self->value))[len] = smart_copy(new_item);
         
         
-        scope->parent_scope->value = self->value;
+        //scope->parent_scope->value = self->value;
        
    //     print(1, ((dreamObj **)scope->parent_scope->value)[3]);
         

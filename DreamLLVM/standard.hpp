@@ -1090,6 +1090,11 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         return np;
     }
 
+    dreamObj * smart_copy(dreamObj * obj ){
+        return (obj->type == dreamObjType)? shallow_copy(obj) : deep_copy(obj);
+        
+    }
+
     dreamObj * shallow_copy(dreamObj * obj, bool parent ){
         //return obj;
        // printf("shallowm");
