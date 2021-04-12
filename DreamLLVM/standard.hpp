@@ -93,8 +93,9 @@ typedef struct dreamObj{
     
     dreamObj ** vars [HASHSIZE];
     
-    
-    
+ 
+    int is_list;
+    dreamObj * ref;
     // etc..
 } dreamObj;
     
@@ -122,7 +123,7 @@ typedef struct dreamObj{
         va_list arglist;
         printf("\x1B[31m[Nightmare]: ");
         //printf("%s", message);
-        va_start( arglist, message );
+         va_start( argl*ist, message );
         vprintf( message, arglist );
         va_end( arglist );
         printf(" on line %d\n",line);
@@ -177,7 +178,12 @@ typedef struct dreamObj{
         
         //android_log("Nightmare", )
     }
-
+    
+    void gc(dreamObj * obj){
+        
+        free(obj);
+        
+    }
     
     const char * dream_lib_exists(){
        
@@ -243,9 +249,9 @@ typedef struct dreamObj{
         new_obj -> next = pointer_init();
         new_obj -> last_var = pointer_init();
         new_obj -> parent_scope = nullDream;
-        
-        new_obj->pointer = 0;
-        
+        new_obj -> is_list = false;
+        new_obj -> pointer = 0;
+        new_obj -> ref = nullDream;
        
         for(int i=0; i<HASHSIZE; i++){
             (new_obj->vars[i]) =  (dreamObj **)malloc(sizeof(struct dreamObj *));
@@ -271,13 +277,30 @@ typedef struct dreamObj{
     }
 
     dreamObj * num_add(dreamObj * me, dreamObj * other){
+        
+        /*
+        if (other->type == dreamStrType){
+            char * other_val;
+            asprintf(&other_val, "%i", *(int *) other->value);
+        }else{
+            other_val = ( char *) other->value;
+        }*/
+        
         return dreamInt( (*(int*) me->value) + (*(int*) other->value));
     }
 
     //TODO: FREE CONCATONATED STRING
     dreamObj * str_add(dreamObj * me, dreamObj * other){
         const char * me_val = (const char *) me->value;
-        const char * other_val = (const char *) other->value;
+        char * other_val ;
+        
+        if (other->type == dreamIntType){
+            
+            asprintf(&other_val, "%i", *(int *) other->value);
+        }else{
+            other_val = ( char *) other->value;
+        }
+        
         char* result;
         result = ( char*) malloc((strlen(me_val)+strlen(other_val)+1 ) * sizeof(char));
         strcpy(result, me_val);
@@ -449,6 +472,7 @@ typedef struct dreamObj{
         
         printf("[Dream]: ");
         for (int i = 0; i < num_args; i++) {
+           
             const char* str = rep(va_arg(valist, dreamObj *));
             const char* ending = " ";
             if(i==num_args-1) ending = "\n";
@@ -686,7 +710,7 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
       //  if(strcmp(name, "other")==0)dict(obj);
         if(found->name != NULL && strcmp(found->name, name)!=0){
             
-           // printf("TODO: FIX HASH COLLISION POINTER BUG - %s COLLIDES WITH %s on %s\n", name, (*(obj->vars[hashval]))->name, obj->name);
+            printf("TODO: FIX HASH COLLISION POINTER BUG - %s COLLIDES WITH %s on %s\n", name, (*(obj->vars[hashval]))->name, obj->name);
             //exit(0);
             
             
@@ -871,7 +895,8 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         }else if(name[0]=='@' || strcmp(name, "this")==0 || value->type==dreamObjType){
            // printf("deep_dish");
             
-            dreamObj * new_value = shallow_copy(value);
+            dreamObj * new_value = shallow_copy(value) ;
+            //if(by)printf("by %s", value->name);
             //apples
             
             new_value ->name = strdup(name);
@@ -1069,13 +1094,28 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
         //return obj;
        // printf("shallowm");
       //  dict(obj);
+       // print(1,obj);
+      //  if(obj->is_list)printf("oooh we got a list printer\n");
         if(obj==NULL || obj==nullDream)return obj;
         if(obj->name !=NULL && !(strcmp(obj->name,"this")==0 || obj->name[0]=='@')){
             //printf("THEM: \n");
             //dict(obj);
         }
         
-       dreamObj *np = make_dream(obj->value, obj->type);
+        
+        
+        dreamObj *np = make_dream(obj->value, obj->type);
+        np->is_list = obj -> is_list;
+        np->ref = (obj->ref == nullDream) ? obj : obj->ref;
+        /*
+        if(obj->is_list){
+            int len = * ((int *)(get_var(obj, "len") -> value));
+         //   dreamObj** list = (dreamObj **)calloc(len + 1, sizeof(struct dreamObj *));
+            for(int i=0;i<len;i++){
+                ((dreamObj **)np->value)[i] = ((dreamObj **)obj->value)[i];
+            }
+        }*/
+       // memcpy(void *__dst, const void *__src, size_t __n)
        // dreamObj** new_type = &(obj->type);
        // np->type = (dreamObj *)new_type;
         
@@ -1176,21 +1216,21 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
 
     dreamObj * new_scope(dreamObj * obj, int nested_scope){
        // printf("%d",obj->parent_scope == &nullDream);
-        //printf("scope bitch %d", nested_scope);
+     
         
         if((obj->parent_scope == nullDream || nested_scope)){
             //nested scope
             dreamObj * new_scope = make_dream(nullDream);
 
             new_scope->parent_scope = (obj);
-            
+          //  print(2, dreamStr("scope: "), obj);
 
             return new_scope;
         }else{
             //lateral scope
             dreamObj * new_scope  = make_dream(nullDream);
             new_scope->parent_scope = (obj->parent_scope);
-            
+           
             //dict(new_scope);
            // print(obj->parent_scope);
             //printf("%d",obj->parent_scope->first_var==NULL);

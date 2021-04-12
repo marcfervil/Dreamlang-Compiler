@@ -47,6 +47,7 @@ void loadStandard(LLVMData* context){
     //PointerType::get(PointerType::getVoidTy(context->context),0);
     null_dream_val = new LoadInst(dreamObjPtrTy, context->owner->getOrInsertGlobal("nullDream", dreamObjPtrTy), "null_dream", context->currentBlock);
     functions["print"] = context->owner->getOrInsertFunction("print", FunctionType::get(voidTy,{intType,dreamObjPtrTy}, true));
+    functions["gc"] = context->owner->getOrInsertFunction("gc", FunctionType::get(voidTy,{dreamObjPtrTy}, false));
     functions["dream_log"] = context->owner->getOrInsertFunction("dream_log", FunctionType::get(voidTy, dreamObjPtrTy, false));
     functions["list"] = context->owner->getOrInsertFunction("dreamList", FunctionType::get(dreamObjPtrTy, intType, true));
     functions["count"] = context->owner->getOrInsertFunction("count", FunctionType::get(dreamObjPtrTy, dreamObjPtrTy, false));
@@ -888,15 +889,40 @@ Value * funcScope(FuncData * data){
 }
 
 
+void listp(dreamObj * lst){
+    //print(1, lst);
+    //for(int i=0; i< 19000;i++){
+        list_get(new_scope(lst, 1), dreamInt(3));
+   // }
+    
+}
+
+void tt(dreamObj * scope){
+    
+    print(1,  get_var(scope, "@lst"));
+    list_push( new_scope( get_var(scope, "@lst"), 1), dreamStr("fff"));
+}
+
 int main(){
     //dreamObj * heyo = dreamStr("hey");
     
    // printx(4,"sdx","new format",2001,heyo);
    // return 0;
     LLVMData * context = llvm_init();
-   Value * scope = str(context, "wokd");
+   //Value * scope = str(context, "wokd");
+   // for(int i=0; i<100000; i++){
+    dreamObj * scope = dreamObject();
+    set_var(scope, "@lst", dreamList(3, dreamStr("item1"), dreamStr("item2"), dreamStr("item3")));
+        
+
+   // list_push( new_scope( get_var(scope, "lst"), 1), dreamStr("fewokf"));
+    //list_push( new_scope( get_var(scope, "lst"), 1), dreamStr("fewfewfewfewe"));
+    list_push( new_scope( get_var(scope, "@lst"), 1), dreamStr("feopeeeeeeeffefwefewf"));
+   // tt(scope);
     
-    
+        tt(scope);
+   // }
+        
    // log_llvm(context, null_dream_val);
     //log_llvm(context, scope);
     

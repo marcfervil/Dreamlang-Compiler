@@ -15,7 +15,7 @@ extern "C"{
 dreamObj * list_get(dreamObj * self, dreamObj * index);
 dreamObj * list_rep(dreamObj * self);
 
-
+dreamObj * list_push(dreamObj * scope, dreamObj * index);
 dreamObj * iter_next(dreamObj * scope);
 }
 

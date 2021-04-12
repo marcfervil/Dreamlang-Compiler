@@ -92,15 +92,11 @@ extern "C"{
             Value * null_dream_val = new LoadInst(dreamObjPtrTy, context->owner->getOrInsertGlobal("nullDream", dreamObjPtrTy), "null_dream", context->currentBlock);
             Value *for_comp = context->builder->get.CreateICmpNE(for_data->last_iter_call, null_dream_val);
             
-           
+           // call_standard(context, "gc", for_data->scope);
             
             context->builder->get.CreateCondBr(for_comp, for_data->start, for_data->forcont);
         }
-        
-        if(!has_return){
-            
-            //      context->builder->get.CreateBr(for_data->forcont);
-        }
+      
         context->currentBlock->getParent()->getBasicBlockList().push_back(for_data->forcont);
         context->currentBlock = for_data->forcont;
         context->builder->get.SetInsertPoint(context->currentBlock);
