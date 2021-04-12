@@ -68,11 +68,13 @@ extern "C" {
 #include "string.h"
 #include "stdlib.h"
 
+
 #include <string.h>
 
-#ifndef standard_hpp
-#define standard_hpp
 
+#ifndef standard_hpp
+
+#define standard_hpp
 extern "C" {
 
 typedef struct dreamObj{
@@ -294,6 +296,8 @@ typedef struct dreamObj{
         const char * me_val = (const char *) me->value;
         char * other_val ;
         
+        
+        
         if (other->type == dreamIntType){
             
             asprintf(&other_val, "%i", *(int *) other->value);
@@ -305,6 +309,7 @@ typedef struct dreamObj{
         result = ( char*) malloc((strlen(me_val)+strlen(other_val)+1 ) * sizeof(char));
         strcpy(result, me_val);
         strcat(result, other_val);
+        //mac_init(result);
         return dreamStr(( char * )result);
     }
 
@@ -1336,5 +1341,6 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
 }
 
 #include "list.hpp"
+#include "mac_compat.hpp"
 
 #endif /* Natives_hpp */

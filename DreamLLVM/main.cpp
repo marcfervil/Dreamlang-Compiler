@@ -47,8 +47,10 @@ void loadStandard(LLVMData* context){
     //PointerType::get(PointerType::getVoidTy(context->context),0);
     null_dream_val = new LoadInst(dreamObjPtrTy, context->owner->getOrInsertGlobal("nullDream", dreamObjPtrTy), "null_dream", context->currentBlock);
     functions["print"] = context->owner->getOrInsertFunction("print", FunctionType::get(voidTy,{intType,dreamObjPtrTy}, true));
+    functions["app"] = context->owner->getOrInsertFunction("app", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["gc"] = context->owner->getOrInsertFunction("gc", FunctionType::get(voidTy,{dreamObjPtrTy}, false));
     functions["dream_log"] = context->owner->getOrInsertFunction("dream_log", FunctionType::get(voidTy, dreamObjPtrTy, false));
+    functions["mac_init"] = context->owner->getOrInsertFunction("mac_init", FunctionType::get(voidTy, true));
     functions["list"] = context->owner->getOrInsertFunction("dreamList", FunctionType::get(dreamObjPtrTy, intType, true));
     functions["count"] = context->owner->getOrInsertFunction("count", FunctionType::get(dreamObjPtrTy, dreamObjPtrTy, false));
     //functions["printx"] = context->owner->getOrInsertFunction("printx", FunctionType::get(voidTy,{intType,strType,dreamObjPtrTy}, true));
@@ -104,8 +106,8 @@ LLVMData * llvm_init(){
     LLVMData * new_context = new LLVMData();
     
     //create main module
-    new_context->owner = std::make_unique<Module>("maindream", new_context -> context);
-    Module *M = new_context->owner.get();
+    new_context->owner = std::make_unique<llvm::Module>("maindream", new_context -> context);
+    llvm::Module *M = new_context->owner.get();
     new_context -> module = M;
     
     //initialize type variables
@@ -920,7 +922,7 @@ int main(){
     list_push( new_scope( get_var(scope, "@lst"), 1), dreamStr("feopeeeeeeeffefwefewf"));
    // tt(scope);
     
-        tt(scope);
+        str_add(dreamStr("hi"), dreamStr("yo"));
    // }
         
    // log_llvm(context, null_dream_val);
@@ -928,7 +930,7 @@ int main(){
     
   //  llvm_inspect(context, "hopes_lib.so");
     //hopes_lib.so
-    
+    dreamObj * ap = app(dreamStr("hey"));
     /*
     FuncData *new_func2 = func(context, scope, "cat", 0, false, new const char * []{});
     
