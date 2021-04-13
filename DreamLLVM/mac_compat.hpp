@@ -12,10 +12,11 @@
 #include "window.h"
 #include "standard.hpp"
 #include "mac_compat.cpp"
+
 extern "C"{
 
 dreamObj * app(dreamObj * name);
-
+dreamObj * mac_start(dreamObj * app);
 }
 
 #endif /* mac_compat_hpp */

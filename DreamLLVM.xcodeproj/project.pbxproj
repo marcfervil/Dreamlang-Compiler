@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9404E2DC2625EB0300ED2475 /* window.mm in Sources */ = {isa = PBXBuildFile; fileRef = 94698DBA26241F7A00B8558A /* window.mm */; };
 		9445D02E2620CAE9001FC0B2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 948AB2F425DB5DA3009FCA3B /* main.cpp */; };
 		944C9FE025EB8C5B0012B74B /* pylink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 944C9FDE25EB8C5B0012B74B /* pylink.cpp */; };
 		946864DE25D0DFB20090421F /* referance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946864DD25D0DFB20090421F /* referance.cpp */; };
 		9468650825D1F8340090421F /* libLLVM.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9468650725D1F8340090421F /* libLLVM.dylib */; };
 		9468650925D1F8340090421F /* libLLVM.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 9468650725D1F8340090421F /* libLLVM.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		94698DBB26241F7A00B8558A /* window.mm in Sources */ = {isa = PBXBuildFile; fileRef = 94698DBA26241F7A00B8558A /* window.mm */; };
 		94698DC126242D3100B8558A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94698DC026242D3000B8558A /* Cocoa.framework */; };
 		947A65AA25DE1D770093D821 /* DreamLib.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 947A65A925DE1D770093D821 /* DreamLib.hpp */; };
 		947A65AC25DE1D770093D821 /* DreamLibPriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 947A65AB25DE1D770093D821 /* DreamLibPriv.hpp */; };
@@ -251,9 +251,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				946864DE25D0DFB20090421F /* referance.cpp in Sources */,
+				9404E2DC2625EB0300ED2475 /* window.mm in Sources */,
 				944C9FE025EB8C5B0012B74B /* pylink.cpp in Sources */,
 				9445D02E2620CAE9001FC0B2 /* main.cpp in Sources */,
-				94698DBB26241F7A00B8558A /* window.mm in Sources */,
 				948AB2F925DB7935009FCA3B /* standard.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
