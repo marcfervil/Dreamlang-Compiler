@@ -12,8 +12,8 @@
 #ifndef window_h
 #define window_h
 
-
-
+#define HASHSIZE 1022
+//#include "standard.hpp"
 
 
 
@@ -26,6 +26,7 @@ class Widget
         Widget(id object);
         id object() const;
         Widget(const Widget &original) : Widget(original._object) {}
+    void add_button(const char * text, dreamObj * onClick);
      /*
         id object() const;
         Widget(const Widget &original) : Widget(original._object) {}

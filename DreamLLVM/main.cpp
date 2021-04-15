@@ -930,7 +930,8 @@ int main(){
     
   //  llvm_inspect(context, "hopes_lib.so");
     //hopes_lib.so
-    dreamObj * ap = app(dreamStr("hey"));
+   // dreamObj * ap = app(dreamStr("hey"));
+   // mac_init("how")->start();
     /*
     FuncData *new_func2 = func(context, scope, "cat", 0, false, new const char * []{});
     

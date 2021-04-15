@@ -75,6 +75,9 @@ extern "C" {
 #ifndef standard_hpp
 
 #define standard_hpp
+
+
+
 extern "C" {
 
 typedef struct dreamObj{
@@ -1341,6 +1344,6 @@ struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
 }
 
 #include "list.hpp"
-#include "mac_compat.hpp"
+//#include "mac_compat.hpp"
 
 #endif /* Natives_hpp */

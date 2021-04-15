@@ -9,8 +9,10 @@
 #define mac_compat_hpp
 
 #include <stdio.h>
-#include "window.h"
 #include "standard.hpp"
+
+#include "window.h"
+
 #include "mac_compat.cpp"
 
 extern "C"{

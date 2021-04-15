@@ -20,7 +20,17 @@ extern "C"{
         set_var(obj, name, obj_func);
     }
 
+    const char * as_str(dreamObj * obj){
+        
+        return (const char *)obj->value;
+    }
     
+    int as_int(dreamObj * obj){
+        
+        return *(int *)obj->value;
+    }
+
+
     dreamObj * dreamList(int num_args, ...){
    
         va_list valist;
