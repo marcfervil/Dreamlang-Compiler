@@ -6,7 +6,8 @@
 //
 
 #include "main.hpp"
-#include "standard.hpp"
+//#include "standard.hpp"
+#include "runtime.hpp"
 
 #include <iostream>
 #include <fstream>

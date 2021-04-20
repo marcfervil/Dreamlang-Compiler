@@ -8,9 +8,12 @@
 #ifndef list_hpp
 #define list_hpp
 
-#include <stdio.h>
+#include "runtime.hpp"
 
 extern "C"{
+
+/*Initialize dream list**/
+dreamObj * dreamList(int num_args, ...);
 
 dreamObj * list_get(dreamObj * self, dreamObj * index);
 dreamObj * list_rep(dreamObj * self);
@@ -18,8 +21,10 @@ dreamObj * list_rep(dreamObj * self);
 dreamObj * list_push(dreamObj * scope, dreamObj * index);
 dreamObj * iter_next(dreamObj * scope);
 dreamObj * list_set(dreamObj * scope, dreamObj * index, dreamObj * value);
+
+dreamObj * list_push(dreamObj * scope, dreamObj * new_item);
 }
 
-#include "list.cpp"
+
 
 #endif /* list_hpp */

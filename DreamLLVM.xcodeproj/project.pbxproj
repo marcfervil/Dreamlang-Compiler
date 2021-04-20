@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9404E3492628DBC000ED2475 /* dreamInt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9404E32E2628B0B900ED2475 /* dreamInt.cpp */; };
+		9404E34B2628DBC300ED2475 /* dreamStr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9404E3322628B2C500ED2475 /* dreamStr.cpp */; };
+		9404E34D2628DBC500ED2475 /* dreamBool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9404E3362628B2D800ED2475 /* dreamBool.cpp */; };
+		9404E34F2628DBCD00ED2475 /* dreamFunc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9404E33A2628B88C00ED2475 /* dreamFunc.cpp */; };
+		9404E3512628DBCF00ED2475 /* memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9404E31E26289EB300ED2475 /* memory.cpp */; };
+		9404E3532628DBD300ED2475 /* runtime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9404E32326289F8E00ED2475 /* runtime.cpp */; };
+		9404E3552628DBD600ED2475 /* copy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9404E33E2628C97F00ED2475 /* copy.cpp */; };
+		9404E3572628DC5100ED2475 /* list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946CEF57261F4D0B00584FD1 /* list.cpp */; };
+		9404E35B2628DCCE00ED2475 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9404E3592628DCCE00ED2475 /* util.cpp */; };
 		9445D02E2620CAE9001FC0B2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 948AB2F425DB5DA3009FCA3B /* main.cpp */; };
 		944C9FE025EB8C5B0012B74B /* pylink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 944C9FDE25EB8C5B0012B74B /* pylink.cpp */; };
 		946864DE25D0DFB20090421F /* referance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946864DD25D0DFB20090421F /* referance.cpp */; };
@@ -42,6 +51,23 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9404E31E26289EB300ED2475 /* memory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = memory.cpp; sourceTree = "<group>"; };
+		9404E31F26289EB300ED2475 /* memory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = memory.hpp; sourceTree = "<group>"; };
+		9404E32326289F8E00ED2475 /* runtime.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = runtime.cpp; sourceTree = "<group>"; };
+		9404E32426289F8E00ED2475 /* runtime.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = runtime.hpp; sourceTree = "<group>"; };
+		9404E3292628AFE000ED2475 /* nativetypes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = nativetypes.hpp; sourceTree = "<group>"; };
+		9404E32E2628B0B900ED2475 /* dreamInt.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dreamInt.cpp; sourceTree = "<group>"; };
+		9404E32F2628B0B900ED2475 /* dreamInt.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dreamInt.hpp; sourceTree = "<group>"; };
+		9404E3322628B2C500ED2475 /* dreamStr.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dreamStr.cpp; sourceTree = "<group>"; };
+		9404E3332628B2C500ED2475 /* dreamStr.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dreamStr.hpp; sourceTree = "<group>"; };
+		9404E3362628B2D800ED2475 /* dreamBool.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dreamBool.cpp; sourceTree = "<group>"; };
+		9404E3372628B2D800ED2475 /* dreamBool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dreamBool.hpp; sourceTree = "<group>"; };
+		9404E33A2628B88C00ED2475 /* dreamFunc.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dreamFunc.cpp; sourceTree = "<group>"; };
+		9404E33B2628B88C00ED2475 /* dreamFunc.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = dreamFunc.hpp; sourceTree = "<group>"; };
+		9404E33E2628C97F00ED2475 /* copy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = copy.cpp; sourceTree = "<group>"; };
+		9404E33F2628C97F00ED2475 /* copy.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = copy.hpp; sourceTree = "<group>"; };
+		9404E3592628DCCE00ED2475 /* util.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = util.cpp; sourceTree = "<group>"; };
+		9404E35A2628DCCE00ED2475 /* util.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = util.hpp; sourceTree = "<group>"; };
 		944C9FD925EB69DB0012B74B /* IfGen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IfGen.cpp; sourceTree = "<group>"; };
 		944C9FDA25EB69DB0012B74B /* IfGen.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = IfGen.hpp; sourceTree = "<group>"; };
 		944C9FDE25EB8C5B0012B74B /* pylink.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pylink.cpp; sourceTree = "<group>"; };
@@ -86,6 +112,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9404E31D26289E4300ED2475 /* Runtime */ = {
+			isa = PBXGroup;
+			children = (
+				9404E3272628AF9900ED2475 /* StandardLib */,
+				9404E31E26289EB300ED2475 /* memory.cpp */,
+				9404E31F26289EB300ED2475 /* memory.hpp */,
+				9404E32326289F8E00ED2475 /* runtime.cpp */,
+				9404E32426289F8E00ED2475 /* runtime.hpp */,
+				9404E33E2628C97F00ED2475 /* copy.cpp */,
+				9404E33F2628C97F00ED2475 /* copy.hpp */,
+				9404E3592628DCCE00ED2475 /* util.cpp */,
+				9404E35A2628DCCE00ED2475 /* util.hpp */,
+			);
+			path = Runtime;
+			sourceTree = "<group>";
+		};
+		9404E3272628AF9900ED2475 /* StandardLib */ = {
+			isa = PBXGroup;
+			children = (
+				9404E3292628AFE000ED2475 /* nativetypes.hpp */,
+				9404E32E2628B0B900ED2475 /* dreamInt.cpp */,
+				9404E32F2628B0B900ED2475 /* dreamInt.hpp */,
+				9404E3322628B2C500ED2475 /* dreamStr.cpp */,
+				9404E3332628B2C500ED2475 /* dreamStr.hpp */,
+				9404E3362628B2D800ED2475 /* dreamBool.cpp */,
+				9404E3372628B2D800ED2475 /* dreamBool.hpp */,
+				9404E33A2628B88C00ED2475 /* dreamFunc.cpp */,
+				9404E33B2628B88C00ED2475 /* dreamFunc.hpp */,
+			);
+			path = StandardLib;
+			sourceTree = "<group>";
+		};
 		946864D125D0DFB20090421F = {
 			isa = PBXGroup;
 			children = (
@@ -108,6 +166,7 @@
 		946864DC25D0DFB20090421F /* DreamLLVM */ = {
 			isa = PBXGroup;
 			children = (
+				9404E31D26289E4300ED2475 /* Runtime */,
 				946864DD25D0DFB20090421F /* referance.cpp */,
 				946864EC25D1C93B0090421F /* test.h */,
 				948AB2F425DB5DA3009FCA3B /* main.cpp */,
@@ -238,9 +297,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				946864DE25D0DFB20090421F /* referance.cpp in Sources */,
+				9404E3492628DBC000ED2475 /* dreamInt.cpp in Sources */,
+				9404E3532628DBD300ED2475 /* runtime.cpp in Sources */,
 				944C9FE025EB8C5B0012B74B /* pylink.cpp in Sources */,
+				9404E34F2628DBCD00ED2475 /* dreamFunc.cpp in Sources */,
+				9404E3572628DC5100ED2475 /* list.cpp in Sources */,
+				9404E3552628DBD600ED2475 /* copy.cpp in Sources */,
+				9404E34D2628DBC500ED2475 /* dreamBool.cpp in Sources */,
+				9404E3512628DBCF00ED2475 /* memory.cpp in Sources */,
+				9404E35B2628DCCE00ED2475 /* util.cpp in Sources */,
 				9445D02E2620CAE9001FC0B2 /* main.cpp in Sources */,
 				948AB2F925DB7935009FCA3B /* standard.cpp in Sources */,
+				9404E34B2628DBC300ED2475 /* dreamStr.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -5,11 +5,7 @@
 //  Created by Marc Fervil on 4/8/21.
 //
 
-
-#ifndef standard_hpp
-#define HASHSIZE 1022
-#include "standard.hpp"
-#endif
+#include "list.hpp"
 
 extern "C"{
     
@@ -19,7 +15,15 @@ extern "C"{
         set_var(obj_func, "@context", obj);
         set_var(obj, name, obj_func);
     }
-
+    
+    char * cat(const char * left, const char * right, const char * sep=NULL){
+        char * str;
+        if(sep == NULL)
+            asprintf(&str, "%s%s", left, right);
+        else
+            asprintf(&str, "%s%s%s", left, sep, right);
+        return str;
+    }
     
     dreamObj * dreamList(int num_args, ...){
    
