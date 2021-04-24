@@ -212,4 +212,38 @@ dreamObj * new_scope(dreamObj * obj, int nested_scope){
     return NULL;
 }
 
+
+dreamObj * contains_c(dreamObj * var1, dreamObj * var2){
+    //printf("here!\n");
+   // if(var1 == nullDream)return dreamBool(var1==nullDream && var2==nullDream);
+    
+    dreamObj * cont;
+    if((cont = find_var(var1, "contains")) != nullDream){
+        
+        dreamObj * b = ((dreamObj* (*)(dreamObj *, dreamObj *)) cont->value)(var1, var2);
+
+        return b;
+    }
+    //TODO - some sort of equals inheritance for objects.  Deffering because I dont want to allocate more memory.
+    else if(var1->type==dreamStrType) return dreamBool(find_var(var2, (const char *)var1->value)!=nullDream);
+    nightmare("Undefined contains operation (or something like that, TODO: better error msg)");
+    return dreamBool(-1);
+}
+
+dreamObj * equals_c(dreamObj * var1, dreamObj * var2){
+    if(var1 == nullDream)return dreamBool(var1==nullDream && var2==nullDream);
+    
+    dreamObj * equ;
+    if((equ = find_var(var1, "equals")) != nullDream){
+        
+        dreamObj * b = ((dreamObj* (*)(dreamObj *, dreamObj *)) equ->value)(var1, var2);
+
+        return b;
+    }
+    //TODO - some sort of equals inheritance for objects.  Deffering because I dont want to allocate more memory.
+    else if(var1->type==dreamObjType) return dreamBool(var1 == var2);
+    printf("[Nightmare]: <Undefined Equals Operation>\n");
+    return dreamBool(-1);
+}
+
 }

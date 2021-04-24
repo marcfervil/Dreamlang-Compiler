@@ -8,6 +8,7 @@
 #include "dreamInt.hpp"
 extern "C" {
 dreamObj * num_equals(dreamObj * me, dreamObj * other){
+    
     return dreamBool(((other->type==dreamIntType ||other->type==dreamBoolType)  &&
                     (*(int*) me->value)==(*(int*) other->value)));
 }

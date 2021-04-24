@@ -916,6 +916,9 @@ int main(){
     dreamObj * scope = dreamObject();
     set_var(scope, "@lst", dreamList(3, dreamStr("item1"), dreamStr("item2"), dreamStr("item3")));
     print(1, get_var(scope, "@lst"));
+    
+    
+    
 
    // list_push( new_scope( get_var(scope, "lst"), 1), dreamStr("fewokf"));
     //list_push( new_scope( get_var(scope, "lst"), 1), dreamStr("fewfewfewfewe"));
@@ -941,7 +944,8 @@ int main(){
     
     end_func(context, scope_l, new_func2);
 
-    
+    Value * g = num(context,3);
+    equals(context, g, g);
     
     //end_for(context, init_for(context, "a", scope, scope), false);
     

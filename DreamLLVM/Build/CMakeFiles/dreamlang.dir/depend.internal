@@ -61,6 +61,15 @@ CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamL
 CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.o
  /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp
 CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o
+ ../RuntimeLib/include/copy.hpp
+ ../RuntimeLib/include/dreamBool.hpp
+ ../RuntimeLib/include/dreamFunc.hpp
+ ../RuntimeLib/include/dreamInt.hpp
+ ../RuntimeLib/include/dreamStr.hpp
+ ../RuntimeLib/include/list.hpp
+ ../RuntimeLib/include/memory.hpp
+ ../RuntimeLib/include/nativetypes.hpp
+ ../RuntimeLib/include/runtime.hpp
  /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp
 CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.o
  ../RuntimeLib/include/copy.hpp

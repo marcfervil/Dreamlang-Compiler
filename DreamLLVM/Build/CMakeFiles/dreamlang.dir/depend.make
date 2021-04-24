@@ -60,6 +60,15 @@ CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamL
 
 CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.o: /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp
 
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o: ../RuntimeLib/include/copy.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o: ../RuntimeLib/include/dreamBool.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o: ../RuntimeLib/include/dreamFunc.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o: ../RuntimeLib/include/dreamInt.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o: ../RuntimeLib/include/dreamStr.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o: ../RuntimeLib/include/list.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o: ../RuntimeLib/include/memory.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o: ../RuntimeLib/include/nativetypes.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o: ../RuntimeLib/include/runtime.hpp
 CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o: /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp
 
 CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.o: ../RuntimeLib/include/copy.hpp
