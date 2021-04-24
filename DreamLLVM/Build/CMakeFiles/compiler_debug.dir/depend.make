@@ -66,6 +66,8 @@ CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/D
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: /usr/local/opt/llvm/include/llvm/ADT/simple_ilist.h
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: /usr/local/opt/llvm/include/llvm/Analysis/DomTreeUpdater.h
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: /usr/local/opt/llvm/include/llvm/Analysis/LoopInfo.h
+CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: /usr/local/opt/llvm/include/llvm/Analysis/TargetLibraryInfo.def
+CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: /usr/local/opt/llvm/include/llvm/Analysis/TargetLibraryInfo.h
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: /usr/local/opt/llvm/include/llvm/BinaryFormat/Magic.h
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: /usr/local/opt/llvm/include/llvm/Config/AsmParsers.def
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: /usr/local/opt/llvm/include/llvm/Config/AsmPrinters.def

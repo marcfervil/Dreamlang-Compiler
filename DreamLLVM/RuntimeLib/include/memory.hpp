@@ -23,6 +23,9 @@ dreamObj * find_var(dreamObj * obj, const char *s, int from_parent=1);
 /*Set a variable onto a dreamObj**/
 struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value);
 
+/*Set a variable onto a dreamObj**/
+struct dreamObj *set_var2(dreamObj *obj, const char *name, dreamObj *value);
+
 /*This function is used to hash a var name to store it in the hash table**/
 unsigned hash_obj(const char *s);
 

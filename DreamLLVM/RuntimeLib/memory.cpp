@@ -83,7 +83,10 @@ unsigned hash_obj(const char *s){
     return hashval % HASHSIZE;
 }
 
-
+struct dreamObj *set_var2(dreamObj *obj, const char *name, dreamObj *value){
+    printf("hia");
+    return NULL;
+}
 
 struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
     //printf("\x1B[31m open");

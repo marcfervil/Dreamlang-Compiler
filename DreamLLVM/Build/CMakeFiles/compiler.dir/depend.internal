@@ -58,6 +58,8 @@ CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLL
  /usr/local/opt/llvm/include/llvm/ADT/simple_ilist.h
  /usr/local/opt/llvm/include/llvm/Analysis/DomTreeUpdater.h
  /usr/local/opt/llvm/include/llvm/Analysis/LoopInfo.h
+ /usr/local/opt/llvm/include/llvm/Analysis/TargetLibraryInfo.def
+ /usr/local/opt/llvm/include/llvm/Analysis/TargetLibraryInfo.h
  /usr/local/opt/llvm/include/llvm/BinaryFormat/Magic.h
  /usr/local/opt/llvm/include/llvm/Config/AsmParsers.def
  /usr/local/opt/llvm/include/llvm/Config/AsmPrinters.def
@@ -239,6 +241,8 @@ CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLL
  /usr/local/opt/llvm/include/llvm/ADT/simple_ilist.h
  /usr/local/opt/llvm/include/llvm/Analysis/DomTreeUpdater.h
  /usr/local/opt/llvm/include/llvm/Analysis/LoopInfo.h
+ /usr/local/opt/llvm/include/llvm/Analysis/TargetLibraryInfo.def
+ /usr/local/opt/llvm/include/llvm/Analysis/TargetLibraryInfo.h
  /usr/local/opt/llvm/include/llvm/BinaryFormat/Magic.h
  /usr/local/opt/llvm/include/llvm/Config/AsmParsers.def
  /usr/local/opt/llvm/include/llvm/Config/AsmPrinters.def
@@ -429,6 +433,8 @@ CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLL
  /usr/local/opt/llvm/include/llvm/ADT/simple_ilist.h
  /usr/local/opt/llvm/include/llvm/Analysis/DomTreeUpdater.h
  /usr/local/opt/llvm/include/llvm/Analysis/LoopInfo.h
+ /usr/local/opt/llvm/include/llvm/Analysis/TargetLibraryInfo.def
+ /usr/local/opt/llvm/include/llvm/Analysis/TargetLibraryInfo.h
  /usr/local/opt/llvm/include/llvm/BinaryFormat/Magic.h
  /usr/local/opt/llvm/include/llvm/Config/AsmParsers.def
  /usr/local/opt/llvm/include/llvm/Config/AsmPrinters.def

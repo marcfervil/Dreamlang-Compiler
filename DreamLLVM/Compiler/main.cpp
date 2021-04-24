@@ -46,8 +46,18 @@ void loadStandard(LLVMData* context){
     
     //strType;
     //PointerType::get(PointerType::getVoidTy(context->context),0);
+   // isDeclaration
+
+
+
+    /* Gather all built-in functions
+       --------------------- */
+
+
     null_dream_val = new LoadInst(dreamObjPtrTy, context->owner->getOrInsertGlobal("nullDream", dreamObjPtrTy), "null_dream", context->currentBlock);
     functions["print"] = context->owner->getOrInsertFunction("print", FunctionType::get(voidTy,{intType,dreamObjPtrTy}, true));
+
+
     functions["gc"] = context->owner->getOrInsertFunction("gc", FunctionType::get(voidTy,{dreamObjPtrTy}, false));
     functions["dream_log"] = context->owner->getOrInsertFunction("dream_log", FunctionType::get(voidTy, dreamObjPtrTy, false));
     functions["list"] = context->owner->getOrInsertFunction("dreamList", FunctionType::get(dreamObjPtrTy, intType, true));
@@ -55,9 +65,9 @@ void loadStandard(LLVMData* context){
     //functions["printx"] = context->owner->getOrInsertFunction("printx", FunctionType::get(voidTy,{intType,strType,dreamObjPtrTy}, true));
     functions["pointer"] = context->owner->getOrInsertFunction("pointer", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["ptr"] = context->owner->getOrInsertFunction("ptr", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
-    functions["printf"] = context->owner->getOrInsertFunction("printf", FunctionType::get(intType, strType, true));
+    functions["printf"] = context->owner->getOrInsertFunction("printjf", FunctionType::get(intType, strType, true));
     functions["object"] = context->owner->getOrInsertFunction("dreamObject", FunctionType::get(dreamObjPtrTy, false ));
-    functions["set_var"] = context->owner->getOrInsertFunction("set_var", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType, dreamObjPtrTy}, false ));
+    functions["set_var"] = context->owner->getOrInsertFunction("set_var2", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType, dreamObjPtrTy}, false ));
     functions["set_var_c"] = context->owner->getOrInsertFunction("set_var_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
     functions["get_var"] = context->owner->getOrInsertFunction("get_var", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType, intType},true ));
     functions["equals_c"] = context->owner->getOrInsertFunction("equals_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));
@@ -73,7 +83,6 @@ void loadStandard(LLVMData* context){
     functions["deep_copy"] = context->owner->getOrInsertFunction("deep_copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["shallow_copy"] = context->owner->getOrInsertFunction("shallow_copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["dict"] = context->owner->getOrInsertFunction("dict", FunctionType::get(voidTy, {dreamObjPtrTy}, false));
-    functions["dict2"] = context->owner->getOrInsertFunction("dict2", FunctionType::get(voidTy, {dreamObjPtrTy}, false));
     functions["makeText"] = context->owner->getOrInsertFunction("makeText", FunctionType::get(voidTy, dreamObjPtrTy, false));
     functions["add_c"] = context->owner->getOrInsertFunction("add_c", FunctionType::get(dreamObjPtrTy,{dreamObjPtrTy,dreamObjPtrTy}, false));
     functions["set_parent"] = context->owner->getOrInsertFunction("set_parent", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
@@ -84,6 +93,9 @@ void loadStandard(LLVMData* context){
     functions["native_int"] = context->owner->getOrInsertFunction("native_int", FunctionType::get(voidTy, {intType},false));
     functions["native_test"] = context->owner->getOrInsertFunction("native_test", FunctionType::get(voidTy, {intType}, false));
     functions["check"] = context->owner->getOrInsertFunction("check", FunctionType::get(voidTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
+    //functions["ijoi"] = context->owner->getOrInsertFunction("dspoksd", FunctionType::get(voidTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
+
+
 }
 
 
@@ -206,7 +218,7 @@ void llvm_link(LLVMData * context, const char * fileName ){
      
     llvm::sys::DynamicLibrary::LoadLibraryPermanently(fileName);
      
-  
+
     
     //lcontext->engine->
 }
@@ -308,19 +320,33 @@ int build(LLVMData * context){
 
 //run our llvm code
 void llvm_run(LLVMData * context, bool link_obj=true, bool print_module = false){
-    
+
+   // context->engine->FindFunctionNamed("");
+   // functions["opkpok"] = context->owner->getOrInsertFunction("ptrer", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
+
     context -> engine = EngineBuilder(std::move(context->owner)).create();
-    //llvm_link(context, "hopes_lib.so");
+
+
     if(link_obj){
+
+
+
         //for some reason library functions need to be exposed like this
+
         for (auto const& x : functions)
         {
+
+
             string funcName = x.first;
+
+            //context->engine->FindFunctionNamed("funcName");
+
             Function *f = Function::Create(functions[funcName].getFunctionType(),Function::ExternalLinkage, funcName, context->module);
             context->engine->addGlobalMapping(f, functions[funcName].getCallee());
         }
+
     }
-    
+
     
     
     if(print_module){
@@ -917,7 +943,7 @@ int main(){
     dreamObj * scope = dreamObject();
     set_var(scope, "@lst", dreamList(3, dreamStr("item1"), dreamStr("item2"), dreamStr("item3")));
     print(1, get_var(scope, "@lst"));
-    get_var(scope, "i");
+ //   get_var(scope, "i");
     
 
    // list_push( new_scope( get_var(scope, "lst"), 1), dreamStr("fewokf"));
@@ -935,6 +961,8 @@ int main(){
     //hopes_lib.so
     
   //  func(LLVMData* context, Value* obj, const char * funcName, bool is_class, int arg_size, const char * arg_names[arg_size])
+
+  /*
     FuncData *new_func2 = func(context, scope_l, "cat", 0, false, new const char * []{});
     
    
@@ -945,11 +973,12 @@ int main(){
     end_func(context, scope_l, new_func2);
 
     Value * g = num(context,5);
-    log_llvm(context, equals(context, g, num(context, 20)));
-    
+    log_llvm(context, equals(context, g, num(context, 20)));*/
+
     //end_for(context, init_for(context, "a", scope, scope), false);
-    
-    
+
+
+
     
     
     //Value * home = call_standard_c(context, "cat", 1, new Value*[]{init_scope(context, scope,1)});
@@ -959,6 +988,12 @@ int main(){
 
     context->builder->get.CreateRet(context->builder->get.getInt32(0));
     llvm_run(context, true, false);
+
+
+  //  functions["opkpok"] = context->owner->getOrInsertFunction("ptrer", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
+
+
+
     //build(context);
     return 0;
 

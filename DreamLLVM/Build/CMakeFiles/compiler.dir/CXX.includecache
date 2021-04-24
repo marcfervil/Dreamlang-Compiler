@@ -87,6 +87,8 @@ llvm/Support/Host.h
 ../Compiler/include/llvm/Support/Host.h
 llvm/Support/raw_ostream.h
 ../Compiler/include/llvm/Support/raw_ostream.h
+llvm/Analysis/TargetLibraryInfo.h
+../Compiler/include/llvm/Analysis/TargetLibraryInfo.h
 llvm/Support/TargetRegistry.h
 ../Compiler/include/llvm/Support/TargetRegistry.h
 llvm/Support/TargetSelect.h
@@ -955,6 +957,28 @@ algorithm
 -
 utility
 -
+
+/usr/local/opt/llvm/include/llvm/Analysis/TargetLibraryInfo.def
+
+/usr/local/opt/llvm/include/llvm/Analysis/TargetLibraryInfo.h
+llvm/ADT/BitVector.h
+/usr/local/opt/llvm/include/llvm/Analysis/llvm/ADT/BitVector.h
+llvm/ADT/DenseMap.h
+/usr/local/opt/llvm/include/llvm/Analysis/llvm/ADT/DenseMap.h
+llvm/ADT/Optional.h
+/usr/local/opt/llvm/include/llvm/Analysis/llvm/ADT/Optional.h
+llvm/IR/Function.h
+/usr/local/opt/llvm/include/llvm/Analysis/llvm/IR/Function.h
+llvm/IR/InstrTypes.h
+/usr/local/opt/llvm/include/llvm/Analysis/llvm/IR/InstrTypes.h
+llvm/IR/Module.h
+/usr/local/opt/llvm/include/llvm/Analysis/llvm/IR/Module.h
+llvm/IR/PassManager.h
+/usr/local/opt/llvm/include/llvm/Analysis/llvm/IR/PassManager.h
+llvm/Pass.h
+/usr/local/opt/llvm/include/llvm/Analysis/llvm/Pass.h
+llvm/Analysis/TargetLibraryInfo.def
+/usr/local/opt/llvm/include/llvm/Analysis/llvm/Analysis/TargetLibraryInfo.def
 
 /usr/local/opt/llvm/include/llvm/BinaryFormat/Magic.h
 system_error
