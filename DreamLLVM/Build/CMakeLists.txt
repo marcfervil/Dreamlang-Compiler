@@ -46,4 +46,4 @@ llvm_map_components_to_libnames(llvm_libs
 
 
 # Link against LLVM libraries
-target_link_libraries(compiler ${llvm_libs} LLVM dreamlang)
+target_link_libraries(compiler LLVM LLVMCore LLVMSupport LLVMTransformUtils LLVMBitReader LLVMAnalysis LLVMDemangle dreamlang)

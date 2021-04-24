@@ -223,7 +223,8 @@ int build(LLVMData * context){
     
   //  outs() << "CPU" << sys::getHostCPUName() << "\n";
     
-    string TargetTriple ="x86_64-apple-macosx11.0.0";
+   // string TargetTriple = "x86_64-apple-macosx11.0.0";
+    string TargetTriple = sys::getDefaultTargetTriple();
     //sys::getDefaultTargetTriple();
     
     //"x86_64-apple-macosx11.0.0";
