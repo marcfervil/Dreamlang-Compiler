@@ -6,5 +6,5 @@ CXX_DEFINES = -Ddreamlang_EXPORTS
 
 CXX_INCLUDES = -I/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/dreamlang -I/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/../RuntimeLib/include -I/usr/local/opt/llvm/include -I/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/compiler -I/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/../Compiler/include
 
-CXX_FLAGS =  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk -fPIC   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -std=gnu++17
+CXX_FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk -fPIC   -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -std=gnu++17
 

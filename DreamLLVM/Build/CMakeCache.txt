@@ -22,13 +22,13 @@ CMAKE_AR:FILEPATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDef
 
 //Choose the type of build, options are: None Debug Release RelWithDebInfo
 // MinSizeRel ...
-CMAKE_BUILD_TYPE:STRING=
+CMAKE_BUILD_TYPE:STRING=Debug
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
 //CXX compiler
-CMAKE_CXX_COMPILER:FILEPATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++
+CMAKE_CXX_COMPILER:STRING=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++
 
 //Flags used by the CXX compiler during all build types.
 CMAKE_CXX_FLAGS:STRING=
@@ -46,7 +46,7 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
 //C compiler
-CMAKE_C_COMPILER:FILEPATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc
+CMAKE_C_COMPILER:STRING=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc
 
 //Flags used by the C compiler during all build types.
 CMAKE_C_FLAGS:STRING=
@@ -146,7 +146,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=compiler
+CMAKE_PROJECT_NAME:STATIC=compiler_debug
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib
@@ -239,6 +239,12 @@ compiler_BINARY_DIR:STATIC=/Users/marcfervil/Documents/Programming/DreamLLVM/Dre
 
 //Value Computed by CMake
 compiler_SOURCE_DIR:STATIC=/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build
+
+//Value Computed by CMake
+compiler_debug_BINARY_DIR:STATIC=/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build
+
+//Value Computed by CMake
+compiler_debug_SOURCE_DIR:STATIC=/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build
 
 //Value Computed by CMake
 dreamlang_BINARY_DIR:STATIC=/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build

@@ -9,6 +9,7 @@
 
 extern "C" {
 dreamObj * get_var(dreamObj * obj, const char *name, int from_parent){
+
     if(strcmp(name, "null")==0){
         //undefined_allowed = !undefined_allowed;
         return nullDream;
@@ -31,6 +32,7 @@ dreamObj * get_var(dreamObj * obj, const char *name, int from_parent){
 
 
 dreamObj* find_var(dreamObj * obj, const char *s, int from_parent){
+
     if(obj == nullDream /*|| obj==temp*/){
         //printf("[Nightmare]: Cannot get property %s from undefined!\n",s);
         char * str;

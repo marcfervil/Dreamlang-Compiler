@@ -59,7 +59,7 @@ void loadStandard(LLVMData* context){
     functions["object"] = context->owner->getOrInsertFunction("dreamObject", FunctionType::get(dreamObjPtrTy, false ));
     functions["set_var"] = context->owner->getOrInsertFunction("set_var", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType, dreamObjPtrTy}, false ));
     functions["set_var_c"] = context->owner->getOrInsertFunction("set_var_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
-    functions["get_var"] = context->owner->getOrInsertFunction("get_var", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType},true ));
+    functions["get_var"] = context->owner->getOrInsertFunction("get_var", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType, intType},true ));
     functions["equals_c"] = context->owner->getOrInsertFunction("equals_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));
     functions["contains_c"] = context->owner->getOrInsertFunction("contains_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));
     functions["str"] = context->owner->getOrInsertFunction("dreamStr", FunctionType::get(dreamObjPtrTy, PointerType::get(Type::getInt8Ty(context->context), 0), false));
@@ -72,7 +72,8 @@ void loadStandard(LLVMData* context){
     functions["copy"] = context->owner->getOrInsertFunction("copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["deep_copy"] = context->owner->getOrInsertFunction("deep_copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["shallow_copy"] = context->owner->getOrInsertFunction("shallow_copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
-    functions["dict"] = context->owner->getOrInsertFunction("dict", FunctionType::get(dreamObjPtrTy, false));
+    functions["dict"] = context->owner->getOrInsertFunction("dict", FunctionType::get(voidTy, {dreamObjPtrTy}, false));
+    functions["dict2"] = context->owner->getOrInsertFunction("dict2", FunctionType::get(voidTy, {dreamObjPtrTy}, false));
     functions["makeText"] = context->owner->getOrInsertFunction("makeText", FunctionType::get(voidTy, dreamObjPtrTy, false));
     functions["add_c"] = context->owner->getOrInsertFunction("add_c", FunctionType::get(dreamObjPtrTy,{dreamObjPtrTy,dreamObjPtrTy}, false));
     functions["set_parent"] = context->owner->getOrInsertFunction("set_parent", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
@@ -668,7 +669,7 @@ Value * save(LLVMData* context, Value* obj, const char * varName, Value * value)
 
 Value * load(LLVMData* context, Value* obj, const char * varName, bool from_parent ){
     //log_llvm(context, llvmStr(context, "dd"));
-    
+
     //TODO: figure out a way to call builtin func so its not wildly inefficient
     if(isBuiltinFunc(varName)){
      //   log_llvm(context, str(context, "woow"));
@@ -685,9 +686,9 @@ Value * load(LLVMData* context, Value* obj, const char * varName, bool from_pare
         return func_inst;
     }
     //printf("loading var %s : %d\n",varName,from_parent);
-    //return call_standard(context, "get_var",  {obj, llvmStrConst(context, varName)} ) ;
+    return call_standard(context, "get_var",  {obj, llvmStrConst(context, varName), llvmInt(context, from_parent)} ) ;
      
-    return (from_parent) ? call_standard(context, "get_var",  {obj, llvmStrConst(context, varName)} ) : call_standard(context, "get_var",  {obj, llvmStrConst(context, varName), llvmInt(context, from_parent)} );
+    //return (from_parent) ? call_standard(context, "get_var",  {obj, llvmStrConst(context, varName)} ) : call_standard(context, "get_var",  {obj, llvmStrConst(context, varName), llvmInt(context, from_parent)} );
 }
 
 Value * init_scope(LLVMData* context, Value* scope, int nested_scope){
@@ -916,8 +917,7 @@ int main(){
     dreamObj * scope = dreamObject();
     set_var(scope, "@lst", dreamList(3, dreamStr("item1"), dreamStr("item2"), dreamStr("item3")));
     print(1, get_var(scope, "@lst"));
-    
-    
+    get_var(scope, "i");
     
 
    // list_push( new_scope( get_var(scope, "lst"), 1), dreamStr("fewokf"));
@@ -944,8 +944,8 @@ int main(){
     
     end_func(context, scope_l, new_func2);
 
-    Value * g = num(context,3);
-    equals(context, g, g);
+    Value * g = num(context,5);
+    log_llvm(context, equals(context, g, num(context, 20)));
     
     //end_for(context, init_for(context, "a", scope, scope), false);
     

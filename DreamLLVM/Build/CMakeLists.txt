@@ -35,6 +35,7 @@ include_directories(compiler ${CMAKE_CURRENT_SOURCE_DIR}/../Compiler/include)
 file(GLOB SOURCES3 ${CMAKE_CURRENT_SOURCE_DIR}/../Compiler/*.cpp)
 add_library(compiler SHARED ${SOURCES3})
 
+
 llvm_map_components_to_libnames(llvm_libs
 	support
 	core
@@ -47,3 +48,9 @@ llvm_map_components_to_libnames(llvm_libs
 
 # Link against LLVM libraries
 target_link_libraries(compiler LLVM LLVMCore LLVMSupport LLVMTransformUtils LLVMBitReader LLVMAnalysis LLVMDemangle dreamlang)
+
+
+project(compiler_debug)
+
+add_executable(compiler_debug ${CMAKE_CURRENT_SOURCE_DIR}/../Compiler/main.cpp)
+target_link_libraries(compiler_debug compiler)

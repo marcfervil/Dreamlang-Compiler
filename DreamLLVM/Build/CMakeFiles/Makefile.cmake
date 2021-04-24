@@ -58,6 +58,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
+  "CMakeFiles/compiler_debug.dir/DependInfo.cmake"
   "CMakeFiles/compiler.dir/DependInfo.cmake"
   "CMakeFiles/dreamlang.dir/DependInfo.cmake"
   "CMakeFiles/acc_gen.dir/DependInfo.cmake"

@@ -130,6 +130,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named compiler_debug
+
+# Build rule for target.
+compiler_debug: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 compiler_debug
+.PHONY : compiler_debug
+
+# fast build rule for target.
+compiler_debug/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_debug.dir/build.make CMakeFiles/compiler_debug.dir/build
+.PHONY : compiler_debug/fast
+
+#=============================================================================
 # Target rules for targets named compiler
 
 # Build rule for target.
@@ -254,6 +267,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.o: User
 
 # target to build an object file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_debug.dir/build.make CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o
 
@@ -263,6 +277,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.i: User
 
 # target to preprocess a source file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_debug.dir/build.make CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.i
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.i
 
@@ -272,6 +287,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.s: User
 
 # target to generate assembly for a file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler_debug.dir/build.make CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.s
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.s
 
@@ -530,6 +546,7 @@ help:
 	@echo "... intrinsics_gen"
 	@echo "... omp_gen"
 	@echo "... compiler"
+	@echo "... compiler_debug"
 	@echo "... dreamlang"
 	@echo "... Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/IfGen.o"
 	@echo "... Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/IfGen.i"

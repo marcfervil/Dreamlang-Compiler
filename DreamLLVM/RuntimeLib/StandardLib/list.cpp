@@ -85,18 +85,14 @@ extern "C"{
         int len = * ((int *)(get_var(self, "len") -> value));
        // dreamInt(len+1);
        set_var(self, "len", dreamInt(len+1));
-        //printf("%d", len);
        
-      //  self->value =
-       // dreamObj ** arr = ((dreamObj **)self->value);
-        //printf("fowpfkewof\n");
-      //  printf("VIBE CHECK %d\n", self->value == scope->parent_scope->value);
+        
         
         dreamObj** temp_list = (dreamObj **)malloc((len + 1) * sizeof(struct dreamObj *));
         for(int i=0; i < len; i++){
             (temp_list[i]) = (*((dreamObj ***)self->value))[i];
         }
-       // free(self->value);
+        free(*((dreamObj ***)self->value));
        
         *((dreamObj ***)self->value) = temp_list;
         (*((dreamObj ***)self->value))[len] = smart_copy(new_item);

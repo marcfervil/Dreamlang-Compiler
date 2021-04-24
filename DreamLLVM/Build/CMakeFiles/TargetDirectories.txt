@@ -1,4 +1,5 @@
 /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles/edit_cache.dir
+/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles/compiler_debug.dir
 /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles/compiler.dir
 /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles/dreamlang.dir
 /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles/acc_gen.dir

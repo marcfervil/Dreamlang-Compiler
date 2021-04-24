@@ -115,6 +115,7 @@ const char * rep(dreamObj* obj){
     
     }else if(type == dreamObjType){
         dreamObj* rep_func;
+        
         if((rep_func = find_var(obj, "repr"))!=nullDream){
             dreamObj * rep_call = ((dreamObj* (*)(dreamObj *)) rep_func->value)(obj);
             
@@ -166,6 +167,12 @@ void dict(dreamObj* obj){
     printf("\n}\n");
 }
 
+void dict2(dreamObj* obj){
+
+    dict(obj);
+
+}
+
 
 void merge(dreamObj * var1, dreamObj * var2){
     dreamObj * var;
@@ -188,7 +195,7 @@ dreamObj * dreamObject(){
 dreamObj * new_scope(dreamObj * obj, int nested_scope){
    // printf("%d",obj->parent_scope == &nullDream);
  
-    
+
     if((obj->parent_scope == nullDream || nested_scope)){
         //nested scope
         dreamObj * new_scope = make_dream(nullDream);
@@ -235,7 +242,7 @@ dreamObj * equals_c(dreamObj * var1, dreamObj * var2){
     
     dreamObj * equ;
     if((equ = find_var(var1, "equals")) != nullDream){
-        
+
         dreamObj * b = ((dreamObj* (*)(dreamObj *, dreamObj *)) equ->value)(var1, var2);
 
         return b;
@@ -243,6 +250,21 @@ dreamObj * equals_c(dreamObj * var1, dreamObj * var2){
     //TODO - some sort of equals inheritance for objects.  Deffering because I dont want to allocate more memory.
     else if(var1->type==dreamObjType) return dreamBool(var1 == var2);
     printf("[Nightmare]: <Undefined Equals Operation>\n");
+    return dreamBool(-1);
+}
+
+
+dreamObj * add_c(dreamObj * var1, dreamObj * var2){
+    
+    dreamObj * equ;
+    if((equ = get_var(var1, "add")) != NULL){
+      //  dict(var1);
+        //dict(var2);
+        dreamObj * result = ((dreamObj* (*)(dreamObj *, dreamObj *)) equ->value)(var1, var2);
+        
+        return result;
+    }
+    printf("[Nightmare]: <Undefined Add Operation>\n");
     return dreamBool(-1);
 }
 
