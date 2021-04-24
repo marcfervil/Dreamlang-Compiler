@@ -14,8 +14,9 @@
 		9404E3512628DBCF00ED2475 /* memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9404E31E26289EB300ED2475 /* memory.cpp */; };
 		9404E3532628DBD300ED2475 /* runtime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9404E32326289F8E00ED2475 /* runtime.cpp */; };
 		9404E3552628DBD600ED2475 /* copy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9404E33E2628C97F00ED2475 /* copy.cpp */; };
-		9404E3572628DC5100ED2475 /* list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946CEF57261F4D0B00584FD1 /* list.cpp */; };
 		9404E35B2628DCCE00ED2475 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9404E3592628DCCE00ED2475 /* util.cpp */; };
+		94295F2A262F7E2800C79FC1 /* list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946CEF57261F4D0B00584FD1 /* list.cpp */; };
+		94295F2E262FCCDE00C79FC1 /* CMakeLists.txt in Sources */ = {isa = PBXBuildFile; fileRef = 94295F2D262FCCDE00C79FC1 /* CMakeLists.txt */; };
 		9445D02E2620CAE9001FC0B2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 948AB2F425DB5DA3009FCA3B /* main.cpp */; };
 		944C9FE025EB8C5B0012B74B /* pylink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 944C9FDE25EB8C5B0012B74B /* pylink.cpp */; };
 		946864DE25D0DFB20090421F /* referance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946864DD25D0DFB20090421F /* referance.cpp */; };
@@ -24,6 +25,8 @@
 		947A65AA25DE1D770093D821 /* DreamLib.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 947A65A925DE1D770093D821 /* DreamLib.hpp */; };
 		947A65AC25DE1D770093D821 /* DreamLibPriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 947A65AB25DE1D770093D821 /* DreamLibPriv.hpp */; };
 		947A65AE25DE1D770093D821 /* DreamLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 947A65AD25DE1D770093D821 /* DreamLib.cpp */; };
+		948206D926337FED00F21442 /* IfGen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 944C9FD925EB69DB0012B74B /* IfGen.cpp */; };
+		948206DB2633806F00F21442 /* Natives.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 94BC36062606CB1700E16882 /* Natives.cpp */; };
 		948AB2F925DB7935009FCA3B /* standard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 948AB2F725DB7935009FCA3B /* standard.cpp */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +71,7 @@
 		9404E33F2628C97F00ED2475 /* copy.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = copy.hpp; sourceTree = "<group>"; };
 		9404E3592628DCCE00ED2475 /* util.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = util.cpp; sourceTree = "<group>"; };
 		9404E35A2628DCCE00ED2475 /* util.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = util.hpp; sourceTree = "<group>"; };
+		94295F2D262FCCDE00C79FC1 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; usesTabs = 1; };
 		944C9FD925EB69DB0012B74B /* IfGen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IfGen.cpp; sourceTree = "<group>"; };
 		944C9FDA25EB69DB0012B74B /* IfGen.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = IfGen.hpp; sourceTree = "<group>"; };
 		944C9FDE25EB8C5B0012B74B /* pylink.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pylink.cpp; sourceTree = "<group>"; };
@@ -112,36 +116,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9404E31D26289E4300ED2475 /* Runtime */ = {
+		9404E31D26289E4300ED2475 /* RuntimeLib */ = {
 			isa = PBXGroup;
 			children = (
+				94F6AD1E2631FDF9002FD2F4 /* include */,
 				9404E3272628AF9900ED2475 /* StandardLib */,
 				9404E31E26289EB300ED2475 /* memory.cpp */,
-				9404E31F26289EB300ED2475 /* memory.hpp */,
 				9404E32326289F8E00ED2475 /* runtime.cpp */,
-				9404E32426289F8E00ED2475 /* runtime.hpp */,
 				9404E33E2628C97F00ED2475 /* copy.cpp */,
-				9404E33F2628C97F00ED2475 /* copy.hpp */,
 				9404E3592628DCCE00ED2475 /* util.cpp */,
-				9404E35A2628DCCE00ED2475 /* util.hpp */,
 			);
-			path = Runtime;
+			path = RuntimeLib;
 			sourceTree = "<group>";
 		};
 		9404E3272628AF9900ED2475 /* StandardLib */ = {
 			isa = PBXGroup;
 			children = (
-				9404E3292628AFE000ED2475 /* nativetypes.hpp */,
 				9404E32E2628B0B900ED2475 /* dreamInt.cpp */,
-				9404E32F2628B0B900ED2475 /* dreamInt.hpp */,
 				9404E3322628B2C500ED2475 /* dreamStr.cpp */,
-				9404E3332628B2C500ED2475 /* dreamStr.hpp */,
+				946CEF57261F4D0B00584FD1 /* list.cpp */,
 				9404E3362628B2D800ED2475 /* dreamBool.cpp */,
-				9404E3372628B2D800ED2475 /* dreamBool.hpp */,
 				9404E33A2628B88C00ED2475 /* dreamFunc.cpp */,
-				9404E33B2628B88C00ED2475 /* dreamFunc.hpp */,
 			);
 			path = StandardLib;
+			sourceTree = "<group>";
+		};
+		94295F2C262F861E00C79FC1 /* Build */ = {
+			isa = PBXGroup;
+			children = (
+				94295F2D262FCCDE00C79FC1 /* CMakeLists.txt */,
+			);
+			path = Build;
 			sourceTree = "<group>";
 		};
 		946864D125D0DFB20090421F = {
@@ -166,24 +171,19 @@
 		946864DC25D0DFB20090421F /* DreamLLVM */ = {
 			isa = PBXGroup;
 			children = (
-				9404E31D26289E4300ED2475 /* Runtime */,
+				948206D826337FA800F21442 /* Compiler */,
+				94A701182630F44D002FCA50 /* Output */,
+				94295F2C262F861E00C79FC1 /* Build */,
+				9404E31D26289E4300ED2475 /* RuntimeLib */,
 				946864DD25D0DFB20090421F /* referance.cpp */,
-				946864EC25D1C93B0090421F /* test.h */,
-				948AB2F425DB5DA3009FCA3B /* main.cpp */,
-				948AB2F525DB5DA3009FCA3B /* main.hpp */,
 				948AB2F725DB7935009FCA3B /* standard.cpp */,
-				948AB2F825DB7935009FCA3B /* standard.hpp */,
+				946864EC25D1C93B0090421F /* test.h */,
 				94B551D125E3E0ED00F1DCB8 /* pass.h */,
 				94FD512925E73393003689BE /* example */,
-				944C9FD925EB69DB0012B74B /* IfGen.cpp */,
-				944C9FDA25EB69DB0012B74B /* IfGen.hpp */,
+				948AB2F825DB7935009FCA3B /* standard.hpp */,
 				944C9FDE25EB8C5B0012B74B /* pylink.cpp */,
 				944C9FDF25EB8C5B0012B74B /* pylink.hpp */,
 				947DCE51260000B4004A793B /* pylinklib.c */,
-				94BC36062606CB1700E16882 /* Natives.cpp */,
-				94BC36072606CB1700E16882 /* Natives.hpp */,
-				946CEF57261F4D0B00584FD1 /* list.cpp */,
-				946CEF58261F4D0B00584FD1 /* list.hpp */,
 			);
 			path = DreamLLVM;
 			sourceTree = "<group>";
@@ -204,6 +204,51 @@
 				947A65AD25DE1D770093D821 /* DreamLib.cpp */,
 			);
 			path = DreamLib;
+			sourceTree = "<group>";
+		};
+		948206D826337FA800F21442 /* Compiler */ = {
+			isa = PBXGroup;
+			children = (
+				948206DE2633809300F21442 /* include */,
+				944C9FD925EB69DB0012B74B /* IfGen.cpp */,
+				948AB2F425DB5DA3009FCA3B /* main.cpp */,
+				94BC36062606CB1700E16882 /* Natives.cpp */,
+			);
+			path = Compiler;
+			sourceTree = "<group>";
+		};
+		948206DE2633809300F21442 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				948AB2F525DB5DA3009FCA3B /* main.hpp */,
+				94BC36072606CB1700E16882 /* Natives.hpp */,
+				944C9FDA25EB69DB0012B74B /* IfGen.hpp */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		94A701182630F44D002FCA50 /* Output */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Output;
+			sourceTree = "<group>";
+		};
+		94F6AD1E2631FDF9002FD2F4 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				946CEF58261F4D0B00584FD1 /* list.hpp */,
+				9404E31F26289EB300ED2475 /* memory.hpp */,
+				9404E32426289F8E00ED2475 /* runtime.hpp */,
+				9404E33F2628C97F00ED2475 /* copy.hpp */,
+				9404E3332628B2C500ED2475 /* dreamStr.hpp */,
+				9404E35A2628DCCE00ED2475 /* util.hpp */,
+				9404E32F2628B0B900ED2475 /* dreamInt.hpp */,
+				9404E33B2628B88C00ED2475 /* dreamFunc.hpp */,
+				9404E3372628B2D800ED2475 /* dreamBool.hpp */,
+				9404E3292628AFE000ED2475 /* nativetypes.hpp */,
+			);
+			path = include;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -301,10 +346,13 @@
 				9404E3532628DBD300ED2475 /* runtime.cpp in Sources */,
 				944C9FE025EB8C5B0012B74B /* pylink.cpp in Sources */,
 				9404E34F2628DBCD00ED2475 /* dreamFunc.cpp in Sources */,
-				9404E3572628DC5100ED2475 /* list.cpp in Sources */,
 				9404E3552628DBD600ED2475 /* copy.cpp in Sources */,
+				948206DB2633806F00F21442 /* Natives.cpp in Sources */,
+				948206D926337FED00F21442 /* IfGen.cpp in Sources */,
 				9404E34D2628DBC500ED2475 /* dreamBool.cpp in Sources */,
 				9404E3512628DBCF00ED2475 /* memory.cpp in Sources */,
+				94295F2E262FCCDE00C79FC1 /* CMakeLists.txt in Sources */,
+				94295F2A262F7E2800C79FC1 /* list.cpp in Sources */,
 				9404E35B2628DCCE00ED2475 /* util.cpp in Sources */,
 				9445D02E2620CAE9001FC0B2 /* main.cpp in Sources */,
 				948AB2F925DB7935009FCA3B /* standard.cpp in Sources */,

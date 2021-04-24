@@ -30,8 +30,8 @@
             filePath = "DreamLLVM/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "596"
-            endingLineNumber = "596"
+            startingLineNumber = "595"
+            endingLineNumber = "595"
             landmarkName = "func(context, obj, funcName, is_class, arg_size, arg_names)"
             landmarkType = "9">
          </BreakpointContent>
@@ -62,8 +62,8 @@
             filePath = "DreamLLVM/main.cpp"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "117"
-            endingLineNumber = "117"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
             landmarkName = "llvm_init()"
             landmarkType = "9">
          </BreakpointContent>
