@@ -93,7 +93,7 @@ struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
         undefined_allowed = *(int *)(value -> value);
         return NULL;
     }
-    
+
     if(strcmp(name, "this")!=0 && name[0]!='@' && obj->parent_scope != nullDream && find_var(obj->parent_scope, name)!=nullDream){
         return set_var(obj->parent_scope, strdup(name), value);
     }
@@ -102,7 +102,7 @@ struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
     dreamObj ** var = obj->vars[hash_val];
 
     if(!var_exists(var)) {
-        //CREATING NEW VAR
+        //creating new var
         dreamObj *new_value = smart_copy(value);
         new_value->name = strdup(name);
         *var = new_value;
@@ -111,9 +111,16 @@ struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
         if (var_exists(obj->last_var)) *((*(obj->last_var))->next) = *var;
         *(obj->last_var) = *var;
     }else if((*var)->name != NULL && strcmp((*var)->name, name)!=0){
-        printf("HASH COLLISION!\n");
+        //creating new var due to hash collision
+        dreamObj *new_value = smart_copy(value);
+        new_value->name = strdup(name);
+
+
+        *(new_value->next) = *(*var)->next;
+        if(!var_exists((*var)->next))*(obj->last_var) = *(new_value->next);
+        *(*var)->next = new_value;
     }else{
-        //UPDATING VAR
+        //updating existing var
         (*var)->value = (value->type==dreamObjType) ? value->value : copy_value(value->value,  value->type);
         (*var)->first_var = value->first_var;
         (*var)->last_var = value->last_var;

@@ -29,7 +29,7 @@
 #include "stdlib.h"
 #include <string.h>
 
-#define HASHSIZE 1022
+#define HASHSIZE 100
 
 
 extern "C" {
