@@ -83,8 +83,58 @@ unsigned hash_obj(const char *s){
     return hashval % HASHSIZE;
 }
 
+inline bool var_exists(dreamObj ** var){
+    return (deref_var(var)!=NULL);
+}
+
 struct dreamObj *set_var2(dreamObj *obj, const char *name, dreamObj *value){
-    printf("hia");
+    if(strcmp(name, "undef")==0){
+        undefined_allowed = *(int *)(value -> value);
+        return NULL;
+    }
+    if(strcmp(name, "this")!=0 && name[0]!='@' && obj->parent_scope != nullDream && find_var(obj->parent_scope, name)!=nullDream){
+        return set_var2(obj->parent_scope, strdup(name), value);
+    }
+
+    unsigned hash_val = hash_obj(name);
+    dreamObj ** var = obj->vars[hash_val];
+
+    if(!var_exists(var)) {
+        //CREATING NEW VAR
+        dreamObj *new_value = smart_copy(value);
+        new_value->name = strdup(name);
+        *var = new_value;
+
+        if (!var_exists(obj->first_var)) *(obj->first_var) = *var;
+        if (var_exists(obj->last_var)) *((*(obj->last_var))->next) = *var;
+        *(obj->last_var) = *var;
+    }else if((*var)->name != NULL && strcmp((*var)->name, name)!=0){
+        printf("HASH COLLISION!\n");
+    }else{
+        //UPDATING VAR
+        (*var)->value = (value->type==dreamObjType) ? value->value : copy_value(value->value,  value->type);
+
+        (*var)->first_var = value->first_var;
+        (*var)->last_var = value->last_var;
+
+        for (int i = 0; i < HASHSIZE; i++) {
+            /*
+            if((*var)->type != dreamObjType){
+                *((*var)->vars[i]) = *(value->vars[i]);
+            }else{
+                ((*var)->vars[i]) = (value->vars[i]);
+            }*/
+            ((*var)->vars[i]) = (value->vars[i]);
+        }
+        (*var)->type = value->type;
+
+
+    }
+
+    if(name[0]=='@'){
+      //  printf("setting %s on %s type = %s\n", name, obj->name, rep(value->type));
+       // dict(obj);
+    }
     return NULL;
 }
 

@@ -666,7 +666,7 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
     return func_data;
 }
 
-void end_func(LLVMData* context, Value * scope, FuncData * func_data){
+Value * end_func(LLVMData* context, Value * scope, FuncData * func_data){
     
     //retVal(context, str(context, "nada"));
     context->builder->get.SetInsertPoint(func_data->startingBlock);
@@ -678,12 +678,14 @@ void end_func(LLVMData* context, Value * scope, FuncData * func_data){
     //printf("yuh");
     set_var_llvm(context, scope, func_data->name, funcPointer);
     set_var_llvm(context, funcPointer, "@context", scope);
+    //set_var_llvm(context, funcPointer, "boob", str(context, "odpkf"));
+   // dict_llvm(context, funcPointer);
     
     if(func_data->is_class){
      //   Value * set_parent_c(LLVMData* context, Value* obj, Value* new_parent){
        // set_parent_c(context, get_var_llvm(context, funcPointer, "@context"), get_var_llvm(context, scope, "null"));
     }
-                                                                                                
+    return funcPointer;
     //set_var_llvm(context, funcPointer, "@context", scope);
 
 }
@@ -942,11 +944,12 @@ int main(){
    // for(int i=0; i<100000; i++){
     dreamObj * scope = dreamObject();
     set_var(scope, "@lst", dreamList(3, dreamStr("item1"), dreamStr("item2"), dreamStr("item3")));
-    print(1, get_var(scope, "@lst"));
+
  //   get_var(scope, "i");
     
 
-   // list_push( new_scope( get_var(scope, "lst"), 1), dreamStr("fewokf"));
+   // list_push( new_scope( get_var(scope, "@lst"), 1),  get_var(scope, "@lst"));
+    print(1, get_var(scope, "@lst"));
     //list_push( new_scope( get_var(scope, "lst"), 1), dreamStr("fewfewfewfewe"));
   //  list_push( new_scope( get_var(scope, "@lst"), 1), dreamStr("feopeeeeeeeffefwefewf"));
    // tt(scope);

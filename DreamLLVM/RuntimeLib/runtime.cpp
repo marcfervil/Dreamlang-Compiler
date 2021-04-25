@@ -248,7 +248,7 @@ dreamObj * equals_c(dreamObj * var1, dreamObj * var2){
         return b;
     }
     //TODO - some sort of equals inheritance for objects.  Deffering because I dont want to allocate more memory.
-    else if(var1->type==dreamObjType) return dreamBool(var1 == var2);
+    else if(var1->type==dreamObjType) return dreamBool(var1->value == var2->value);
     printf("[Nightmare]: <Undefined Equals Operation>\n");
     return dreamBool(-1);
 }

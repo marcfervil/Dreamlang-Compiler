@@ -51,7 +51,7 @@ dreamObj* medium_copy(dreamObj * obj){
 }
 
 dreamObj * smart_copy(dreamObj * obj ){
-    return (obj->type == dreamObjType)? shallow_copy(obj) : deep_copy(obj);
+    return (obj->type == dreamObjType || obj->type == dreamFuncType )? shallow_copy(obj) : deep_copy(obj);
     
 }
 
@@ -90,8 +90,10 @@ dreamObj * shallow_copy(dreamObj * obj, bool parent ){
     if(parent)np->parent_scope = obj->parent_scope;
     np->first_var = obj->first_var;
     np->last_var = obj->last_var;
-    np->next = obj->next;
-  
+   // np->next = obj->next;
+
+
+
     //obj->first_var = obj
     
     /*

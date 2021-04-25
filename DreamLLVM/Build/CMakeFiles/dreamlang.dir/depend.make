@@ -56,6 +56,15 @@ CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamL
 CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.o: ../RuntimeLib/include/runtime.hpp
 CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.o: /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp
 
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o: ../RuntimeLib/include/copy.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o: ../RuntimeLib/include/dreamBool.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o: ../RuntimeLib/include/dreamFunc.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o: ../RuntimeLib/include/dreamInt.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o: ../RuntimeLib/include/dreamStr.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o: ../RuntimeLib/include/list.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o: ../RuntimeLib/include/memory.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o: ../RuntimeLib/include/nativetypes.hpp
+CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o: ../RuntimeLib/include/runtime.hpp
 CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o: /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp
 
 CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.o: ../RuntimeLib/include/copy.hpp
