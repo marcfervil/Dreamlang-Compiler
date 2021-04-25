@@ -19,10 +19,12 @@ dreamObj * list_get(dreamObj * self, dreamObj * index);
 dreamObj * list_rep(dreamObj * self);
 
 dreamObj * list_push(dreamObj * scope, dreamObj * index);
-dreamObj * iter_next(dreamObj * scope);
+dreamObj * count_iter_next(dreamObj * scope);
 dreamObj * list_set(dreamObj * scope, dreamObj * index, dreamObj * value);
 
 dreamObj * list_push(dreamObj * scope, dreamObj * new_item);
+
+dreamObj * count_iter(dreamObj * scope);
 }
 
 

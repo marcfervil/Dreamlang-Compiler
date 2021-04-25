@@ -37,18 +37,13 @@ extern "C"{
         dreamObj * obj = make_dream((void *) list_ptr, dreamObjType);
         obj->is_list = true ;
         set_var(obj, "len", dreamInt(num_args));
-        
-        /*
-         
-         **/
-        
+
         add_native_func(obj, "get", (void *) list_get);
         add_native_func(obj, "set", (void *) list_set);
         add_native_func(obj, "push", (void *) list_push);
         add_native_func(obj, "repr", (void *) list_rep);
-       
-        
-        
+
+
         return obj;
     }
 
@@ -57,7 +52,6 @@ extern "C"{
     dreamObj * list_get(dreamObj * scope, dreamObj * index){
         if(index->type != dreamIntType)nightmare("List index must be int");
         dreamObj* self = scope->parent_scope;
-        //print(1, ((dreamObj**) self->value)[*(int *)(index->value)]);
         return ((*(dreamObj***) self->value))[*(int *)(index->value)];
 
     }
@@ -65,7 +59,6 @@ extern "C"{
     dreamObj * list_set(dreamObj * scope, dreamObj * index, dreamObj * value){
         if(index->type != dreamIntType)nightmare("List index must be int");
         dreamObj* self = scope->parent_scope;
-        //print(1, ((dreamObj**) self->value)[*(int *)(index->value)]);
         ((*(dreamObj***) self->value))[*(int *)(index->value)] = smart_copy(value);
         return value;
     }
@@ -73,15 +66,10 @@ extern "C"{
 
     dreamObj * list_push(dreamObj * scope, dreamObj * new_item){
         dreamObj* self = scope->parent_scope;
-        //scope->parent_scope;
-        
-        //printf("%s",self->name);
-        
+
         int len = * ((int *)(get_var(self, "len") -> value));
-       // dreamInt(len+1);
-       set_var(self, "len", dreamInt(len+1));
-       
-        
+        set_var(self, "len", dreamInt(len+1));
+
         
         dreamObj** temp_list = (dreamObj **)malloc((len + 1) * sizeof(struct dreamObj *));
         for(int i=0; i < len; i++){
@@ -92,11 +80,7 @@ extern "C"{
         *((dreamObj ***)self->value) = temp_list;
         (*((dreamObj ***)self->value))[len] = smart_copy(new_item);
         
-        
-        //scope->parent_scope->value = self->value;
-       
-   //     print(1, ((dreamObj **)scope->parent_scope->value)[3]);
-        
+
         return nullDream;
     }
 
@@ -122,21 +106,29 @@ extern "C"{
 
     dreamObj * count(dreamObj * num){
 
+        dreamObj * count_obj = dreamObject();
+        add_native_func(count_obj, "iter", (void *) count_iter);
+        set_var(count_obj, "num", num);
+
+        return count_obj;
+    }
+
+    dreamObj * count_iter(dreamObj * scope){
+        dreamObj* self =  scope->parent_scope;
         dreamObj * iter = dreamObject();
-        set_var(iter, "max", num);
-        
-        
+        set_var(iter, "max", get_var(self, "num"));
+
+
         set_var(iter, "index", dreamInt(0));
-        
-        dreamObj* next_func = dreamFunc((void *) iter_next);
+
+        dreamObj* next_func = dreamFunc((void *) count_iter_next);
         set_var(next_func, "@context", iter);
         set_var(iter, "next", next_func);
-        
+
         return iter;
     }
 
-
-    dreamObj * iter_next(dreamObj * scope){
+    dreamObj * count_iter_next(dreamObj * scope){
         
         dreamObj* self =  scope->parent_scope;
         dreamObj * index = get_var(self, "index");
