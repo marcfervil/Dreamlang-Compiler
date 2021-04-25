@@ -67,7 +67,7 @@ void loadStandard(LLVMData* context){
     functions["ptr"] = context->owner->getOrInsertFunction("ptr", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["printf"] = context->owner->getOrInsertFunction("printjf", FunctionType::get(intType, strType, true));
     functions["object"] = context->owner->getOrInsertFunction("dreamObject", FunctionType::get(dreamObjPtrTy, false ));
-    functions["set_var"] = context->owner->getOrInsertFunction("set_var2", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType, dreamObjPtrTy}, false ));
+    functions["set_var"] = context->owner->getOrInsertFunction("set_var", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType, dreamObjPtrTy}, false ));
     functions["set_var_c"] = context->owner->getOrInsertFunction("set_var_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType}, false ));
     functions["get_var"] = context->owner->getOrInsertFunction("get_var", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, strType, intType},true ));
     functions["equals_c"] = context->owner->getOrInsertFunction("equals_c", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false ));

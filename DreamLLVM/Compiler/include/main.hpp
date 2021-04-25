@@ -50,7 +50,7 @@
 
 
 
-#define HASHSIZE 1022
+
 extern "C"{
 
 

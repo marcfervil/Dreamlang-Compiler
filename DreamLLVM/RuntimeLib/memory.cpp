@@ -87,13 +87,15 @@ inline bool var_exists(dreamObj ** var){
     return (deref_var(var)!=NULL);
 }
 
-struct dreamObj *set_var2(dreamObj *obj, const char *name, dreamObj *value){
+struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
+
     if(strcmp(name, "undef")==0){
         undefined_allowed = *(int *)(value -> value);
         return NULL;
     }
+    
     if(strcmp(name, "this")!=0 && name[0]!='@' && obj->parent_scope != nullDream && find_var(obj->parent_scope, name)!=nullDream){
-        return set_var2(obj->parent_scope, strdup(name), value);
+        return set_var(obj->parent_scope, strdup(name), value);
     }
 
     unsigned hash_val = hash_obj(name);
@@ -113,36 +115,23 @@ struct dreamObj *set_var2(dreamObj *obj, const char *name, dreamObj *value){
     }else{
         //UPDATING VAR
         (*var)->value = (value->type==dreamObjType) ? value->value : copy_value(value->value,  value->type);
-
         (*var)->first_var = value->first_var;
         (*var)->last_var = value->last_var;
 
         for (int i = 0; i < HASHSIZE; i++) {
-            /*
-            if((*var)->type != dreamObjType){
-                *((*var)->vars[i]) = *(value->vars[i]);
-            }else{
-                ((*var)->vars[i]) = (value->vars[i]);
-            }*/
             ((*var)->vars[i]) = (value->vars[i]);
         }
         (*var)->type = value->type;
-
-
     }
 
-    if(name[0]=='@'){
-      //  printf("setting %s on %s type = %s\n", name, obj->name, rep(value->type));
-       // dict(obj);
-    }
     return NULL;
 }
 
-struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
+struct dreamObj *set_var2(dreamObj *obj, const char *name, dreamObj *value){
     //printf("\x1B[31m open");
    // printf("Setting var type - %s", rep(value->type));
-  
-    
+    //printf("setting %s\n",name);
+    printf("OG SET VAR ALERT\n");
     if(obj == nullDream){
         nightmare("Cannot set property %s on undefined!", name);
         
