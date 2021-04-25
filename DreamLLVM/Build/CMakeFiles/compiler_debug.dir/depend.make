@@ -13,6 +13,7 @@ CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/D
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: ../RuntimeLib/include/memory.hpp
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: ../RuntimeLib/include/nativetypes.hpp
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: ../RuntimeLib/include/runtime.hpp
+CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: ../RuntimeLib/include/util.hpp
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: /usr/local/opt/llvm/include/llvm-c/DataTypes.h
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: /usr/local/opt/llvm/include/llvm-c/DisassemblerTypes.h

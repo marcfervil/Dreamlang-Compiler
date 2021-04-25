@@ -14,11 +14,14 @@ extern "C" {
 /*Initialize dream str object**/
 dreamObj * dreamStr(const char * value);
 
-/*String concatination**/
+/*String concatenation**/
 dreamObj * str_add(dreamObj * me, dreamObj * other);
 
 /*String comparison**/
 dreamObj * str_equals(dreamObj * me, dreamObj * other);
+
+/*String concatenation**/
+dreamObj * str_get(dreamObj * self, dreamObj * index);
 
 }
 #endif /* dreamStr_hpp */

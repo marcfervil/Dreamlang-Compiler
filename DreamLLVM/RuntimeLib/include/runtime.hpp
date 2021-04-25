@@ -118,10 +118,13 @@ dreamObj * set_parent(dreamObj * obj, dreamObj * new_parent);
 
 /*returns a new scope object given a dreamObj**/
 dreamObj * new_scope(dreamObj * obj, int nested_scope);
+
+
+
 }
 
 
-
+#include "util.hpp"
 #include "nativetypes.hpp"
 #include "copy.hpp"
 #include "memory.hpp"

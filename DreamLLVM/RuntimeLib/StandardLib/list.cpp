@@ -9,12 +9,7 @@
 
 extern "C"{
     
-    void add_native_func(dreamObj * obj, const char * name, void * func){
-        
-        dreamObj* obj_func = dreamFunc(func);
-        set_var(obj_func, "@context", obj);
-        set_var(obj, name, obj_func);
-    }
+
     
     char * cat(const char * left, const char * right, const char * sep=NULL){
         char * str;
@@ -63,7 +58,7 @@ extern "C"{
         if(index->type != dreamIntType)nightmare("List index must be int");
         dreamObj* self = scope->parent_scope;
         //print(1, ((dreamObj**) self->value)[*(int *)(index->value)]);
-        return  ((*(dreamObj***) self->value))[*(int *)(index->value)];
+        return ((*(dreamObj***) self->value))[*(int *)(index->value)];
 
     }
 

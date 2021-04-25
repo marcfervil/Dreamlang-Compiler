@@ -20,5 +20,11 @@ dreamObj * deref_var(dreamObj ** obj);
 //char * dog(const char * left, const char * right, const char * sep=NULL);
 char * dog(const char * left, const char * right, const char * sep=NULL);
 
+void add_native_func(dreamObj * obj, const char * name, void * func);
+
+int to_int(dreamObj * obj);
+
+char * to_char(dreamObj * obj);
+
 }
 #endif /* util_hpp */

@@ -175,12 +175,18 @@ stdlib.h
 ../RuntimeLib/include/stdlib.h
 string.h
 -
+util.hpp
+../RuntimeLib/include/util.hpp
 nativetypes.hpp
 ../RuntimeLib/include/nativetypes.hpp
 copy.hpp
 ../RuntimeLib/include/copy.hpp
 memory.hpp
 ../RuntimeLib/include/memory.hpp
+
+../RuntimeLib/include/util.hpp
+runtime.hpp
+../RuntimeLib/include/runtime.hpp
 
 /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp
 main.hpp
