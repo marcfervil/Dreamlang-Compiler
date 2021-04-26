@@ -5,6 +5,7 @@ CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/D
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: ../Compiler/include/Natives.hpp
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: ../Compiler/include/main.hpp
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: ../RuntimeLib/include/copy.hpp
+CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: ../RuntimeLib/include/count.h
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: ../RuntimeLib/include/dreamBool.hpp
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: ../RuntimeLib/include/dreamFunc.hpp
 CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o: ../RuntimeLib/include/dreamInt.hpp

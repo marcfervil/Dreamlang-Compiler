@@ -10,6 +10,10 @@
 runtime.hpp
 ../RuntimeLib/include/runtime.hpp
 
+../RuntimeLib/include/count.h
+runtime.hpp
+../RuntimeLib/include/runtime.hpp
+
 ../RuntimeLib/include/dreamBool.hpp
 runtime.hpp
 ../RuntimeLib/include/runtime.hpp
@@ -45,6 +49,8 @@ dreamStr.hpp
 ../RuntimeLib/include/dreamStr.hpp
 list.hpp
 ../RuntimeLib/include/list.hpp
+count.h
+../RuntimeLib/include/count.h
 
 ../RuntimeLib/include/runtime.hpp
 stdio.h
@@ -92,39 +98,7 @@ memory.hpp
 runtime.hpp
 ../RuntimeLib/include/runtime.hpp
 
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp
-dreamBool.hpp
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.hpp
-
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp
-dreamFunc.hpp
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.hpp
-
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp
-dreamInt.hpp
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.hpp
-
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp
-dreamStr.hpp
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.hpp
-
 /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp
 list.hpp
 /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.hpp
-
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp
-copy.hpp
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.hpp
-
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp
-memory.hpp
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.hpp
-
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp
-runtime.hpp
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.hpp
-
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp
-util.hpp
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.hpp
 

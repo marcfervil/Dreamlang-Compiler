@@ -53,10 +53,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/local/Cellar/cmake/3.19.4/bin/cmake
+CMAKE_COMMAND = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake
 
 # The command to remove a file.
-RM = /usr/local/Cellar/cmake/3.19.4/bin/cmake -E rm -f
+RM = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -115,11 +115,25 @@ CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLL
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp -o CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.s
 
+CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.o: CMakeFiles/compiler.dir/flags.make
+CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.o: /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.o -c /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp
+
+CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp > CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.i
+
+CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp -o CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.s
+
 # Object files for target compiler
 compiler_OBJECTS = \
 "CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/IfGen.cpp.o" \
 "CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/Natives.cpp.o" \
-"CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o"
+"CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o" \
+"CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.o"
 
 # External object files for target compiler
 compiler_EXTERNAL_OBJECTS =
@@ -127,6 +141,7 @@ compiler_EXTERNAL_OBJECTS =
 libcompiler.dylib: CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/IfGen.cpp.o
 libcompiler.dylib: CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/Natives.cpp.o
 libcompiler.dylib: CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/main.cpp.o
+libcompiler.dylib: CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.o
 libcompiler.dylib: CMakeFiles/compiler.dir/build.make
 libcompiler.dylib: /usr/local/opt/llvm/lib/libLLVM.dylib
 libcompiler.dylib: /usr/local/opt/llvm/lib/libLLVMCore.a
@@ -153,7 +168,7 @@ libcompiler.dylib: /usr/local/opt/llvm/lib/libLLVMDemangle.a
 libcompiler.dylib: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk/usr/lib/libz.tbd
 libcompiler.dylib: /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/libcurses.tbd
 libcompiler.dylib: CMakeFiles/compiler.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX shared library libcompiler.dylib"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX shared library libcompiler.dylib"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/compiler.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

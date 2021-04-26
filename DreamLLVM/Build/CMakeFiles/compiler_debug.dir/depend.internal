@@ -6,6 +6,7 @@ CMakeFiles/compiler_debug.dir/Users/marcfervil/Documents/Programming/DreamLLVM/D
  ../Compiler/include/Natives.hpp
  ../Compiler/include/main.hpp
  ../RuntimeLib/include/copy.hpp
+ ../RuntimeLib/include/count.h
  ../RuntimeLib/include/dreamBool.hpp
  ../RuntimeLib/include/dreamFunc.hpp
  ../RuntimeLib/include/dreamInt.hpp

@@ -18,7 +18,7 @@ dreamObj * deref_var(dreamObj ** obj);
 
 //Quick way to concatonate two strings
 //char * dog(const char * left, const char * right, const char * sep=NULL);
-char * dog(const char * left, const char * right, const char * sep=NULL);
+char * cat(const char * left, const char * right, const char * sep=NULL);
 
 void add_native_func(dreamObj * obj, const char * name, void * func);
 

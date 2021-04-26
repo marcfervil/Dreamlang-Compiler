@@ -20,7 +20,7 @@ dreamObj * str_add(dreamObj * me, dreamObj * other);
 /*String comparison**/
 dreamObj * str_equals(dreamObj * me, dreamObj * other);
 
-/*String concatenation**/
+/*get character from string**/
 dreamObj * str_get(dreamObj * self, dreamObj * index);
 
 }

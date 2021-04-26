@@ -33,7 +33,7 @@ llvm_map_components_to_libnames(llvm_libs support core irreader)
 
 include_directories(compiler ${CMAKE_CURRENT_SOURCE_DIR}/../Compiler/include)
 file(GLOB SOURCES3 ${CMAKE_CURRENT_SOURCE_DIR}/../Compiler/*.cpp)
-add_library(compiler SHARED ${SOURCES3})
+add_library(compiler SHARED ${SOURCES3} ../RuntimeLib/StandardLib/count.cpp ../RuntimeLib/include/count.h)
 
 
 llvm_map_components_to_libnames(llvm_libs

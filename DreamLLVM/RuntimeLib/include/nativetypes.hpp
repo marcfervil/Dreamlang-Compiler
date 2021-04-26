@@ -15,6 +15,7 @@
 #include "dreamInt.hpp"
 #include "dreamStr.hpp"
 #include "list.hpp"
+#include "count.h"
 
 
 

@@ -10,7 +10,7 @@
 extern "C"{
 
 
-char * dog(const char * left, const char * right, const char * sep){
+char * cat(const char * left, const char * right, const char * sep){
     char * str;
     if(sep == NULL)
         asprintf(&str, "%s%s", left, right);

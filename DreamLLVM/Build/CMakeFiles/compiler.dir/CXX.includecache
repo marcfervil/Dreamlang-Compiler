@@ -106,6 +106,10 @@ Natives.hpp
 runtime.hpp
 ../RuntimeLib/include/runtime.hpp
 
+../RuntimeLib/include/count.h
+runtime.hpp
+../RuntimeLib/include/runtime.hpp
+
 ../RuntimeLib/include/dreamBool.hpp
 runtime.hpp
 ../RuntimeLib/include/runtime.hpp
@@ -141,6 +145,8 @@ dreamStr.hpp
 ../RuntimeLib/include/dreamStr.hpp
 list.hpp
 ../RuntimeLib/include/list.hpp
+count.h
+../RuntimeLib/include/count.h
 
 ../RuntimeLib/include/runtime.hpp
 stdio.h
@@ -197,6 +203,10 @@ iostream
 -
 fstream
 -
+
+/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp
+count.h
+/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.h
 
 /usr/local/opt/llvm/include/llvm-c/DataTypes.h
 inttypes.h

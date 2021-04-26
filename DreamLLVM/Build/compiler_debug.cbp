@@ -198,6 +198,10 @@
 			<Option target="compiler_debug"/>
 			<Option target="compiler"/>
 		</Unit>
+		<Unit filename="/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp">
+			<Option target="compiler"/>
+			<Option target="dreamlang"/>
+		</Unit>
 		<Unit filename="/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp">
 			<Option target="dreamlang"/>
 		</Unit>
@@ -215,6 +219,9 @@
 		</Unit>
 		<Unit filename="/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp">
 			<Option target="dreamlang"/>
+		</Unit>
+		<Unit filename="/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/include/count.h">
+			<Option target="compiler"/>
 		</Unit>
 		<Unit filename="/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp">
 			<Option target="dreamlang"/>

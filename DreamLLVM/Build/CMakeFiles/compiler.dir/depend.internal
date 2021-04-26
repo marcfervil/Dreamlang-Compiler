@@ -372,6 +372,7 @@ CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLL
  ../Compiler/include/Natives.hpp
  ../Compiler/include/main.hpp
  ../RuntimeLib/include/copy.hpp
+ ../RuntimeLib/include/count.h
  ../RuntimeLib/include/dreamBool.hpp
  ../RuntimeLib/include/dreamFunc.hpp
  ../RuntimeLib/include/dreamInt.hpp
@@ -560,3 +561,16 @@ CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLL
  /usr/local/opt/llvm/include/llvm/Target/TargetMachine.h
  /usr/local/opt/llvm/include/llvm/Target/TargetOptions.h
  /usr/local/opt/llvm/include/llvm/Transforms/Utils/BasicBlockUtils.h
+CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.o
+ ../RuntimeLib/include/copy.hpp
+ ../RuntimeLib/include/count.h
+ ../RuntimeLib/include/dreamBool.hpp
+ ../RuntimeLib/include/dreamFunc.hpp
+ ../RuntimeLib/include/dreamInt.hpp
+ ../RuntimeLib/include/dreamStr.hpp
+ ../RuntimeLib/include/list.hpp
+ ../RuntimeLib/include/memory.hpp
+ ../RuntimeLib/include/nativetypes.hpp
+ ../RuntimeLib/include/runtime.hpp
+ ../RuntimeLib/include/util.hpp
+ /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp
