@@ -38,9 +38,9 @@ dreamObj * make_dream(void * value, dreamObj * type){
     new_obj -> next = pointer_init();
     new_obj -> last_var = pointer_init();
     new_obj -> parent_scope = nullDream;
-    new_obj -> is_list = false;
+
     new_obj -> pointer = 0;
-    new_obj -> ref = nullDream;
+
    
     for(int i=0; i<HASHSIZE; i++){
         (new_obj->vars[i]) =  (dreamObj **)malloc(sizeof(struct dreamObj *));

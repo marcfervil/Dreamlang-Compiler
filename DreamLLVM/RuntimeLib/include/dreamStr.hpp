@@ -23,5 +23,7 @@ dreamObj * str_equals(dreamObj * me, dreamObj * other);
 /*get character from string**/
 dreamObj * str_get(dreamObj * self, dreamObj * index);
 
+dreamObj * str_len(dreamObj * self);
+
 }
 #endif /* dreamStr_hpp */

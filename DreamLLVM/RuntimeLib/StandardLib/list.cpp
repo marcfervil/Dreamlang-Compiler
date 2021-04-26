@@ -24,7 +24,7 @@ extern "C"{
         dreamObj*** list_ptr = (dreamObj ***) malloc(sizeof(struct dreamObj **));
         *list_ptr = list;
         dreamObj * obj = make_dream((void *) list_ptr, dreamObjType);
-        obj->is_list = true ;
+
         set_var(obj, "len", dreamInt(num_args));
 
         add_native_func(obj, "get", (void *) list_get);

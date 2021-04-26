@@ -70,8 +70,8 @@ dreamObj * shallow_copy(dreamObj * obj, bool parent ){
     
     
     dreamObj *np = make_dream(obj->value, obj->type);
-    np->is_list = obj -> is_list;
-    np->ref = (obj->ref == nullDream) ? obj : obj->ref;
+    //np->is_list = obj -> is_list;
+   // np->ref = (obj->ref == nullDream) ? obj : obj->ref;
     /*
     if(obj->is_list){
         int len = * ((int *)(get_var(obj, "len") -> value));

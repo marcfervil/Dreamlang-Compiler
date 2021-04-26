@@ -17,7 +17,10 @@ dreamObj * dreamStr(const char * value){
   
     set_var(obj, "equals", dreamFunc((void *) str_equals));
     set_var(obj, "add", dreamFunc((void *)str_add));
+
+
     add_native_func(obj, "get",  (void *) str_get);
+    add_native_func(obj, "len",  (void *) str_len);
     return obj;
 }
 
@@ -26,6 +29,11 @@ dreamObj * str_get(dreamObj * scope, dreamObj * index){
     char str[2] = "\0";
     str[0] = to_char(self)[to_int(index)];
     return dreamStr(str);
+}
+
+dreamObj * str_len(dreamObj * scope){
+    dreamObj* self = scope->parent_scope;
+    return dreamInt(strlen(to_char(self)));
 }
 
 dreamObj * str_add(dreamObj * me, dreamObj * other){

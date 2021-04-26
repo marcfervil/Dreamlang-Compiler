@@ -60,8 +60,7 @@ typedef struct dreamObj{
     
     dreamObj ** vars [HASHSIZE];
     
-    int is_list;
-    dreamObj * ref;
+
 
 } dreamObj;
 
