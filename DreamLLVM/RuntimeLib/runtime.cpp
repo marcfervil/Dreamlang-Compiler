@@ -81,19 +81,20 @@ void log_error(const char * error){
 
 void super(dreamObj *context){
     dreamObj * self = context->parent_scope;
-    dreamObj * og_parent =  get_var(self, "obj")->parent_scope;
+    dreamObj * init_scope =  get_var(self, "init_scope");
     dreamObj * me = new_scope(get_var(self, "obj"), 1);
 
             //get_var(self, "obj");
     merge(get_var(self, "obj"),
           (((dreamObj* (*)(dreamObj *))get_var(self, "parent")->value)(me)),
           false);
+    merge(get_var(self, "obj"), init_scope);
 
   //  get_var(self, "parent")->parent_scope = og_parent;
    // *(get_var(self, "obj")->parent_scope) = *(((dreamObj* (*)(dreamObj *))get_var(self, "parent")->value)(og_parent->parent_scope));
 }
 
-void inherit(dreamObj * obj, dreamObj * parent){
+void inherit(dreamObj * obj, dreamObj * parent, dreamObj *init_scope){
    // obj->is_inherited = 1;
     //parent->parent_scope = obj->parent_scope;
 //    obj->parent_scope = parent;
@@ -101,6 +102,7 @@ void inherit(dreamObj * obj, dreamObj * parent){
     dreamObj * inherit_data = dreamObject();
     set_var(inherit_data, "parent", parent);
     set_var(inherit_data, "obj", obj);
+    set_var(inherit_data, "init_scope", init_scope);
     dreamObj * inherit_super = dreamFuncWithContext((void *) super, inherit_data);
     set_var(obj, "super", inherit_super);
 }
