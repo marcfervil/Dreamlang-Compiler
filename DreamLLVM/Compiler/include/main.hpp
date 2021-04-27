@@ -113,7 +113,7 @@ extern "C"{
 
     extern Value * null_dream_val;
 
-    Value * call(LLVMData* context, Value * var,  int size=0, Value * c_args[size]={});
+    Value * call(LLVMData* context, Value * var,  int size=0, Value * c_args[size]={}, bool vargs = false);
     Value* get_value(LLVMData* context, Type * type, Value * obj );
     Value * str(LLVMData* context, const char * value/*, const char * name="str"*/);
     Value * set_var_llvm(LLVMData* context,  Value * scope, const char * key, Value * value);

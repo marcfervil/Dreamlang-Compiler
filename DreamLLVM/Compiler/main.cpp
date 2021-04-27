@@ -454,7 +454,7 @@ Value * llvmStr(LLVMData* context, const char * value){
     return v;
 }
 
-Value * call(LLVMData* context, Value * var,  int size, Value * c_args[size]){
+Value * call(LLVMData* context, Value * var,  int size, Value * c_args[size], bool vargs){
     vector<Value *> args;
     for(int i=0;i<size;i++)args.push_back(c_args[i]);
     
@@ -465,38 +465,35 @@ Value * call(LLVMData* context, Value * var,  int size, Value * c_args[size]){
     std::vector<llvm::Value*> indices(2);
     indices[0] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
     indices[1] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 2, true));
-    //var->mutateType(dreamObjPtrTy);
-    
-    
-   // Value *valuePointer = context->builder->get.CreateGEP(dreamObjTy ,var, indices,  "GEP_STORE");
 
     Value *func_ptr = get_value(context, func_ptr_ty, var);
-    
-    
-    
-    
-    
-    //printf("cast party\n");
-   //LoadInst *value = new LoadInst(func_ptr_ty,  valuePointer, "value_temp", context->currentBlock);
+
 
     
-    //Value * casted_func = context->builder->get.CreatePointerCast(func_ptr, func_ptr_ty);
-    
-    
-    
-    
     Instruction * var_inst = dyn_cast<Instruction>(var);
-    
+
+    //printf("%d",vargs);
     
     if(var_inst->hasMetadata()){
       
         StringRef var_args = cast<MDString>(var_inst->getMetadata("var_args")->getOperand(0))->getString();
         if(var_args=="1")args.insert(args.begin(), llvmInt(context, size));
+    }else {
+
+
+        for (int i = 1; i < size; i++) {
+            //skip first context argument because we want the value of the variables (for now...)
+
+
+            string name = "arg";
+            name = name + to_string(i);
+            //printf("name %s", name.c_str());
+            set_var_llvm(context, args[0], name.c_str(), args[i]);
+
+        }
     }
-    
-    
-    
-    return context->builder->get.CreateCall(func_ty, func_ptr, args);
+
+    return  context->builder->get.CreateCall(func_ty, func_ptr, args);
     
    // return v;
 }
@@ -607,6 +604,16 @@ Value * dict_llvm(LLVMData * context, Value * value){
     return call_standard(context, "dict", {value});
 }
 
+void rename_llvm(LLVMData * context, Value * value, const char * name){
+    std::vector<llvm::Value*> indices(2);
+    indices[0] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
+    
+    indices[1] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
+    Value *valuePointer = context->builder->get.CreateGEP(value, indices,  "memberptr");
+    new StoreInst(llvmStr(context, name), valuePointer, context->currentBlock);
+
+}
+
 FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_class, int arg_size, const char * arg_names[arg_size]){
 
     vector<Type *> args = {dreamObjPtrTy};
@@ -617,18 +624,22 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
   
     
     //intitilize function data struct pointer and set starting block so we know what our preivous function is
-    Function *new_func = Function::Create(FunctionType::get(dreamObjPtrTy, args, false), Function::ExternalLinkage, funcName, context->module);
+    Function *new_func = Function::Create(FunctionType::get(dreamObjPtrTy, args, true), Function::ExternalLinkage, funcName, context->module);
     FuncData * func_data = new FuncData(new_func);
     func_data -> startingBlock = std::move((context->currentBlock));
     func_data -> is_class = is_class;
-    
-    //saving the arg names into metada was unnecessary in hindsight, but it might come in handy later...
+
+
+
+    //saving the arg names into metadata was unnecessary in hindsight, but it might come in handy later...
     for(int i=0;i<arg_size;i++)meta_args.push_back(MDString::get(new_func->getContext(), arg_names[i]));
     new_func->setMetadata("arg_names", MDNode::get(new_func->getContext(),  meta_args));
     
     //name scope arg to prevent seggy
     Argument *context_arg = &*new_func->arg_begin();
     context_arg->setName("scope");
+
+
 
     
     //create and enter method block
@@ -637,7 +648,8 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
     
     //save arguments into scope "obj"
     int i = 0;
-    
+
+
     for (Argument& arg : new_func->args()) {
         //skip first context argument because we want the value of the variables (for now...)
         if(i==0){
@@ -650,13 +662,11 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
         new StoreInst(&arg, alloc, context->currentBlock);
         LoadInst * arg_ref = new LoadInst(dreamObjPtrTy, alloc, "varName", context->currentBlock);
         (&arg)->setName(arg_names[(i++)-1]);
-        
-        //log_llvm(context, arg_ref);
-        //printf("setting params\n");
-        
-        //set_var_llvm(context, context_arg, a rg_names[i-2], arg_ref);
-        set_var_llvm(context, context_arg, arg_names[i-2], arg_ref);
-        
+
+        string arg_name = "arg"+to_string(i-1);
+        rename_llvm(context, get_var_llvm(context, context_arg, arg_name.c_str()), arg_names[i-2]);
+        //set_var_llvm(context, context_arg, arg_names[i-2], arg_ref);
+
     }
     
     //store function name & scope so they can be used outside of this function
@@ -937,12 +947,12 @@ Value * math_op(LLVMData* context, Value *var1, Value *var2, char * op){
 
 
 Value * contains(LLVMData* context, Value *var1, Value *var2){
-    return  call_standard(context, "contains_c", {var1, var2});
+    return call_standard(context, "contains_c", {var1, var2});
 }
 
 Value * retVal(LLVMData* context, Value * value ){
 
-    return  context->builder->get.CreateRet(value);
+    return context->builder->get.CreateRet(value);
 }
 
 Value * funcScope(FuncData * data){
