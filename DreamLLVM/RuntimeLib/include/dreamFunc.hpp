@@ -13,5 +13,6 @@
 extern "C" {
 /*Initialize dream function**/
 dreamObj * dreamFunc(void * value);
+dreamObj * dreamFuncWithContext(void * value, dreamObj * context);
 }
 #endif /* dreamFunc_hpp */

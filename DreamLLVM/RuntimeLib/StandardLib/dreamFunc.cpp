@@ -16,4 +16,11 @@ dreamObj * dreamFunc(void * value){
     
     return obj;
 }
+
+dreamObj * dreamFuncWithContext(void * value, dreamObj * context){
+    dreamObj * obj = dreamFunc(value);
+    set_var(obj, "@context", context);
+    return obj;
+}
+
 }

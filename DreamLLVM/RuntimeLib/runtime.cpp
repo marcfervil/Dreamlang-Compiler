@@ -30,7 +30,6 @@ dreamObj * make_dream(void * value, dreamObj * type){
     
     dreamObj *new_obj = (dreamObj *) malloc(sizeof(struct dreamObj));
     
-    
     new_obj -> value = value;
     new_obj -> type = type;
     new_obj -> name =  NULL;
@@ -40,11 +39,11 @@ dreamObj * make_dream(void * value, dreamObj * type){
     new_obj -> parent_scope = nullDream;
 
     new_obj -> pointer = 0;
-
+    new_obj -> is_inherited = 0;
    
     for(int i=0; i<HASHSIZE; i++){
-        (new_obj->vars[i]) =  (dreamObj **)malloc(sizeof(struct dreamObj *));
-        *(new_obj->vars[i])= NULL;
+        (new_obj->vars[i]) = (dreamObj **)malloc(sizeof(struct dreamObj *));
+        *(new_obj->vars[i]) = NULL;
     }
     
     return new_obj;
@@ -79,6 +78,26 @@ void log_error(const char * error){
     printf("\x1B[31m[Nightmare]: %s \n\033[0m",error);
     exit(1);
 }
+
+void inheriter(dreamObj *context){
+    dreamObj * self = context->parent_scope;
+    dreamObj * og_parent =  get_var(self, "obj")->parent_scope;
+    get_var(self, "parent")->parent_scope = og_parent;
+    *(get_var(self, "obj")->parent_scope) = *(((dreamObj* (*)(dreamObj *))get_var(self, "parent")->value)(og_parent->parent_scope));
+}
+
+void inherit(dreamObj * obj, dreamObj * parent){
+    obj->is_inherited = 1;
+    //parent->parent_scope = obj->parent_scope;
+//    obj->parent_scope = parent;
+
+    dreamObj * inherit_data = dreamObject();
+    set_var(inherit_data, "parent", parent);
+    set_var(inherit_data, "obj", obj);
+    dreamObj * inherit_super = dreamFuncWithContext((void *) inheriter, inherit_data);
+    set_var(obj, "super", inherit_super);
+}
+
 
 
 const char * rep(dreamObj* obj){
@@ -184,9 +203,6 @@ void merge(dreamObj * var1, dreamObj * var2){
 }
 
 dreamObj * dreamObject(){
-  //  int y = 69;
-  //  nightmare("hey look at this number: %d", y);
-    //printf("fiewjfoiew");
     return make_dream(NULL, dreamObjType);
 }
 

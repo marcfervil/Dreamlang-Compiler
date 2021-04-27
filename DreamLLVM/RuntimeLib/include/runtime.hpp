@@ -60,7 +60,7 @@ typedef struct dreamObj{
     
     dreamObj ** vars [HASHSIZE];
     
-
+    int is_inherited;
 
 } dreamObj;
 

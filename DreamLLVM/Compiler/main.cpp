@@ -83,6 +83,7 @@ void loadStandard(LLVMData* context){
     functions["deep_copy"] = context->owner->getOrInsertFunction("deep_copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["shallow_copy"] = context->owner->getOrInsertFunction("shallow_copy", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));
     functions["dict"] = context->owner->getOrInsertFunction("dict", FunctionType::get(voidTy, {dreamObjPtrTy}, false));
+    functions["inherit"] = context->owner->getOrInsertFunction("inherit", FunctionType::get(voidTy, {dreamObjPtrTy}, false));
     functions["makeText"] = context->owner->getOrInsertFunction("makeText", FunctionType::get(voidTy, dreamObjPtrTy, false));
     functions["add_c"] = context->owner->getOrInsertFunction("add_c", FunctionType::get(dreamObjPtrTy,{dreamObjPtrTy,dreamObjPtrTy}, false));
     functions["set_parent"] = context->owner->getOrInsertFunction("set_parent", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
@@ -448,6 +449,7 @@ Value * llvmInt(LLVMData* context, int value){
 }
 
 Value * llvmStr(LLVMData* context, const char * value){
+    //printf(value);
     Value * v = context->builder->get.CreateGlobalStringPtr(StringRef(value));
     return v;
 }
@@ -501,7 +503,8 @@ Value * call(LLVMData* context, Value * var,  int size, Value * c_args[size]){
 
 
 
-    Value * str(LLVMData* context, const char * value/*, const char * name="str"*/){
+Value * str(LLVMData* context, const char * value/*, const char * name="str"*/){
+    //printf(value);
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "str_stack", context->currentBlock);
     Value * callResult = context->builder->get.CreateCall(functions["str"], context->builder->get.CreateGlobalStringPtr(StringRef(value)));
     new StoreInst(callResult, objStore, context->currentBlock);
@@ -820,7 +823,14 @@ Value * numVal(LLVMData* context, Value * value){
     return object;
 }
 
- 
+Value * boolVal(LLVMData* context, Value * value){
+    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "bool_stack", context->currentBlock);
+    Value * callResult = context->builder->get.CreateCall(functions["bool"], value);
+    new StoreInst(callResult, objStore, context->currentBlock);
+    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "bool", context->currentBlock);
+    return object;
+}
+
 
 Value* get_value(LLVMData* context, Type * type, Value * obj ){
     std::vector<llvm::Value*> indices(2);
@@ -902,16 +912,37 @@ Value * equals(LLVMData* context, Value *var1, Value *var2){
     return  call_standard(context, "equals_c", {var1, var2});
 }
 
+
+Value * nequals(LLVMData* context, Value *var1, Value *var2){
+    Value * result = call_standard(context, "equals_c", {var1, var2});
+    Value* equals_bool = get_pointer_value(context, Type::getInt32Ty(context->context), result);
+    return boolVal(context, context->builder->get.CreateICmpNE(equals_bool, llvmInt(context, 1)));
+}
+
+Value * math_op(LLVMData* context, Value *var1, Value *var2, char * op){
+    Value* var1_val = get_pointer_value(context, Type::getInt32Ty(context->context), var1);
+    Value* var2_val = get_pointer_value(context, Type::getInt32Ty(context->context), var2);
+    if(strcmp(op, "<")==0){
+        return boolVal(context, context->builder->get.CreateICmpSLT(var1_val, var2_val));
+    }else if(strcmp(op, ">")==0){
+        return boolVal(context, context->builder->get.CreateICmpSGT(var1_val, var2_val));
+    }else if(strcmp(op, ">=")==0){
+        return boolVal(context, context->builder->get.CreateICmpSGE(var1_val, var2_val));
+    }else if(strcmp(op, "<=")==0){
+        return boolVal(context, context->builder->get.CreateICmpSLE(var1_val, var2_val));
+    }
+    return str(context, "If you're seeing this I REALLY screwed up");
+}
+
+
+
 Value * contains(LLVMData* context, Value *var1, Value *var2){
     return  call_standard(context, "contains_c", {var1, var2});
 }
 
 Value * retVal(LLVMData* context, Value * value ){
 
-    
-   
-
-    return  context->builder->get.CreateRet(value);;
+    return  context->builder->get.CreateRet(value);
 }
 
 Value * funcScope(FuncData * data){

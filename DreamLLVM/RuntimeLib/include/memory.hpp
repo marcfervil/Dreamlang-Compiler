@@ -14,11 +14,11 @@
 extern "C" {
 
 /*Function that is used to get a var, if it returns undefined it will throw a fatal error **/
-dreamObj * get_var(dreamObj * obj, const char *name, int from_parent=1);
+dreamObj * get_var(dreamObj * obj, const char *name, int search_parent=1);
 
 /*This function is used to find a var, this can return undefined,
- and can be used to check for the existance of a var**/
-dreamObj * find_var(dreamObj * obj, const char *s, int from_parent=1);
+ and can be used to check for the existence of a var**/
+dreamObj * find_var(dreamObj * obj, const char *s, int search_parent=1);
 
 /*Set a variable onto a dreamObj**/
 struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value);

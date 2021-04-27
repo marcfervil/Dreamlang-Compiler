@@ -8,15 +8,17 @@
 #include "memory.hpp"
 
 extern "C" {
-dreamObj * get_var(dreamObj * obj, const char *name, int from_parent){
+dreamObj * get_var(dreamObj * obj, const char *name, int search_parent){
 
-    if(strcmp(name, "null")==0){
-        //undefined_allowed = !undefined_allowed;
-        return nullDream;
-    }
+    if(strcmp(name, "null")==0)return nullDream;
+    if(strcmp(name, "$parent") == 0)return obj->parent_scope;
+    if(strcmp(name, "$type") == 0)return obj->type;
+    if(strcmp(name, "$name") == 0)return (obj->name != NULL) ? dreamStr(obj->name) : nullDream;
+    if(strcmp(name, "$line") == 0)return dreamInt(line);
+    if(strcmp(name, "$self") == 0)return obj;
     
     dreamObj * found_obj;
-    if((found_obj = find_var(obj, name, from_parent))!=nullDream)return found_obj;
+    if((found_obj = find_var(obj, name, search_parent))!=nullDream)return found_obj;
     if(!undefined_allowed){
         
         char * str;
@@ -31,42 +33,25 @@ dreamObj * get_var(dreamObj * obj, const char *name, int from_parent){
 }
 
 
-dreamObj* find_var(dreamObj * obj, const char *s, int from_parent){
+dreamObj* find_var(dreamObj * obj, const char *s, int search_parent){
 
-    if(obj == nullDream /*|| obj==temp*/){
-        //printf("[Nightmare]: Cannot get property %s from undefined!\n",s);
+    if(obj == nullDream){
         char * str;
         asprintf(&str, "Cannot get property %s from undefined", s);
         nightmare(str);
-        //exit(1);
-        //dream_log(dreamStr("ddd"));
     }
-    if(strcmp(s, "parent") == 0)return obj->parent_scope;
-    if(strcmp(s, "type") == 0)return obj->type;
-    if(strcmp(s, "$name") == 0)return (obj->name != NULL) ? dreamStr(obj->name) : nullDream;
-    if(strcmp(s, "line") == 0)return dreamInt(line);
-    if(strcmp(s, "self") == 0)return obj;
+
+
     dreamObj * np;
    
     for (np = deref_var(obj->vars[hash_obj(s)]); np!=NULL; np = deref_var(np->next)){
-   
-       // printf("searching: %s\n",s);
         if (np->name != NULL && strcmp(s, np->name) == 0){
-            
-            /*
-            if(np->type == dreamObjType){
-                dreamObj * cp =  shallow_copy(np, false);
-               cp->parent_scope = nullDream;
-                return cp;
-            }*/
-           
-            return np; // found
+            return np;
         }
     }
     
-    if(from_parent!=-1 && obj->parent_scope != nullDream && strcmp(s,"scope")!=0 && s[0]!='@' ){
-        //printf("up-get: %s\n",s);
-        if(from_parent)
+    if(search_parent!=-1 && obj->parent_scope != nullDream && strcmp(s, "scope")!=0 && s[0]!='@'){
+        if(search_parent && !obj->is_inherited)
             return find_var(obj->parent_scope, s);
         else
             return find_var(obj->parent_scope, s, -1);

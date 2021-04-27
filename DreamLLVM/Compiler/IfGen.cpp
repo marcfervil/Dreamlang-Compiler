@@ -10,7 +10,7 @@
 extern "C"{
 
     IfData * init_if(LLVMData * context, Value * drm_bool){
-        //printf("hurr");
+
         IfData * if_data = new IfData();
        
         Type * int32Type = Type::getInt32Ty(context->context);
