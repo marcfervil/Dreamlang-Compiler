@@ -106,7 +106,7 @@ void dict(dreamObj* obj);
 
 /*Function that is used to merge two dreamObjs together by
  adding the variables from var2 onto var1 **/
-void merge(dreamObj * var1, dreamObj * var2);
+void merge(dreamObj * var1, dreamObj * var2, bool override = true);
 
 
 /*Initialize dream object with no value and with a basic object type*/

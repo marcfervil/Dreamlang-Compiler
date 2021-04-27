@@ -104,6 +104,7 @@ struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
         *(new_value->next) = *(*var)->next;
         if(!var_exists((*var)->next))*(obj->last_var) = *(new_value->next);
         *(*var)->next = new_value;
+        return *(*var)->next;
     }else{
         //updating existing var
         (*var)->value = (value->type==dreamObjType) ? value->value : copy_value(value->value,  value->type);
@@ -116,7 +117,7 @@ struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
         (*var)->type = value->type;
     }
 
-    return NULL;
+    return *var;
 }
 
 struct dreamObj *set_var2(dreamObj *obj, const char *name, dreamObj *value){

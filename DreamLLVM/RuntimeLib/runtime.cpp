@@ -79,22 +79,29 @@ void log_error(const char * error){
     exit(1);
 }
 
-void inheriter(dreamObj *context){
+void super(dreamObj *context){
     dreamObj * self = context->parent_scope;
     dreamObj * og_parent =  get_var(self, "obj")->parent_scope;
-    get_var(self, "parent")->parent_scope = og_parent;
-    *(get_var(self, "obj")->parent_scope) = *(((dreamObj* (*)(dreamObj *))get_var(self, "parent")->value)(og_parent->parent_scope));
+    dreamObj * me = new_scope(get_var(self, "obj"), 1);
+
+            //get_var(self, "obj");
+    merge(get_var(self, "obj"),
+          (((dreamObj* (*)(dreamObj *))get_var(self, "parent")->value)(me)),
+          false);
+
+  //  get_var(self, "parent")->parent_scope = og_parent;
+   // *(get_var(self, "obj")->parent_scope) = *(((dreamObj* (*)(dreamObj *))get_var(self, "parent")->value)(og_parent->parent_scope));
 }
 
 void inherit(dreamObj * obj, dreamObj * parent){
-    obj->is_inherited = 1;
+   // obj->is_inherited = 1;
     //parent->parent_scope = obj->parent_scope;
 //    obj->parent_scope = parent;
 
     dreamObj * inherit_data = dreamObject();
     set_var(inherit_data, "parent", parent);
     set_var(inherit_data, "obj", obj);
-    dreamObj * inherit_super = dreamFuncWithContext((void *) inheriter, inherit_data);
+    dreamObj * inherit_super = dreamFuncWithContext((void *) super, inherit_data);
     set_var(obj, "super", inherit_super);
 }
 
@@ -193,12 +200,19 @@ void dict2(dreamObj* obj){
 }
 
 
-void merge(dreamObj * var1, dreamObj * var2){
+void merge(dreamObj * var1, dreamObj * var2, bool override){
     dreamObj * var;
-    for (var = deref_var(var2->first_var); var!=NULL; var = deref_var(var->next)){
 
-        set_var(var1, strdup(var->name), var);
-       // printf("merged %s\n", var->name);
+    for (var = deref_var(var2->first_var); var!=NULL; var = deref_var(var->next)){
+        if(!override && find_var(var1, var->name)!=nullDream)continue;
+
+        dreamObj * new_var = set_var(var1, strdup(var->name), var);
+        /*when merging functions onto another object,
+         * make sure to supply them with the proper context of the object they were merged onto*/
+        if(new_var->type == dreamFuncType){
+            set_var(new_var, "@context", var1);
+        }
+
     }
 }
 
