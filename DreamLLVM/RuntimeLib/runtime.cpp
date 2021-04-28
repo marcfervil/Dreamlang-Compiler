@@ -79,15 +79,34 @@ void log_error(const char *error) {
     exit(1);
 }
 
-void super(dreamObj *context) {
-    dreamObj *self = context->parent_scope;
-    dreamObj *init_scope = get_var(self, "init_scope");
-    dreamObj *me = new_scope(get_var(self, "obj"), 1);
+void apply_vargs(dreamObj *func_scope, dreamObj *args, dreamObj * arg_list_vals){
 
-    //get_var(self, "obj");
+    dreamObj** args_list = *((dreamObj ***)args->value);
+    dreamObj** arg_list_vals_list = *((dreamObj ***)arg_list_vals->value);
+    int args_list_len = to_int(get_var(args, "len"));
+    for(int i=0; i<args_list_len; i++){
+        set_var(func_scope, to_char(args_list[i]), arg_list_vals_list[i]);
+    }
+}
+
+void super(dreamObj *context, dreamObj * vargs) {
+
+    dreamObj *self = context->parent_scope;
+    //dict( context);
+    dreamObj *init_scope = get_var(self, "init_scope");
+    dreamObj *parent_call_scope = new_scope(get_var(self, "obj"), 1);
+
+   // dict((((dreamObj *(*)(dreamObj *, dreamObj *)) get_var(self, "parent")->value)(me, dreamStr("ewf"))));
+    //set_var(parent_call_scope, "woop", dreamStr("dsdsd"));
+    dreamObj * parent_args = get_var(get_var(self, "parent"), "args");
+    apply_vargs(parent_call_scope, parent_args, vargs);
+
+    //this is horrible, but there's no other way to pass in the correct number of args dynamically
     merge(get_var(self, "obj"),
-          (((dreamObj *(*)(dreamObj *)) get_var(self, "parent")->value)(me)),
+          (((dreamObj *(*)(...)) get_var(self, "parent")->value)(parent_call_scope, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)),
           false);
+
+
     merge(get_var(self, "obj"), init_scope);
 
     //  get_var(self, "parent")->parent_scope = og_parent;
@@ -258,16 +277,7 @@ struct dreamObj *set_var_c(dreamObj *obj, dreamObj *name_obj, dreamObj *value) {
 }
 
 
-void apply_vargs(dreamObj *func_scope, dreamObj *args, dreamObj * arg_list_vals){
 
-    dreamObj** args_list = *((dreamObj ***)args->value);
-    dreamObj** arg_list_vals_list = *((dreamObj ***)arg_list_vals->value);
-    int args_list_len = to_int(get_var(args, "len"));
-    for(int i=0; i<args_list_len; i++){
-       // print(2, args_list[i], arg_list_vals_list[i]);
-        set_var(func_scope, to_char(args_list[i]), arg_list_vals_list[i]);
-    }
-}
 
 dreamObj * contains_c(dreamObj * var1, dreamObj * var2){
     //printf("here!\n");
