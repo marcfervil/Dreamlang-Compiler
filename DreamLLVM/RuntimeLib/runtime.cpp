@@ -279,14 +279,17 @@ struct dreamObj *set_var_c(dreamObj *obj, dreamObj *name_obj, dreamObj *value) {
 
 
 
-dreamObj * contains_c(dreamObj * var1, dreamObj * var2){
+dreamObj * contains_c(dreamObj * var2, dreamObj * var1){
     //printf("here!\n");
    // if(var1 == nullDream)return dreamBool(var1==nullDream && var2==nullDream);
     
     dreamObj * cont;
+
     if((cont = find_var(var1, "contains")) != nullDream){
-        
-        dreamObj * b = ((dreamObj* (*)(dreamObj *, dreamObj *)) cont->value)(var1, var2);
+
+        dreamObj * native_scope = new_scope(var1, 0);
+        set_var(native_scope, "this", var1);
+        dreamObj * b = ((dreamObj* (*)(dreamObj *, dreamObj *)) cont->value)(native_scope, var2);
 
         return b;
     }
