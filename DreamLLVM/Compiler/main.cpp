@@ -467,31 +467,16 @@ Value * call(LLVMData* context, Value * var,  int size, Value * c_args[size], bo
     indices[1] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 2, true));
 
     Value *func_ptr = get_value(context, func_ptr_ty, var);
-
-
-    
     Instruction * var_inst = dyn_cast<Instruction>(var);
 
-    //printf("%d",vargs);
     
     if(var_inst->hasMetadata()){
-      
         StringRef var_args = cast<MDString>(var_inst->getMetadata("var_args")->getOperand(0))->getString();
         if(var_args=="1")args.insert(args.begin(), llvmInt(context, size));
-    }else {
+    }else if(vargs){
 
-
-        for (int i = 1; i < size; i++) {
-            //skip first context argument because we want the value of the variables (for now...)
-
-
-            string name = "arg";
-            name = name + to_string(i);
-            //printf("name %s", name.c_str());
-            set_var_llvm(context, args[0], name.c_str(), args[i]);
-
-        }
     }
+
 
     return  context->builder->get.CreateCall(func_ty, func_ptr, args);
     
@@ -607,7 +592,7 @@ Value * dict_llvm(LLVMData * context, Value * value){
 void rename_llvm(LLVMData * context, Value * value, const char * name){
     std::vector<llvm::Value*> indices(2);
     indices[0] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
-    
+
     indices[1] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
     Value *valuePointer = context->builder->get.CreateGEP(value, indices,  "memberptr");
     new StoreInst(llvmStr(context, name), valuePointer, context->currentBlock);
@@ -663,9 +648,9 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
         LoadInst * arg_ref = new LoadInst(dreamObjPtrTy, alloc, "varName", context->currentBlock);
         (&arg)->setName(arg_names[(i++)-1]);
 
-        string arg_name = "arg"+to_string(i-1);
-        rename_llvm(context, get_var_llvm(context, context_arg, arg_name.c_str()), arg_names[i-2]);
-        //set_var_llvm(context, context_arg, arg_names[i-2], arg_ref);
+       // string arg_name = "arg"+to_string(i-1);
+        //rename_llvm(context, get_var_llvm(context, context_arg, arg_name.c_str()), arg_names[i-2]);
+        set_var_llvm(context, context_arg, arg_names[i-2], arg_ref);
 
     }
     

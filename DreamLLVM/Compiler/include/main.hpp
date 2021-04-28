@@ -112,13 +112,13 @@ extern "C"{
     extern  PointerType * voidPointerTy;
 
     extern Value * null_dream_val;
-
+    Value * dict_llvm(LLVMData * context, Value * value);
     Value * call(LLVMData* context, Value * var,  int size=0, Value * c_args[size]={}, bool vargs = false);
     Value* get_value(LLVMData* context, Type * type, Value * obj );
     Value * str(LLVMData* context, const char * value/*, const char * name="str"*/);
     Value * set_var_llvm(LLVMData* context,  Value * scope, const char * key, Value * value);
     Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *> args);
-
+Value * init_scope(LLVMData* context, Value* scope, int nested_scope);
 }
 
 #include "IfGen.hpp"

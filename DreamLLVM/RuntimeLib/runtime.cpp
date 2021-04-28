@@ -252,6 +252,13 @@ dreamObj * new_scope(dreamObj * obj, int nested_scope){
 }
 
 
+struct dreamObj *set_var_c(dreamObj *obj, dreamObj *name_obj, dreamObj *value){
+
+    char * name = ( char *)name_obj->value;
+
+    return set_var(obj, name, value);
+}
+
 dreamObj * contains_c(dreamObj * var1, dreamObj * var2){
     //printf("here!\n");
    // if(var1 == nullDream)return dreamBool(var1==nullDream && var2==nullDream);
