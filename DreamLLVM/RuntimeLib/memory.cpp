@@ -74,6 +74,10 @@ inline bool var_exists(dreamObj ** var){
 
 struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
 
+    if(value == NULL){
+        return nullDream;
+    }
+
     if(strcmp(name, "undef")==0){
         undefined_allowed = *(int *)(value -> value);
         return NULL;

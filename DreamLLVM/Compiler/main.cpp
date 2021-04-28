@@ -92,6 +92,7 @@ void loadStandard(LLVMData* context){
     functions["display"] = context->owner->getOrInsertFunction("display", FunctionType::get(voidTy, false));
     
     functions["native_int"] = context->owner->getOrInsertFunction("native_int", FunctionType::get(voidTy, {intType},false));
+    functions["apply_vargs"] = context->owner->getOrInsertFunction("apply_vargs", FunctionType::get(voidTy, {dreamObjPtrTy, dreamObjPtrTy, dreamObjPtrTy},false));
     functions["native_test"] = context->owner->getOrInsertFunction("native_test", FunctionType::get(voidTy, {intType}, false));
     functions["check"] = context->owner->getOrInsertFunction("check", FunctionType::get(voidTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
     //functions["ijoi"] = context->owner->getOrInsertFunction("dspoksd", FunctionType::get(voidTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
@@ -634,7 +635,6 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
     //save arguments into scope "obj"
     int i = 0;
 
-
     for (Argument& arg : new_func->args()) {
         //skip first context argument because we want the value of the variables (for now...)
         if(i==0){
@@ -674,7 +674,7 @@ Value * end_func(LLVMData* context, Value * scope, FuncData * func_data){
     funcPointer = (func_data->is_class) ?  obj_init(context, func_data->func) : func_init_value(context, func_data->func);
  
     //printf("yuh");
-    set_var_llvm(context, scope, func_data->name, funcPointer);
+    Value * new_func = set_var_llvm(context, scope, func_data->name, funcPointer);
     set_var_llvm(context, funcPointer, "@context", scope);
     //set_var_llvm(context, funcPointer, "boob", str(context, "odpkf"));
    // dict_llvm(context, funcPointer);

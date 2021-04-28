@@ -98,7 +98,7 @@ memory.hpp
 runtime.hpp
 ../RuntimeLib/include/runtime.hpp
 
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp
-runtime.hpp
-/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.hpp
+/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp
+memory.hpp
+/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.hpp
 
