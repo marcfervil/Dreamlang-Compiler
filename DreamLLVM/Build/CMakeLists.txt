@@ -12,6 +12,7 @@ set(stdlib "${CMAKE_CURRENT_SOURCE_DIR}/../RuntimeLib")
 file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../RuntimeLib/StandardLib/*.cpp)
 file(GLOB SOURCES2 ${CMAKE_CURRENT_SOURCE_DIR}/../RuntimeLib/*.cpp)
 add_library(dreamlang SHARED ${SOURCES} ${SOURCES2})
+add_library(dreamlib OBJECT ${SOURCES} ${SOURCES2})
 
 
 

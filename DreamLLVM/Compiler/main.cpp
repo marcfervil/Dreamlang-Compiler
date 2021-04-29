@@ -925,6 +925,35 @@ Value * math_op(LLVMData* context, Value *var1, Value *var2, char * op){
         return boolVal(context, context->builder->get.CreateICmpSGE(var1_val, var2_val));
     }else if(strcmp(op, "<=")==0){
         return boolVal(context, context->builder->get.CreateICmpSLE(var1_val, var2_val));
+    }else if(strcmp(op, "and")==0){
+
+        BasicBlock * andthen = BasicBlock::Create(context->context, "and_then");
+        BasicBlock * andif = BasicBlock::Create(context->context, "and_if");
+
+        Value *andResultStore = new AllocaInst(intType, 0, "and_result", context->currentBlock);
+        new StoreInst(llvmInt(context, 0), andResultStore, context->currentBlock);
+        Value *andcmp1 = context->builder->get.CreateICmpEQ(var1_val, llvmInt(context, 1));
+        new StoreInst(andcmp1, andResultStore, context->currentBlock);
+
+        context->builder->get.CreateCondBr(andcmp1, andif, andthen);
+
+
+        context->builder->get.CreateBr(andif);
+        context->currentBlock->getParent()->getBasicBlockList().push_back(andif);
+        context->currentBlock = andif;
+        context->builder->get.SetInsertPoint(context->currentBlock);
+
+        Value *andcmp2 = context->builder->get.CreateICmpEQ(var2_val, llvmInt(context, 1));
+        //new StoreInst(llvmInt(context, 0), andResultStore, context->currentBlock);
+        new StoreInst(andcmp2, andResultStore, context->currentBlock);
+
+        context->builder->get.CreateBr(andthen);
+        context->currentBlock->getParent()->getBasicBlockList().push_back(andthen);
+        context->currentBlock = andthen;
+        context->builder->get.SetInsertPoint(context->currentBlock);
+
+        Value * and_result = new LoadInst(intType, andResultStore, "and_result", context->currentBlock);
+        return boolVal(context, and_result);
     }
     return str(context, "If you're seeing this I REALLY screwed up");
 }

@@ -77,8 +77,8 @@ CMAKE_BINARY_DIR = /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/B
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/usr/local/Cellar/cmake/3.19.4/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/local/Cellar/cmake/3.19.4/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -169,6 +169,19 @@ dreamlang/fast:
 .PHONY : dreamlang/fast
 
 #=============================================================================
+# Target rules for targets named omp_gen
+
+# Build rule for target.
+omp_gen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 omp_gen
+.PHONY : omp_gen
+
+# fast build rule for target.
+omp_gen/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/omp_gen.dir/build.make CMakeFiles/omp_gen.dir/build
+.PHONY : omp_gen/fast
+
+#=============================================================================
 # Target rules for targets named acc_gen
 
 # Build rule for target.
@@ -182,17 +195,17 @@ acc_gen/fast:
 .PHONY : acc_gen/fast
 
 #=============================================================================
-# Target rules for targets named omp_gen
+# Target rules for targets named dreamlib
 
 # Build rule for target.
-omp_gen: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 omp_gen
-.PHONY : omp_gen
+dreamlib: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 dreamlib
+.PHONY : dreamlib
 
 # fast build rule for target.
-omp_gen/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/omp_gen.dir/build.make CMakeFiles/omp_gen.dir/build
-.PHONY : omp_gen/fast
+dreamlib/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/build
+.PHONY : dreamlib/fast
 
 #=============================================================================
 # Target rules for targets named intrinsics_gen
@@ -299,6 +312,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.o
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.o
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.i: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.i
@@ -309,6 +323,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.i
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.i
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.s: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.s
@@ -319,6 +334,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.s
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp.s
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.o: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.o
@@ -328,6 +344,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to build an object file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.o
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.o
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.i: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.i
@@ -337,6 +354,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to preprocess a source file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.i
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.i
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.s: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.s
@@ -346,6 +364,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to generate assembly for a file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.s
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamBool.cpp.s
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.o: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.o
@@ -355,6 +374,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to build an object file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.o
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.o
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.i: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.i
@@ -364,6 +384,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to preprocess a source file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.i
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.i
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.s: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.s
@@ -373,6 +394,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to generate assembly for a file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.s
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamFunc.cpp.s
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.o: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.o
@@ -382,6 +404,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to build an object file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.o
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.o
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.i: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.i
@@ -391,6 +414,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to preprocess a source file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.i
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.i
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.s: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.s
@@ -400,6 +424,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to generate assembly for a file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.s
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp.s
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.o: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.o
@@ -409,6 +434,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to build an object file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.o
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.o
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.i: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.i
@@ -418,6 +444,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to preprocess a source file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.i
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.i
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.s: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.s
@@ -427,6 +454,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to generate assembly for a file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.s
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamStr.cpp.s
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.o: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.o
@@ -436,6 +464,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to build an object file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.o
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.o
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.i: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.i
@@ -445,6 +474,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to preprocess a source file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.i
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.i
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.s: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.s
@@ -454,6 +484,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLi
 # target to generate assembly for a file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.s
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/list.cpp.s
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.o: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o
@@ -463,6 +494,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.o: Us
 # target to build an object file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.o
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.i: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.i
@@ -472,6 +504,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.i: Us
 # target to preprocess a source file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.i
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.i
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.s: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.s
@@ -481,6 +514,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.s: Us
 # target to generate assembly for a file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.s
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp.s
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.o: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.o
@@ -490,6 +524,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.o: 
 # target to build an object file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.o
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.o
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.i: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.i
@@ -499,6 +534,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.i: 
 # target to preprocess a source file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.i
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.i
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.s: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.s
@@ -508,6 +544,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.s: 
 # target to generate assembly for a file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.s
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/memory.cpp.s
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.o: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o
@@ -517,6 +554,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.o:
 # target to build an object file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.o
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.i: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.i
@@ -526,6 +564,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.i:
 # target to preprocess a source file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.i
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.i
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.s: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.s
@@ -535,6 +574,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.s:
 # target to generate assembly for a file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.s
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp.s
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.o: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.o
@@ -544,6 +584,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.o: Us
 # target to build an object file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.o
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.o
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.i: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.i
@@ -553,6 +594,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.i: Us
 # target to preprocess a source file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.i
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.i
 
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.s: Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.s
@@ -562,6 +604,7 @@ Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.s: Us
 # target to generate assembly for a file
 Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlang.dir/build.make CMakeFiles/dreamlang.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.s
 .PHONY : Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/util.cpp.s
 
 # Help Target
@@ -578,6 +621,7 @@ help:
 	@echo "... compiler"
 	@echo "... compiler_debug"
 	@echo "... dreamlang"
+	@echo "... dreamlib"
 	@echo "... Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/IfGen.o"
 	@echo "... Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/IfGen.i"
 	@echo "... Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Compiler/IfGen.s"

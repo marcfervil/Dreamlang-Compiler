@@ -75,6 +75,7 @@ CMAKE_BINARY_DIR = /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/B
 all: CMakeFiles/compiler_debug.dir/all
 all: CMakeFiles/compiler.dir/all
 all: CMakeFiles/dreamlang.dir/all
+all: CMakeFiles/dreamlib.dir/all
 
 .PHONY : all
 
@@ -87,8 +88,9 @@ preinstall:
 clean: CMakeFiles/compiler_debug.dir/clean
 clean: CMakeFiles/compiler.dir/clean
 clean: CMakeFiles/dreamlang.dir/clean
-clean: CMakeFiles/acc_gen.dir/clean
 clean: CMakeFiles/omp_gen.dir/clean
+clean: CMakeFiles/acc_gen.dir/clean
+clean: CMakeFiles/dreamlib.dir/clean
 clean: CMakeFiles/intrinsics_gen.dir/clean
 
 .PHONY : clean
@@ -176,6 +178,33 @@ CMakeFiles/dreamlang.dir/clean:
 .PHONY : CMakeFiles/dreamlang.dir/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/omp_gen.dir
+
+# All Build rule for target.
+CMakeFiles/omp_gen.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/omp_gen.dir/build.make CMakeFiles/omp_gen.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/omp_gen.dir/build.make CMakeFiles/omp_gen.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles --progress-num= "Built target omp_gen"
+.PHONY : CMakeFiles/omp_gen.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/omp_gen.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/omp_gen.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles 0
+.PHONY : CMakeFiles/omp_gen.dir/rule
+
+# Convenience name for target.
+omp_gen: CMakeFiles/omp_gen.dir/rule
+
+.PHONY : omp_gen
+
+# clean rule for target.
+CMakeFiles/omp_gen.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/omp_gen.dir/build.make CMakeFiles/omp_gen.dir/clean
+.PHONY : CMakeFiles/omp_gen.dir/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/acc_gen.dir
 
 # All Build rule for target.
@@ -203,31 +232,31 @@ CMakeFiles/acc_gen.dir/clean:
 .PHONY : CMakeFiles/acc_gen.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/omp_gen.dir
+# Target rules for target CMakeFiles/dreamlib.dir
 
 # All Build rule for target.
-CMakeFiles/omp_gen.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/omp_gen.dir/build.make CMakeFiles/omp_gen.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/omp_gen.dir/build.make CMakeFiles/omp_gen.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles --progress-num= "Built target omp_gen"
-.PHONY : CMakeFiles/omp_gen.dir/all
+CMakeFiles/dreamlib.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles --progress-num=19,20,21,22,23,24,25,26,27,28 "Built target dreamlib"
+.PHONY : CMakeFiles/dreamlib.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/omp_gen.dir/rule: cmake_check_build_system
+CMakeFiles/dreamlib.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles 10
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/dreamlib.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles 0
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/omp_gen.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/Build/CMakeFiles 0
-.PHONY : CMakeFiles/omp_gen.dir/rule
+.PHONY : CMakeFiles/dreamlib.dir/rule
 
 # Convenience name for target.
-omp_gen: CMakeFiles/omp_gen.dir/rule
+dreamlib: CMakeFiles/dreamlib.dir/rule
 
-.PHONY : omp_gen
+.PHONY : dreamlib
 
 # clean rule for target.
-CMakeFiles/omp_gen.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/omp_gen.dir/build.make CMakeFiles/omp_gen.dir/clean
-.PHONY : CMakeFiles/omp_gen.dir/clean
+CMakeFiles/dreamlib.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dreamlib.dir/build.make CMakeFiles/dreamlib.dir/clean
+.PHONY : CMakeFiles/dreamlib.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/intrinsics_gen.dir
