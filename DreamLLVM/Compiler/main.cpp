@@ -95,6 +95,7 @@ void loadStandard(LLVMData* context){
     functions["apply_vargs"] = context->owner->getOrInsertFunction("apply_vargs", FunctionType::get(voidTy, {dreamObjPtrTy, dreamObjPtrTy, dreamObjPtrTy},false));
     functions["native_test"] = context->owner->getOrInsertFunction("native_test", FunctionType::get(voidTy, {intType}, false));
     functions["check"] = context->owner->getOrInsertFunction("check", FunctionType::get(voidTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
+    functions["input"] = context->owner->getOrInsertFunction("input", FunctionType::get(voidTy, {}, false));
     //functions["ijoi"] = context->owner->getOrInsertFunction("dspoksd", FunctionType::get(voidTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
 
 

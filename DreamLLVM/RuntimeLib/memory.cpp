@@ -72,6 +72,8 @@ inline bool var_exists(dreamObj ** var){
     return (deref_var(var)!=NULL);
 }
 
+
+
 struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
 
     if(value == NULL){

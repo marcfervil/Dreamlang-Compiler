@@ -277,7 +277,13 @@ struct dreamObj *set_var_c(dreamObj *obj, dreamObj *name_obj, dreamObj *value) {
 }
 
 
+dreamObj * input(){
+    char str[100];
+    printf("[Dream]: ");
+    scanf("%s", str);
 
+    return dreamStr(str);
+}
 
 dreamObj * contains_c(dreamObj * var2, dreamObj * var1){
     //printf("here!\n");
