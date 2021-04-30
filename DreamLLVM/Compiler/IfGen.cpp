@@ -35,13 +35,22 @@ extern "C"{
     }
 
     void end_if(LLVMData * context, IfData * if_data, bool has_return){
+
         if(!has_return)context->builder->get.CreateBr(if_data->ifcont);
         context->currentBlock->getParent()->getBasicBlockList().push_back(if_data->ifcont);
         context->currentBlock = if_data->ifcont;
         context->builder->get.SetInsertPoint(context->currentBlock);
     }
 
-    
+
+    void continue_for(LLVMData * context, ForData * for_data){
+        context->builder->get.CreateBr(for_data->start);
+    }
+
+    void break_for(LLVMData * context, ForData * for_data){
+        context->builder->get.CreateBr(for_data->forcont);
+    }
+
     ForData * init_for(LLVMData * context, const char * var_name, Value * scope, Value * iter_func, Value * iter_func_call_scope){
 
 
@@ -60,8 +69,6 @@ extern "C"{
         for_data->start = BasicBlock::Create(context->context, "for_start");
 
 
-
-
         context->builder->get.CreateBr(for_data->start);
         context->currentBlock->getParent()->getBasicBlockList().push_back(for_data->start);
         context->currentBlock = for_data->start;
@@ -73,6 +80,7 @@ extern "C"{
         
         for_data->then = BasicBlock::Create(context->context, "then" );
         for_data->forcont = BasicBlock::Create(context->context, "forcont" );
+        //for_data->for_end = BasicBlock::Create(context->context, "forend" );
 
         Value *for_comp = context->builder->get.CreateICmpNE(for_data->last_iter_call, null_dream_val);
         context->builder->get.CreateCondBr(for_comp, for_data->then, for_data->forcont);
@@ -97,7 +105,7 @@ extern "C"{
 
             context->builder->get.CreateCondBr(for_comp, for_data->start, for_data->forcont);
         }
-      
+
         context->currentBlock->getParent()->getBasicBlockList().push_back(for_data->forcont);
         context->currentBlock = for_data->forcont;
         context->builder->get.SetInsertPoint(context->currentBlock);

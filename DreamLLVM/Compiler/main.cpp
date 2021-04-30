@@ -607,14 +607,12 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
     
     for(int i=0;i<arg_size;i++)args.push_back(dreamObjPtrTy);
     
-  
-    
+
     //intitilize function data struct pointer and set starting block so we know what our preivous function is
     Function *new_func = Function::Create(FunctionType::get(dreamObjPtrTy, args, true), Function::ExternalLinkage, funcName, context->module);
     FuncData * func_data = new FuncData(new_func);
     func_data -> startingBlock = std::move((context->currentBlock));
     func_data -> is_class = is_class;
-
 
 
     //saving the arg names into metadata was unnecessary in hindsight, but it might come in handy later...
@@ -625,8 +623,6 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
     Argument *context_arg = &*new_func->arg_begin();
     context_arg->setName("scope");
 
-
-
     
     //create and enter method block
     context -> currentBlock = BasicBlock::Create(context -> context, "EntryBlock", new_func);
@@ -634,6 +630,14 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
     
     //save arguments into scope "obj"
     int i = 0;
+
+    null_dream_val = new LoadInst(dreamObjPtrTy, context->owner->getOrInsertGlobal("nullDream", dreamObjPtrTy), "null_dream", context->currentBlock);
+
+    /*
+     * Using this block of code in conjunction with the bottom block of commented code will stop function params from "upsetting" instance variables
+    Value * og_parent = get_var_llvm(context, context_arg, "$parent");
+    set_parent_c(context, context_arg, null_dream_val);
+    */
 
     for (Argument& arg : new_func->args()) {
         //skip first context argument because we want the value of the variables (for now...)
@@ -648,19 +652,18 @@ FuncData * func(LLVMData* context, Value* obj, const char * funcName, bool is_cl
         LoadInst * arg_ref = new LoadInst(dreamObjPtrTy, alloc, "varName", context->currentBlock);
         (&arg)->setName(arg_names[(i++)-1]);
 
-       // string arg_name = "arg"+to_string(i-1);
-        //rename_llvm(context, get_var_llvm(context, context_arg, arg_name.c_str()), arg_names[i-2]);
         set_var_llvm(context, context_arg, arg_names[i-2], arg_ref);
-
     }
     
     //store function name & scope so they can be used outside of this function
     func_data -> scope = load_store(context, context_arg);
     func_data -> name = (new std::string(funcName))->c_str();
-  
-    //if(is_class)log_llvm(context, get_var_llvm(context, context_arg, "x"));
-   // if(is_class)dict_llvm(context, context_arg);
-    //dict_llvm(context, get_var_llvm(context, context_arg, "parent"));
+
+    /*
+     * other block of code to prevent instance "upsetting"
+    set_parent_c(context, context_arg, og_parent);
+ */
+
     return func_data;
 }
 
@@ -941,7 +944,6 @@ Value * math_op(LLVMData* context, Value *var1, Value *var2, char * op){
             //or
             context->builder->get.CreateCondBr(andcmp1, andthen, andif);
         }
-
 
 
         context->builder->get.CreateBr(andif);
