@@ -11,7 +11,6 @@
 #include "runtime.hpp"
 extern "C" {
 
-
 /*Check if two nums are equal**/
 dreamObj * num_equals(dreamObj * me, dreamObj * other);
 

@@ -9,6 +9,7 @@ include_directories(dreamlang ${CMAKE_CURRENT_SOURCE_DIR}/../RuntimeLib/include)
 set(stdlib "${CMAKE_CURRENT_SOURCE_DIR}/../RuntimeLib")
 
 # Create shared library
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../RuntimeLib/StandardLib/*.cpp)
 file(GLOB SOURCES2 ${CMAKE_CURRENT_SOURCE_DIR}/../RuntimeLib/*.cpp)
 add_library(dreamlang SHARED ${SOURCES} ${SOURCES2})

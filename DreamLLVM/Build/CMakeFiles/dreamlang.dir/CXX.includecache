@@ -98,6 +98,14 @@ memory.hpp
 runtime.hpp
 ../RuntimeLib/include/runtime.hpp
 
+/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.cpp
+dreamInt.hpp
+/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/dreamInt.hpp
+
+/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.cpp
+copy.hpp
+/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/copy.hpp
+
 /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.cpp
 runtime.hpp
 /Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/runtime.hpp

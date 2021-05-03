@@ -204,6 +204,10 @@ iostream
 fstream
 -
 
+/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.cpp
+count.h
+/Users/marcfervil/Documents/Programming/DreamLLVM/DreamLLVM/RuntimeLib/StandardLib/count.h
+
 /usr/local/opt/llvm/include/llvm-c/DataTypes.h
 inttypes.h
 -

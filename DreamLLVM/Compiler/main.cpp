@@ -96,6 +96,7 @@ void loadStandard(LLVMData* context){
     functions["native_test"] = context->owner->getOrInsertFunction("native_test", FunctionType::get(voidTy, {intType}, false));
     functions["check"] = context->owner->getOrInsertFunction("check", FunctionType::get(voidTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
     functions["input"] = context->owner->getOrInsertFunction("input", FunctionType::get(voidTy, {}, false));
+    functions["clear"] = context->owner->getOrInsertFunction("clear", FunctionType::get(voidTy, {}, false));
     //functions["ijoi"] = context->owner->getOrInsertFunction("dspoksd", FunctionType::get(voidTy, {dreamObjPtrTy, dreamObjPtrTy}, false));
 
 
@@ -997,22 +998,31 @@ void tt(dreamObj * scope){
     list_push( new_scope( get_var(scope, "@lst"), 1), dreamStr("fff"));
 }
 */
+
+void lala(int he, float  g){
+    //printf ("__PRETTY_FUNCTION__ = %s\n", __PRETTY_FUNCTION__);
+   //const char * f = __PRETTY_FUNCTION__;
+    //printf(f);
+}
+
 int main(){
     //dreamObj * heyo = dreamStr("hey");
-    
-   // printx(4,"sdx","new format",2001,heyo);
+
+   lala(3,3);
+
+    // printx(4,"sdx","new format",2001,heyo);
    // return 0;
-    LLVMData * context = llvm_init();
-   Value * scope_l = str(context, "wokd");
+  //  LLVMData * context = llvm_init();
+  // Value * scope_l = str(context, "wokd");
    // for(int i=0; i<100000; i++){
-    dreamObj * scope = dreamObject();
-    set_var(scope, "@lst", dreamList(3, dreamStr("item1"), dreamStr("item2"), dreamStr("item3")));
+   // dreamObj * scope = dreamObject();
+   // set_var(scope, "@lst", dreamList(3, dreamStr("item1"), dreamStr("item2"), dreamStr("item3")));
 
  //   get_var(scope, "i");
     
 
    // list_push( new_scope( get_var(scope, "@lst"), 1),  get_var(scope, "@lst"));
-    print(1, get_var(scope, "@lst"));
+  //  print(1, get_var(scope, "@lst"));
     //list_push( new_scope( get_var(scope, "lst"), 1), dreamStr("fewfewfewfewe"));
   //  list_push( new_scope( get_var(scope, "@lst"), 1), dreamStr("feopeeeeeeeffefwefewf"));
    // tt(scope);
@@ -1052,8 +1062,8 @@ int main(){
     
     // context->builder->get.CreateRet(context->builder->get.getInt32(0));
 
-    context->builder->get.CreateRet(context->builder->get.getInt32(0));
-    llvm_run(context, true, false);
+    //context->builder->get.CreateRet(context->builder->get.getInt32(0));
+   // llvm_run(context, true, false);
 
 
   //  functions["opkpok"] = context->owner->getOrInsertFunction("ptrer", FunctionType::get(dreamObjPtrTy, {dreamObjPtrTy}, false));

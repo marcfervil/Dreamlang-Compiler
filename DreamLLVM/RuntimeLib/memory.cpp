@@ -94,7 +94,9 @@ struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
 
     if(!var_exists(var)) {
         //creating new var
+        //if(value->type == dreamIntType)printf("start copy\n");
         dreamObj *new_value = smart_copy(value);
+        //if(value->type == dreamIntType)printf("end copy\n");
         new_value->name = strdup(name);
         *var = new_value;
 

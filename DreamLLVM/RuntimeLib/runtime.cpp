@@ -29,6 +29,11 @@ dreamObj *make_dream(void *value, dreamObj *type) {
     if (type == nullptr)type = dreamObjType;
 
     dreamObj *new_obj = (dreamObj *) malloc(sizeof(struct dreamObj));
+    if(new_obj == NULL)nightmare("memory failure!");
+
+
+
+
 
     new_obj->value = value;
     new_obj->type = type;
@@ -41,16 +46,22 @@ dreamObj *make_dream(void *value, dreamObj *type) {
     new_obj->pointer = 0;
     new_obj->is_inherited = 0;
 
-    for (int i = 0; i < HASHSIZE; i++) {
-        (new_obj->vars[i]) = (dreamObj **) malloc(sizeof(struct dreamObj *));
-        *(new_obj->vars[i]) = NULL;
+    if(type!=dreamIntType) {
+        new_obj->vars = (dreamObj ***)malloc(HASHSIZE * sizeof(dreamObj **));
+        if( new_obj->vars == NULL)nightmare("memory failure!");
+        for (int i = 0; i < HASHSIZE; i++) {
+            (new_obj->vars[i]) = pointer_init();
+                    //(dreamObj **) malloc(sizeof(struct dreamObj *));
+           // *(new_obj->vars[i]) = NULL;
+        }
     }
 
     return new_obj;
 }
 
-dreamObj **pointer_init() {
+inline dreamObj **pointer_init() {
     dreamObj **ptr = (dreamObj **) malloc(sizeof(struct dreamObj *));
+    if(ptr==NULL)nightmare("memory failure!");
     *(ptr) = NULL;
     return ptr;
 }
@@ -276,6 +287,9 @@ struct dreamObj *set_var_c(dreamObj *obj, dreamObj *name_obj, dreamObj *value) {
     return set_var(obj, name, value);
 }
 
+void clear() {
+    printf("\e[1;1H\e[2J");
+}
 
 dreamObj * input(){
     char str[100];

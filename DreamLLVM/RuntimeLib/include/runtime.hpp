@@ -58,7 +58,8 @@ typedef struct dreamObj{
     
     int pointer;
     
-    dreamObj ** vars [HASHSIZE];
+    //dreamObj ** vars [HASHSIZE];
+    dreamObj *** vars ;
     
     int is_inherited;
 

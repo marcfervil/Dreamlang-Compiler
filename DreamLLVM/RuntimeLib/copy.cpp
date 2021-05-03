@@ -150,17 +150,18 @@ dreamObj * deep_copy(dreamObj * obj){
     }
 
     dreamObj *var;
+  //  np->vars = obj->vars;
     
-   // np->vars = obj->vars;
+    np->vars = obj->vars;
 //  np->parent_scope = deep_copy(obj->parent_scope);
     //memcpy(np->vars, obj->vars, sizeof(obj->vars));
     
-    
+/*
     for (var = deref_var(obj->first_var); var!=NULL; var = deref_var(var->next)){
         //printf("name: %s\n", var->name);
         if(strcmp(var->name, "this")==0)continue;
         //printf("copying: %s\n", var->name);
-        if(var->name!=NULL && var->name[0]=='@'/* || strcmp(var->name, "this")==0)*/){
+        if(var->name!=NULL && var->name[0]=='@'){
            // printf("red flag ");
             set_var(np, strdup(var->name), medium_copy(var));
             continue;
@@ -170,7 +171,7 @@ dreamObj * deep_copy(dreamObj * obj){
         //new_name[0] = 'e';
         set_var(np, strdup(var->name), deep_copy(var));
         //printf("");
-    }
+    }*/
     
   //  set_var(np, "shallow", dreamBool(1));
     return np;
