@@ -63,24 +63,32 @@ extern "C"{
         Value * null_dream_val = new LoadInst(dreamObjPtrTy, context->owner->getOrInsertGlobal("nullDream", dreamObjPtrTy), "null_dream", context->currentBlock);
         
         
-      //  for_data->last_iter_call = call(context, iter_func, 1, new Value*[]{iter_func_call_scope});
-        //Value *for_comp = context->builder->get.CreateICmpNE(for_data->last_iter_call, null_dream_val);
-        
+
         for_data->start = BasicBlock::Create(context->context, "for_start");
 
+        /*if we cannot guarantee the type, don't do this*/
+       // for_data->last_iter_call = call(context, iter_func, 1, new Value*[]{iter_func_call_scope});
+       // Value * iter_var = set_var_llvm(context,  for_data->scope, for_data->var_name, for_data->last_iter_call);
+        /*that includes this*/
 
         context->builder->get.CreateBr(for_data->start);
         context->currentBlock->getParent()->getBasicBlockList().push_back(for_data->start);
         context->currentBlock = for_data->start;
         context->builder->get.SetInsertPoint(context->currentBlock);
 
+        //for_data->last_iter_call = call(context, iter_func, 1, new Value*[]{iter_func_call_scope});
+        //set_value(context, iter_var, get_value(context, voidPointerTy, for_data->last_iter_call));
+
+
+
+        //if we can't guarantee the iterable we have to do this
         for_data->last_iter_call = call(context, iter_func, 1, new Value*[]{iter_func_call_scope});
         set_var_llvm(context,  for_data->scope, for_data->var_name, for_data->last_iter_call);
-        
+
         
         for_data->then = BasicBlock::Create(context->context, "then" );
         for_data->forcont = BasicBlock::Create(context->context, "forcont" );
-        //for_data->for_end = BasicBlock::Create(context->context, "forend" );
+
 
         Value *for_comp = context->builder->get.CreateICmpNE(for_data->last_iter_call, null_dream_val);
         context->builder->get.CreateCondBr(for_comp, for_data->then, for_data->forcont);

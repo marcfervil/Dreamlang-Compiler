@@ -25,14 +25,13 @@ int line = 1;
 
 bool undefined_allowed = false;
 
+
+
 dreamObj *make_dream(void *value, dreamObj *type) {
     if (type == nullptr)type = dreamObjType;
 
     dreamObj *new_obj = (dreamObj *) malloc(sizeof(struct dreamObj));
     if(new_obj == NULL)nightmare("memory failure!");
-
-
-
 
 
     new_obj->value = value;
@@ -46,7 +45,7 @@ dreamObj *make_dream(void *value, dreamObj *type) {
     new_obj->pointer = 0;
     new_obj->is_inherited = 0;
 
-    if(type!=dreamIntType) {
+    if(!(type==dreamIntType || type==dreamBoolType)) {
         new_obj->vars = (dreamObj ***)malloc(HASHSIZE * sizeof(dreamObj **));
         if( new_obj->vars == NULL)nightmare("memory failure!");
         for (int i = 0; i < HASHSIZE; i++) {
@@ -88,6 +87,30 @@ void nightmare(const char *message, ...) {
 void log_error(const char *error) {
     printf("\x1B[31m[Nightmare]: %s \n\033[0m", error);
     exit(1);
+}
+
+dreamObj * gc(dreamObj * obj, dreamObj * scope){
+    //free(obj);
+   // print(1, obj);
+
+    unsigned hash = hash_obj(obj->name);
+
+
+    free(obj->first_var);
+    free(obj->next);
+    free(obj->last_var);
+    free(obj->value);
+    //const char * f = "ff";
+    free((char *)obj->name);
+    //free(obj->parent_scope);
+    //free(obj->value);
+    //for (int i = 0; i < HASHSIZE; i++) {
+       // if(obj->vars[i]!=NULL)free(obj->vars[i]);
+   // }
+    free(*scope->vars[hash]);
+    scope->vars[hash] = NULL;
+   // free(obj);
+    return NULL;
 }
 
 void apply_vargs(dreamObj *func_scope, dreamObj *args, dreamObj * arg_list_vals){

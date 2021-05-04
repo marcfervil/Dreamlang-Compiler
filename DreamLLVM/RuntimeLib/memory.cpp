@@ -10,13 +10,15 @@
 extern "C" {
 dreamObj * get_var(dreamObj * obj, const char *name, int search_parent){
 
-    if(strcmp(name, "null")==0)return nullDream;
-    if(strcmp(name, "$parent") == 0)return obj->parent_scope;
-    if(strcmp(name, "$type") == 0)return obj->type;
-    if(strcmp(name, "$name") == 0)return (obj->name != NULL) ? dreamStr(obj->name) : nullDream;
-    if(strcmp(name, "$line") == 0)return dreamInt(line);
-    if(strcmp(name, "$self") == 0)return obj;
-    
+    //if (name[0]=='$') {
+        if (strcmp(name, "null") == 0)return nullDream;
+        if (strcmp(name, "$parent") == 0)return obj->parent_scope;
+        if (strcmp(name, "$type") == 0)return obj->type;
+        if (strcmp(name, "$name") == 0)return (obj->name != NULL) ? dreamStr(obj->name) : nullDream;
+        if (strcmp(name, "$line") == 0)return dreamInt(line);
+        if (strcmp(name, "$self") == 0)return obj;
+    //}
+
     dreamObj * found_obj;
     if((found_obj = find_var(obj, name, search_parent))!=nullDream)return found_obj;
     if(!undefined_allowed){
@@ -43,8 +45,14 @@ dreamObj* find_var(dreamObj * obj, const char *s, int search_parent){
 
 
     dreamObj * np;
-   
-    for (np = deref_var(obj->vars[hash_obj(s)]); np!=NULL; np = deref_var(np->next)){
+
+    const char * z = s;
+    unsigned hash_val;
+    for (hash_val = 0; *z != '\0'; z++)
+        hash_val = *z + 31 * hash_val;
+    unsigned  hashval= hash_val % HASHSIZE;
+
+    for (np = deref_var(obj->vars[hashval]); np!=NULL; np = deref_var(np->next)){
         if (np->name != NULL && strcmp(s, np->name) == 0){
             return np;
         }
@@ -61,7 +69,7 @@ dreamObj* find_var(dreamObj * obj, const char *s, int search_parent){
 }
 
 
-unsigned hash_obj(const char *s){
+inline unsigned hash_obj(const char *s){
     unsigned hashval;
     for (hashval = 0; *s != '\0'; s++)
       hashval = *s + 31 * hashval;
@@ -89,11 +97,18 @@ struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
         return set_var(obj->parent_scope, strdup(name), value);
     }
 
-    unsigned hash_val = hash_obj(name);
+
+    const char * s = name;
+    unsigned hashval;
+    for (hashval = 0; *s != '\0'; s++)
+        hashval = *s + 31 * hashval;
+    unsigned  hash_val= hashval % HASHSIZE;
+
     dreamObj ** var = obj->vars[hash_val];
 
     if(!var_exists(var)) {
         //creating new var
+       // printf("new var %s\n",name);
         //if(value->type == dreamIntType)printf("start copy\n");
         dreamObj *new_value = smart_copy(value);
         //if(value->type == dreamIntType)printf("end copy\n");
@@ -107,7 +122,7 @@ struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
         //creating new var due to hash collision
         dreamObj *new_value = smart_copy(value);
         new_value->name = strdup(name);
-
+       // printf("hash collision %s\n",name);
 
         *(new_value->next) = *(*var)->next;
         if(!var_exists((*var)->next))*(obj->last_var) = *(new_value->next);
@@ -115,12 +130,33 @@ struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
         return *(*var)->next;
     }else{
         //updating existing var
-        (*var)->value = (value->type==dreamObjType) ? value->value : copy_value(value->value,  value->type);
+       // printf("updating %s\n",name);
+         if(value->type==dreamObjType) {
+             (*var)->value = value->value;
+         }else if(value->type==dreamIntType &&  (*var)->type == dreamIntType) {
+
+             *(int *)(*var)->value = *(int *)value -> value;
+         }else{
+            // printf("%s", rep((*var)->type));
+
+             //free((*var)->value);
+             (*var)->value = copy_value(value->value,  value->type);
+         }
+
+         //free( (*var)->first_var);
+         //free( (*var)->last_var);
+
         (*var)->first_var = value->first_var;
         (*var)->last_var = value->last_var;
 
-        for (int i = 0; i < HASHSIZE; i++) {
-            ((*var)->vars[i]) = (value->vars[i]);
+
+        if(value->type != dreamIntType) {
+            for (int i = 0; i < HASHSIZE; i++) {
+               // printf("ddd");
+                ((*var)->vars[i]) = (value->vars[i]);
+            }
+        }else{
+            (*var)->vars = value->vars;
         }
         (*var)->type = value->type;
     }
@@ -163,10 +199,15 @@ struct dreamObj *set_var2(dreamObj *obj, const char *name, dreamObj *value){
 
 
 struct dreamObj *set_var_soft(dreamObj *obj, const char *name, dreamObj *value){
-   
-    unsigned hashval;
-   
-    hashval = hash_obj(name);
+
+    /*
+    const char * s = name;
+    unsigned hash_val;
+    for (hash_val = 0; *s != '\0'; s++)
+        hash_val = *s + 31 * hash_val;
+    unsigned  hashval= hashval % HASHSIZE;*/
+
+    unsigned hashval = hash_obj(name);
     
     //printf("setting %s onto %s\n",rep(value),rep(obj));
     

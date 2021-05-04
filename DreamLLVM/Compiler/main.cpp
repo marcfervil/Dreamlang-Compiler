@@ -59,6 +59,7 @@ void loadStandard(LLVMData* context){
 
 
     functions["gc"] = context->owner->getOrInsertFunction("gc", FunctionType::get(voidTy,{dreamObjPtrTy}, false));
+    functions["free_c"] = context->owner->getOrInsertFunction("free", FunctionType::get(voidTy,{voidPtrTy}, false));
     functions["dream_log"] = context->owner->getOrInsertFunction("dream_log", FunctionType::get(voidTy, dreamObjPtrTy, false));
     functions["list"] = context->owner->getOrInsertFunction("dreamList", FunctionType::get(dreamObjPtrTy, intType, true));
     functions["count"] = context->owner->getOrInsertFunction("count", FunctionType::get(dreamObjPtrTy, dreamObjPtrTy, false));
@@ -375,11 +376,11 @@ Value * llvmStrConst(LLVMData* context, const char * value){
 
 Value * num(LLVMData* context, int value){
     Value* builtInt = context->builder->get.getInt32(value);
-    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "int_stack", context->currentBlock);
+    //Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "int_stack", context->currentBlock);
     Value * callResult = context->builder->get.CreateCall(functions["int"], builtInt);
-    new StoreInst(callResult, objStore, context->currentBlock);
-    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "int", context->currentBlock);
-    return object;
+    //new StoreInst(callResult, objStore, context->currentBlock);
+    //LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "int", context->currentBlock);
+    return callResult;
 }
 
 Value * num_llvm(LLVMData* context, Value* value){
@@ -391,6 +392,7 @@ Value * num_llvm(LLVMData* context, Value* value){
     return object;
 }
 
+/*
 Value * bool_(LLVMData* context, bool value){
     Value* builtInt = context->builder->get.getInt32(value);
     Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "int_stack", context->currentBlock);
@@ -398,8 +400,20 @@ Value * bool_(LLVMData* context, bool value){
     new StoreInst(callResult, objStore, context->currentBlock);
     LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "int", context->currentBlock);
     return object;
-}
+}*/
 
+
+Value * bool_(LLVMData* context, bool value){
+    Value* builtInt = context->builder->get.getInt32(value);
+  //  Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "bool_stack", context->currentBlock);
+   //
+     Value * callResult = context->builder->get.CreateCall(functions["bool"], builtInt);
+  //  new StoreInst(callResult, objStore, context->currentBlock);
+
+  //  LoadInst * object = new LoadInst(dreamObjPtrTy, callResult, "int", context->currentBlock);
+  // call_standard(context, "free_c", object);
+    return callResult;
+}
 
 bool isBuiltinFunc(const char * key){
     
@@ -854,6 +868,29 @@ Value* get_value(LLVMData* context, Type * type, Value * obj ){
     return casted_value;
 }
 
+void set_value(LLVMData* context, Value * obj, Value * value ){
+    std::vector<llvm::Value*> indices(2);
+    indices[0] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
+    indices[1] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 2, true));
+    Value *valuePointer = context->builder->get.CreateGEP( obj, indices,  "memberptr");
+
+    //context->builder->get.GEP
+  //  StoreInst(callResult, objStore, context->currentBlock);
+   new StoreInst(value,  valuePointer, "value_temp", context->currentBlock);
+
+   // Value * casted_value = context->builder->get.CreatePointerCast(load_val, type);
+
+    //  valuePointer->mutateType(type);
+    //load
+    //%dreamObj* (...)*,
+    //%dreamObj* (...)*
+
+    // LoadInst *value = new LoadInst(casted_value->getType(),  casted_value, "value_temp", context->currentBlock);
+
+
+
+}
+
 LoadInst* get_pointer_value(LLVMData* context, Type * type, Value * obj ){
     std::vector<llvm::Value*> indices(2);
     indices[0] = llvm::ConstantInt::get(context->context, llvm::APInt(32, 0, true));
@@ -1008,7 +1045,28 @@ void lala(int he, float  g){
 int main(){
     //dreamObj * heyo = dreamStr("hey");
 
-   lala(3,3);
+   // dreamObj * cnt = count(dreamInt(10));
+   dreamObj * cnt = count(dreamInt(10000));
+    dreamObj * c_iter = get_var(cnt, "iter");
+    dreamObj * iter_obj = to_call(c_iter)(new_scope(cnt, 0));
+
+
+    dreamObj * iter_scope = (new_scope(iter_obj, 0));
+
+
+    dreamCall next_call = to_call(get_var(iter_obj, "next"));
+    dreamObj * scope = dreamObject();
+    dreamObj * y = set_var(scope, "y", dreamInt(30));
+    dreamObj * index;
+    while((index = next_call(iter_scope)) != nullDream){
+        set_var(scope, "kk", index);
+      //  print(1, get_var(scope, "kk"));
+      //  print(1, get_var(scope, "y")/*, get_var(scope, "i")*/);
+        set_var(scope, "y", to_call(get_var(get_var(scope, "y"), "add"))(get_var(scope, "y"), dreamInt(1)));
+        //sleep(0.5f);
+    }
+
+    printf("%s",rep(get_var(scope, "y")));
 
     // printx(4,"sdx","new format",2001,heyo);
    // return 0;

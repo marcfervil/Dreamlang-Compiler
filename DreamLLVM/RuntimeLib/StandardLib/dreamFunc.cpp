@@ -10,12 +10,25 @@
 
 
 extern "C" {
+
+
+
+
+
+dreamCall to_call(dreamObj * obj){
+    return (dreamCall) obj->value ;
+}
+
+
+
 dreamObj * dreamFunc(void * value){
     
     dreamObj * obj = make_dream((void *)value, dreamFuncType);
     
     return obj;
 }
+
+
 
 dreamObj * dreamFuncWithContext(void * value, dreamObj * context){
     dreamObj * obj = dreamFunc(value);

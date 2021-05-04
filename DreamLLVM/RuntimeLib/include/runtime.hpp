@@ -122,6 +122,7 @@ dreamObj * new_scope(dreamObj * obj, int nested_scope);
 /*applies virtual arguments to function scope IE: func_name(~[1, 2]) is the same as func_name(1, 2) */
 void apply_vargs(dreamObj *func_scope, dreamObj *args, dreamObj * arg_list_vals);
 
+
 }
 
 

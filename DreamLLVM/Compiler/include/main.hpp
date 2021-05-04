@@ -118,7 +118,8 @@ extern "C"{
     Value * str(LLVMData* context, const char * value/*, const char * name="str"*/);
     Value * set_var_llvm(LLVMData* context,  Value * scope, const char * key, Value * value);
     Value * call_standard(LLVMData* context, const char * funcName, ArrayRef<Value *> args);
-Value * init_scope(LLVMData* context, Value* scope, int nested_scope);
+    Value * init_scope(LLVMData* context, Value* scope, int nested_scope);
+    void set_value(LLVMData* context, Value * obj, Value * value );
 }
 
 #include "IfGen.hpp"

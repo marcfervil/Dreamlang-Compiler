@@ -34,7 +34,8 @@ dreamObj * num_add(dreamObj * me, dreamObj * other){
 dreamObj * dreamInt(int value){
     int *num = (int *)malloc(sizeof *num);
     *num = value;
-    dreamObj * obj = make_dream((void *)num, dreamIntType);
+    dreamObj * obj = make_dream(num, dreamIntType);
+  //  obj->type = dreamIntType;
 
     if(!has_proto_int ){
         proto_int = (dreamObj ***)malloc(HASHSIZE * sizeof(dreamObj **));
@@ -46,13 +47,14 @@ dreamObj * dreamInt(int value){
         set_var(obj, "equals", dreamFunc((void *)num_equals));
         set_var(obj, "add", dreamFunc((void *)num_add));
         has_proto_int = 1;
-
+        //printf("protointtt\n");
     }else{
+
         obj->vars = proto_int;
     }
 
-   // set_var(obj, "equals", dreamFunc((void *)num_equals));
-   // set_var(obj, "add", dreamFunc((void *)num_add));
+  //  set_var(obj, "equals", dreamFunc((void *)num_equals));
+  //  set_var(obj, "add", dreamFunc((void *)num_add));
 
     //print(1, get_var(obj, "add"));
     return obj;
