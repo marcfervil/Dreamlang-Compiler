@@ -8,19 +8,29 @@
 #include "dreamStr.hpp"
 
 extern "C" {
+
+int has_proto_str = 0;
+dreamObj *** proto_str;
+
 dreamObj * dreamStr(const char * value){
     
     char* result = (char*) malloc( strlen(value) + 1 );
     strcpy(result, value);
     
     dreamObj * obj = make_dream((void *) result, dreamStrType);
-  
-    set_var(obj, "equals", dreamFunc((void *) str_equals));
-    set_var(obj, "add", dreamFunc((void *)str_add));
+    if(!has_proto_str){
+        proto_str = make_vars();
+        obj->vars = proto_str;
+        
+        set_var(obj, "equals", dreamFunc((void *) str_equals));
+        set_var(obj, "add", dreamFunc((void *)str_add));
 
-
-    add_native_func(obj, "get",  (void *) str_get);
-    add_native_func(obj, "len",  (void *) str_len);
+        add_native_func(obj, "get",  (void *) str_get);
+        add_native_func(obj, "len",  (void *) str_len);
+    }else{
+        obj->vars = proto_str;
+    }
+    
     return obj;
 }
 

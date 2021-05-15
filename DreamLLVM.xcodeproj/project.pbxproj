@@ -17,6 +17,7 @@
 		9404E35B2628DCCE00ED2475 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9404E3592628DCCE00ED2475 /* util.cpp */; };
 		94295F2A262F7E2800C79FC1 /* list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946CEF57261F4D0B00584FD1 /* list.cpp */; };
 		94295F2E262FCCDE00C79FC1 /* CMakeLists.txt in Sources */ = {isa = PBXBuildFile; fileRef = 94295F2D262FCCDE00C79FC1 /* CMakeLists.txt */; };
+		9434B3602650425600C6A06F /* count.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9434B35F2650425600C6A06F /* count.cpp */; };
 		9445D02E2620CAE9001FC0B2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 948AB2F425DB5DA3009FCA3B /* main.cpp */; };
 		944C9FE025EB8C5B0012B74B /* pylink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 944C9FDE25EB8C5B0012B74B /* pylink.cpp */; };
 		946864DE25D0DFB20090421F /* referance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 946864DD25D0DFB20090421F /* referance.cpp */; };
@@ -72,6 +73,8 @@
 		9404E3592628DCCE00ED2475 /* util.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = util.cpp; sourceTree = "<group>"; };
 		9404E35A2628DCCE00ED2475 /* util.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = util.hpp; sourceTree = "<group>"; };
 		94295F2D262FCCDE00C79FC1 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; usesTabs = 1; };
+		9434B35F2650425600C6A06F /* count.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = count.cpp; sourceTree = "<group>"; };
+		9434B3622650425E00C6A06F /* count.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = count.h; sourceTree = "<group>"; };
 		944C9FD925EB69DB0012B74B /* IfGen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IfGen.cpp; sourceTree = "<group>"; };
 		944C9FDA25EB69DB0012B74B /* IfGen.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = IfGen.hpp; sourceTree = "<group>"; };
 		944C9FDE25EB8C5B0012B74B /* pylink.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pylink.cpp; sourceTree = "<group>"; };
@@ -132,6 +135,7 @@
 		9404E3272628AF9900ED2475 /* StandardLib */ = {
 			isa = PBXGroup;
 			children = (
+				9434B35F2650425600C6A06F /* count.cpp */,
 				9404E32E2628B0B900ED2475 /* dreamInt.cpp */,
 				9404E3322628B2C500ED2475 /* dreamStr.cpp */,
 				946CEF57261F4D0B00584FD1 /* list.cpp */,
@@ -237,6 +241,7 @@
 		94F6AD1E2631FDF9002FD2F4 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				9434B3622650425E00C6A06F /* count.h */,
 				946CEF58261F4D0B00584FD1 /* list.hpp */,
 				9404E31F26289EB300ED2475 /* memory.hpp */,
 				9404E32426289F8E00ED2475 /* runtime.hpp */,
@@ -357,6 +362,7 @@
 				9445D02E2620CAE9001FC0B2 /* main.cpp in Sources */,
 				948AB2F925DB7935009FCA3B /* standard.cpp in Sources */,
 				9404E34B2628DBC300ED2475 /* dreamStr.cpp in Sources */,
+				9434B3602650425600C6A06F /* count.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

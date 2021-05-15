@@ -25,7 +25,18 @@ int line = 1;
 
 bool undefined_allowed = false;
 
+inline dreamObj *** make_vars(){
+    dreamObj *** vars = (dreamObj ***)malloc(HASHSIZE * sizeof(dreamObj **));
+    if(vars == NULL)nightmare("memory failure!");
+    for (int i = 0; i < HASHSIZE; i++) {
+        vars[i] = pointer_init();
+    }
+    return vars;
+}
 
+bool is_primitive(dreamObj * obj){
+    return obj->type == dreamIntType || obj->type == dreamBoolType;
+}
 
 dreamObj *make_dream(void *value, dreamObj *type) {
     if (type == nullptr)type = dreamObjType;
@@ -45,14 +56,8 @@ dreamObj *make_dream(void *value, dreamObj *type) {
     new_obj->pointer = 0;
     new_obj->is_inherited = 0;
 
-    if(!(type==dreamIntType || type==dreamBoolType)) {
-        new_obj->vars = (dreamObj ***)malloc(HASHSIZE * sizeof(dreamObj **));
-        if( new_obj->vars == NULL)nightmare("memory failure!");
-        for (int i = 0; i < HASHSIZE; i++) {
-            (new_obj->vars[i]) = pointer_init();
-                    //(dreamObj **) malloc(sizeof(struct dreamObj *));
-           // *(new_obj->vars[i]) = NULL;
-        }
+    if(!is_primitive(new_obj)) {
+        new_obj->vars = make_vars();
     }
 
     return new_obj;
@@ -338,7 +343,7 @@ dreamObj * contains_c(dreamObj * var2, dreamObj * var1){
     }
     //TODO - some sort of equals inheritance for objects.  Deffering because I dont want to allocate more memory.
     else if(var1->type==dreamStrType) return dreamBool(find_var(var2, (const char *)var1->value)!=nullDream);
-    nightmare("Undefined contains operation (or something like that, TODO: better error msg)");
+    nightmare("Undefined contains function (or something like that, TODO: better error msg)");
     return dreamBool(-1);
 }
 
@@ -354,7 +359,7 @@ dreamObj * equals_c(dreamObj * var1, dreamObj * var2){
     }
     //TODO - some sort of equals inheritance for objects.  Deffering because I dont want to allocate more memory.
     else if(var1->type==dreamObjType) return dreamBool(var1->value == var2->value);
-    printf("[Nightmare]: <Undefined Equals Operation>\n");
+    nightmare("<Undefined Equals Operation>");
     return dreamBool(-1);
 }
 

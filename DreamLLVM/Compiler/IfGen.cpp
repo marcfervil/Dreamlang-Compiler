@@ -67,7 +67,7 @@ extern "C"{
         for_data->start = BasicBlock::Create(context->context, "for_start");
 
         /*if we cannot guarantee the type, don't do this*/
-       // for_data->last_iter_call = call(context, iter_func, 1, new Value*[]{iter_func_call_scope});
+      //  for_data->last_iter_call = call(context, iter_func, 1, new Value*[]{iter_func_call_scope});
        // Value * iter_var = set_var_llvm(context,  for_data->scope, for_data->var_name, for_data->last_iter_call);
         /*that includes this*/
 

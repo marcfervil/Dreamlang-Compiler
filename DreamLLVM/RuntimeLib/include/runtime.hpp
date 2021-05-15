@@ -92,6 +92,11 @@ extern dreamObj * nullDream;
 /*Function that is used to create runtime errors**/
 void nightmare(const char * message, ...);
 
+/*Checks if an obejct is a primitive type (num, str, bool) **/
+bool is_primitive(dreamObj * obj);
+
+/*Function that's used to initialize empty variable array**/
+dreamObj *** make_vars();
 
 /*Platform specific error logging **/
 void log_error(const char * error);

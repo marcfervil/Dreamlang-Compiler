@@ -130,30 +130,25 @@ struct dreamObj *set_var(dreamObj *obj, const char *name, dreamObj *value){
         return *(*var)->next;
     }else{
         //updating existing var
-       // printf("updating %s\n",name);
+            
          if(value->type==dreamObjType) {
              (*var)->value = value->value;
-         }else if(value->type==dreamIntType &&  (*var)->type == dreamIntType) {
-
+         }else if(value->type==dreamIntType && (*var)->type == dreamIntType) {
              *(int *)(*var)->value = *(int *)value -> value;
          }else{
-            // printf("%s", rep((*var)->type));
-
-             //free((*var)->value);
              (*var)->value = copy_value(value->value,  value->type);
          }
-
-         //free( (*var)->first_var);
-         //free( (*var)->last_var);
 
         (*var)->first_var = value->first_var;
         (*var)->last_var = value->last_var;
 
-
-        if(value->type != dreamIntType) {
+        if (is_primitive(*var) && value->type==dreamObjType){
+            (*var)->vars = make_vars();
+        }
+        
+        if(!is_primitive(value)) {
             for (int i = 0; i < HASHSIZE; i++) {
-               // printf("ddd");
-                ((*var)->vars[i]) = (value->vars[i]);
+                (*var)->vars[i] = value->vars[i];
             }
         }else{
             (*var)->vars = value->vars;

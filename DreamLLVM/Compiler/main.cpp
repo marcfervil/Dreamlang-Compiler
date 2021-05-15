@@ -504,14 +504,14 @@ Value * call(LLVMData* context, Value * var,  int size, Value * c_args[size], bo
 
 Value * str(LLVMData* context, const char * value/*, const char * name="str"*/){
     //printf(value);
-    Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "str_stack", context->currentBlock);
+    //Value *objStore = new AllocaInst(dreamObjPtrTy, 0, "str_stack", context->currentBlock);
     Value * callResult = context->builder->get.CreateCall(functions["str"], context->builder->get.CreateGlobalStringPtr(StringRef(value)));
-    new StoreInst(callResult, objStore, context->currentBlock);
-    LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "str", context->currentBlock);
+    //new StoreInst(callResult, objStore, context->currentBlock);
+    //LoadInst * object = new LoadInst(dreamObjPtrTy, objStore, "str", context->currentBlock);
     
   
   //  context->builder->get.CreateCall(functions["printf"], load2);
-    return object;
+    return callResult;
 }
 
 
